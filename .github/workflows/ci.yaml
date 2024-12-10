@@ -25,4 +25,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: false
-          tags: cctm002/pilaresverdes-frontend:${{ github.sha }}
+          tags: ctm002/pilaresverdes-frontend:${{ github.sha }}
