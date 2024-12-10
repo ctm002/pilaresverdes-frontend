@@ -34,8 +34,8 @@ jobs:
             ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker pull ctm002/pilaresverdes-frontend:${{ github.sha }}'
       - name: Stop running container
         run: |
-            ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker stop cddemo || true'
-            ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker rm cddemo || true'
+            ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker stop ubuntu-web-1 || true'
+            ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker rm ubuntu-web-1 || true'
       - name: Run new container
         run: |
-            ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker run -d --name cddemo -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
+            ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker run -d --name ubuntu-web-1 -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
