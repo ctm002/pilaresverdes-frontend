@@ -1,0 +1,9 @@
+body{
+    background-image: url(images/pilaresverdes.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.container {
+    text-align: center;
+}
