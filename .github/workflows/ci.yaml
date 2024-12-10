@@ -27,7 +27,7 @@ jobs:
           tags: ctm002/pilaresverdes-frontend:${{ github.sha }}
       - name: Set permissions for private key
         run: |
-            echo "${{ env.AWS_PRIVATE_KEY }}" > key.pem
+            echo "${{ secrets.AWS_PRIVATE_KEY }}" > key.pem
             chmod 400 key.pem
       - name: Pull Docker image
         run: |
