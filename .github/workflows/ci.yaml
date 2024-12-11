@@ -38,4 +38,4 @@ jobs:
             ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker rm ubuntu-web-1 || true'
       - name: Run new container
         run: |
-            ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker run -d --name ubuntu-web-1 -v /nginx/nginx.conf:/etc/nginx/nginx.conf -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
+            ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@44.203.151.23 'sudo docker run -d --name ubuntu-web-1 -v /nginx/nginx.conf:/etc/nginx/nginx.conf:ro -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
