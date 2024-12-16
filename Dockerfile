@@ -2,7 +2,7 @@
 FROM node:22.12.0-alpine3.21 AS builder
 
 # Declaring env
-ENV NODE_ENV production
+ENV NODE_ENV development
 
 
 # Setting up the work directory
