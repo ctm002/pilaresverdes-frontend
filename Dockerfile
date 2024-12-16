@@ -19,7 +19,7 @@ COPY . .
 # Building our application
 CMD npm run build
 
-RUN dir -s 
+RUN ls
 
 # Fetching the latest nginx image
 FROM nginx
