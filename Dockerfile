@@ -16,10 +16,11 @@ RUN npm install
 # Copying all the files in our project
 COPY . /app
 
+RUN ls
+
 # Building our application
 RUN npm run build
 
-RUN ls
 
 # Fetching the latest nginx image
 FROM nginx
