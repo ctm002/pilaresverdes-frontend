@@ -9,7 +9,7 @@ ENV NODE_ENV production
 WORKDIR /app
 
 # Installing dependencies
-COPY  ./package.json /app
+COPY  ./package*.json /app
 
 RUN npm install
 
