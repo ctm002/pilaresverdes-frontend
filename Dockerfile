@@ -19,6 +19,8 @@ COPY . .
 # Building our application
 CMD npm run build
 
+RUN dir -s 
+
 # Fetching the latest nginx image
 FROM nginx
 
