@@ -11,7 +11,8 @@ WORKDIR /app
 # Installing dependencies
 COPY  ./package*.json /app
 
-RUN npm install
+# RUN npm install
+RUN npm ci && npm cache clean --force
 
 # Copying all the files in our project
 COPY . /app
