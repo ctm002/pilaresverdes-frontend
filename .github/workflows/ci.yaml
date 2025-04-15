@@ -31,11 +31,11 @@ jobs:
             chmod 400 key.pem
       - name: Pull Docker image
         run: |
-            ssh -o StrictHostKeyChecking=no -i key.pem 'ubuntu@${{AWS_HOST_IP}}' 'sudo docker pull ctm002/pilaresverdes-frontend:${{ github.sha }}'
+            ssh -o StrictHostKeyChecking=no -i key.pem 'ubuntu@${{ AWS_HOST_IP }}' 'sudo docker pull ctm002/pilaresverdes-frontend:${{ github.sha }}'
       - name: Stop running container
         run: |
-            ssh -o StrictHostKeyChecking=no -i key.pem 'ubuntu@${{AWS_HOST_IP}}' 'sudo docker stop ubuntu-web-1 || true'
-            ssh -o StrictHostKeyChecking=no -i key.pem 'ubuntu@${{AWS_HOST_IP}}' 'sudo docker rm ubuntu-web-1 || true'
+            ssh -o StrictHostKeyChecking=no -i key.pem 'ubuntu@${{ AWS_HOST_IP }}' 'sudo docker stop ubuntu-web-1 || true'
+            ssh -o StrictHostKeyChecking=no -i key.pem 'ubuntu@${{ AWS_HOST_IP }}' 'sudo docker rm ubuntu-web-1 || true'
       - name: Run new container
         run: |
-            ssh -o StrictHostKeyChecking=no -i key.pem 'ubuntu@${{AWS_HOST_IP}}' 'sudo docker run -d --name ubuntu-web-1 -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf:ro -v ~/nginx/conf.d/:/etc/nginx/conf.d/ -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
+            ssh -o StrictHostKeyChecking=no -i key.pem 'ubuntu@${{ AWS_HOST_IP }}' 'sudo docker run -d --name ubuntu-web-1 -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf:ro -v ~/nginx/conf.d/:/etc/nginx/conf.d/ -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
