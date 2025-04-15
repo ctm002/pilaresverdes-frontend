@@ -42,11 +42,11 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
       - name: Pull Docker image
         run: |
-            ssh -o staging 'sudo docker pull ctm002/pilaresverdes-frontend:${{ github.sha }}'
+            ssh staging 'sudo docker pull ctm002/pilaresverdes-frontend:${{ github.sha }}'
       - name: Stop running container
         run: |
-            ssh -o staging 'sudo docker stop ubuntu-web-1 || true'
-            ssh -o staging 'sudo docker rm ubuntu-web-1 || true'
+            ssh staging 'sudo docker stop ubuntu-web-1 || true'
+            ssh staging 'sudo docker rm ubuntu-web-1 || true'
       - name: Run new container
         run: |
-            ssh -o staging 'sudo docker run -d --name ubuntu-web-1 -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf:ro -v ~/nginx/conf.d/:/etc/nginx/conf.d/ -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
+            ssh staging 'sudo docker run -d --name ubuntu-web-1 -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf:ro -v ~/nginx/conf.d/:/etc/nginx/conf.d/ -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
