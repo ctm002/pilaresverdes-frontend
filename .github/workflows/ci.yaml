@@ -28,7 +28,7 @@ jobs:
       - name: Set permissions for private key
         run: |
             mkdir -p ~/.ssh/
-            echo "~/.ssh/${{ secrets.AWS_PRIVATE_KEY }}" > key.pem
+            echo "${{ secrets.AWS_PRIVATE_KEY }}" > ~/.ssh/key.pem
             chmod 400 ~/.ssh/key.pem
             cat >>~/.ssh/config <<END
             Host staging
