@@ -29,9 +29,15 @@ jobs:
         run: |
             echo "${{ secrets.AWS_PRIVATE_KEY }}" > key.pem
             chmod 400 key.pem
+            cat >>~/.ssh/config <<END
+            Host staging
+              HostName $SSH_HOST
+              User $SSH_USER
+              IdentityFile ~/.ssh/staging.key
+              StrictHostKeyChecking no
+            END
       - name: Pull Docker image
         run: |
-            host=''
             ssh -o StrictHostKeyChecking=no -i key.pem ${{ AWS_HOST_IP }} 'sudo docker pull ctm002/pilaresverdes-frontend:${{ github.sha }}'
       - name: Stop running container
         run: |
