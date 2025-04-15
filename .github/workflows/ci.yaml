@@ -38,8 +38,8 @@ jobs:
               StrictHostKeyChecking no
             END
         env:
-            SSH_KEY: ${{ secrets.SSH_KEY }}
-            SSH_HOST: ${{ secrets.SSH_HOST }}
+            SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+            SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
       - name: Pull Docker image
         run: |
             ssh staging 'sudo docker pull ctm002/pilaresverdes-frontend:${{ github.sha }}'
