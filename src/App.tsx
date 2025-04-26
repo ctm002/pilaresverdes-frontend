@@ -6,7 +6,7 @@ import './index.css';
 
 function App() {
     
-  const [username, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -14,7 +14,7 @@ function App() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:9090/api/v1/auth/signin', {
+      const response = await axios.post('http://backend-api:9090/api/v1/auth/signin', {
         username,
         password
       });
@@ -47,7 +47,7 @@ function App() {
             className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="ejemplo@correo.com"
             value={username}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
