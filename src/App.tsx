@@ -14,7 +14,7 @@ function App() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://backend-api:9090/api/v1/auth/signin', {
+      const response = await axios.post('/api/v1/auth/signin', {
         username,
         password
       });

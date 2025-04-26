@@ -29,5 +29,6 @@
     "tailwindcss": "^4.1.4",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
-  }
+  },
+  "proxy": "http://backend-api:9090"
 }
