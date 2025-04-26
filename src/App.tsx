@@ -23,7 +23,7 @@ function App() {
       localStorage.setItem('token', token);
 
       alert('Login exitoso');
-      //TODO
+      //TForce
       // Aquí podrías redirigir, por ejemplo:
       // navigate('/dashboard');
 
