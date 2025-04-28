@@ -1,10 +1,15 @@
 // vite.proxy.js
-const target = 'http://localhost:9090';
 
-export default {
-  '/api': {
-    target,
-    changeOrigin: true,
-    secure: false
-  },
-};
+export default function createProxy(target) {
+    if (!target) {
+        throw new Error("VITE_PROXY_TARGET no está definido.");
+    }
+
+    return {
+        '/api': {
+            target,
+            changeOrigin: true,
+            secure: false
+        },
+    };
+}
