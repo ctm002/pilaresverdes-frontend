@@ -40,7 +40,9 @@ function App() {
   };
 
   return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-100">
+  <div className="min-h-screen flex items-center justify-center bg-gray-100"
+    style={{ backgroundImage: "url('https://imagesbucket28042025.s3.us-east-1.amazonaws.com/images/pilaresverdes.jpg')" }}
+  >
     <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Iniciar sesión</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
