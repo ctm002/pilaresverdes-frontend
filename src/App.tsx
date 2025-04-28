@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 import './index.css';
@@ -9,6 +10,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -22,10 +24,11 @@ function App() {
       const token = response.data.accessToken;
       localStorage.setItem('token', token);
 
-      alert('Login exitoso');
+      // alert('Login exitoso');
       //TForce
       // Aquí podrías redirigir, por ejemplo:
       // navigate('/dashboard');
+      navigate('/home');
 
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {
@@ -42,9 +45,9 @@ function App() {
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Iniciar sesión</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-600 mb-1">Correo electrónico</label>
+          <label className="block text-gray-600 mb-1">Correo electrónico o Celular</label>
           <input
-            type="email"
+            type="text"
             className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="ejemplo@correo.com"
             value={username}
