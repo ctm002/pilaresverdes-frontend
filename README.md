@@ -1,1 +1,1 @@
-React Pilares verdes 1.0.0
+App pilares verdes 1.0.0

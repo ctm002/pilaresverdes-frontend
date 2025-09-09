@@ -1,9 +1,9 @@
 // src/api/axios.js
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 const api = axios.create({
-  baseURL: "https://tu-api.com/api",
+  baseURL: "",
 });
 
 // Función para saber si un token está por expirar
