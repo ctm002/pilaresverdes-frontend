@@ -1,17 +1,21 @@
 import api from "./api/axios.js";
 import { useEffect, useState } from "react";
+import { AxiosResponse } from "axios";
 import defaultImage from "./assets/no_image_available.svg";
 
-type Props = {}
+interface Aviso {
+  id: number;
+  titulo: string;
+  descripcion: string;
+}
 
-export default function Home({}: Props) {
-
-  const [data, setData] = useState(null);
+export default function Home() {
+  const [data, setData] = useState<Aviso[] | null>(null);
 
   useEffect(() => {
     api.get("/api/v1/avisos") // Esto va a incluir automáticamente el JWT
-      .then(res => setData(res.data))
-      .catch(err => {
+      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
+      .catch((err: unknown) => {
         console.error("Error al llamar servicio protegido:", err);
         // Podés redirigir a login si querés acá
       });
