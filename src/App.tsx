@@ -41,7 +41,7 @@ function App() {
 
   return (
   <div className="min-h-screen flex items-center justify-center bg-gray-100"
-    style={{ backgroundImage: "url('http://lb-web-local-1341053061.us-east-1.elb.amazonaws.com/images/pilaresverdes.jpg')" }}
+    style={{ backgroundImage: "url('https://pilaresverdes.cl/images/pilaresverdes.jpg')" }}
   >
     <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Iniciar sesión</h2>
