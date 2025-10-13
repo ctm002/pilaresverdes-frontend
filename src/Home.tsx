@@ -7,6 +7,7 @@ interface Aviso {
   id: number;
   titulo: string;
   descripcion: string;
+  image_url: string;
 }
 
 export default function Home() {
