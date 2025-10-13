@@ -41,7 +41,7 @@ export default function Home() {
             className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             <div className="flex justify-center items-center pt-12">
               <img
-                src={defaultImage}
+                src={item.image_url}
                 alt={item.titulo}
                 className="object-cover"
               />
