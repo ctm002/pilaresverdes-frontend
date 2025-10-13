@@ -13,7 +13,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path='/signin' element={ <App/>} ></Route>
         <Route path='/home' element={ <ProtectedRoute><Home/></ProtectedRoute>}></Route>
-        <Route path='/*' element={<App/>} ></Route>
+        <Route path='/' element={<App/>} ></Route>
+        <Route path='*' element={<App/>} ></Route>
       </Routes>
     </Router>
   </React.StrictMode>,
