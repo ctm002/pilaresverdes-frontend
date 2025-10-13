@@ -55,4 +55,4 @@ jobs:
               --network=red-local-docker \
               -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf:ro \
               -v ~/nginx/conf.d/:/etc/nginx/conf.d/ \
-              -p 80:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
+              -p 443:80 ctm002/pilaresverdes-frontend:${{ github.sha }}'
