@@ -9,6 +9,8 @@ export default defineConfig(({ mode }) =>  {
   
   process.env = { ...process.env, ...env}; 
   console.log('Proxy target:', process.env.VITE_PROXY_TARGET);
+  console.log('Hash target:', process.env.VITE_BUILD_HASH);
+
 
   return {
     plugins: [react(), tailwindcss()],

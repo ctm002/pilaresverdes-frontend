@@ -29,7 +29,7 @@ jobs:
           push: true
           tags: ctm002/pilaresverdes-frontend:${{ github.sha }}
           build-args: |
-            BUILD_HASH=${{ github.sha }}
+            VITE_BUILD_HASH=${{ github.sha }}
       - name: Set permissions for private key
         run: |
             mkdir -p ~/.ssh/
