@@ -19,6 +19,7 @@ export default function Home() {
     image_url: ''
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => {
     api.get("/api/v1/avisos") // Esto va a incluir automáticamente el JWT
@@ -79,35 +80,68 @@ export default function Home() {
         <header className="bg-green-600 text-white py-4 shadow-md">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
-              {/* <img 
-                src="/logo_pilares_verdes.png" 
-                alt="Pilares Verdes Logo" 
-                className="h-10 w-auto bg-transparent"
-                style={{ mixBlendMode: 'multiply' }}
-              /> */}
-              <h1 className="text-2xl font-bold">Market Pilares Verdes</h1>
+              <h1 className="text-xl md:text-2xl font-bold">Market Pilares Verdes</h1>
             </div>
+            
+            {/* Desktop Menu */}
+            <div className="hidden md:flex gap-4">
+              <button 
+                onClick={() => setShowForm(true)}
+                className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors flex items-center gap-2"
+              >
+                <span>+</span>
+                Publicar Aviso
+              </button>
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  window.location.href = '/signin';
+                }}
+                className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+            
+            {/* Mobile Menu Button */}
             <button 
-              onClick={() => {
-                localStorage.removeItem('token');
-                window.location.href = '/signin';
-              }}
-              className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="md:hidden p-2"
             >
-              Cerrar Sesión
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
           </div>
+          
+          {/* Mobile Menu */}
+          {showMobileMenu && (
+            <div className="md:hidden bg-green-700 px-4 py-2 space-y-2">
+              <button 
+                onClick={() => {
+                  setShowForm(true);
+                  setShowMobileMenu(false);
+                }}
+                className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors flex items-center gap-2"
+              >
+                <span>+</span>
+                Publicar Aviso
+              </button>
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  window.location.href = '/signin';
+                }}
+                className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+          )}
         </header>
         <div className="p-4 bg-green-50 flex-grow">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-800">Avisos</h2>
-            <button 
-              onClick={() => setShowForm(true)}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center gap-2"
-            >
-              <span>+</span>
-              Agregar Aviso
-            </button>
+          <div className="mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Avisos</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-0">
