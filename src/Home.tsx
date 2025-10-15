@@ -77,7 +77,7 @@ export default function Home() {
 
     return (
       <div className="min-h-screen flex flex-col">
-        <header className="bg-green-600 text-white py-4 shadow-md">
+        <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
               <h1 className="text-xl md:text-2xl font-bold">Market Pilares Verdes</h1>
@@ -139,7 +139,7 @@ export default function Home() {
             </div>
           )}
         </header>
-        <div className="p-4 bg-green-50 flex-grow">
+        <div className="p-4 bg-green-50 flex-grow pt-20">
           <div className="mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Avisos</h2>
           </div>
