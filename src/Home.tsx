@@ -12,6 +12,12 @@ interface Aviso {
 
 export default function Home() {
   const [data, setData] = useState<Aviso[] | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    titulo: '',
+    descripcion: '',
+    image_url: ''
+  });
 
   useEffect(() => {
     api.get("/api/v1/avisos") // Esto va a incluir automáticamente el JWT
@@ -21,6 +27,24 @@ export default function Home() {
         // Podés redirigir a login si querés acá
       });
   }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await api.post('/api/v1/avisos', formData);
+      setShowForm(false);
+      setFormData({ titulo: '', descripcion: '', image_url: '' });
+      // Recargar datos
+      const res = await api.get('/api/v1/avisos');
+      setData(res.data);
+    } catch (error) {
+      console.error('Error al crear aviso:', error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
     if (!data || data.length === 0) {
       return (
@@ -50,7 +74,7 @@ export default function Home() {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800">Avisos</h2>
             <button 
-              onClick={() => alert('Funcionalidad para agregar aviso')}
+              onClick={() => setShowForm(true)}
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center gap-2"
             >
               <span>+</span>
@@ -78,6 +102,65 @@ export default function Home() {
           ))}
           </div>
         </div>
+        
+        {/* Modal para agregar aviso */}
+        {showForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg w-full max-w-md">
+              <h3 className="text-xl font-bold mb-4">Agregar Nuevo Aviso</h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-gray-700 mb-1">Título</label>
+                  <input
+                    type="text"
+                    name="titulo"
+                    value={formData.titulo}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1">Descripción</label>
+                  <textarea
+                    name="descripcion"
+                    value={formData.descripcion}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                    rows={3}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-1">URL de Imagen</label>
+                  <input
+                    type="url"
+                    name="image_url"
+                    value={formData.image_url}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+        
         <footer className="bg-green-800 text-white py-6 mt-auto">
           <div className="container mx-auto px-4 text-center">
             <p>&copy; 2024 Pilares Verdes. Todos los derechos reservados.</p>
