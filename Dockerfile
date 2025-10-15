@@ -1,6 +1,10 @@
 # Fetching the latest node image on alpine linux
 FROM node:22.12.0-alpine3.21 AS builder
 
+# Build arguments
+ARG VITE_BUILD_HASH
+ENV VITE_BUILD_HASH=$VITE_BUILD_HASH
+
 # Declaring env
 ENV NODE_ENV development
 
