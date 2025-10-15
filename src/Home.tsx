@@ -18,6 +18,7 @@ export default function Home() {
     descripcion: '',
     image_url: ''
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     api.get("/api/v1/avisos") // Esto va a incluir automáticamente el JWT
@@ -31,9 +32,22 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post('/api/v1/avisos', formData);
+      const formDataToSend = new FormData();
+      formDataToSend.append('titulo', formData.titulo);
+      formDataToSend.append('descripcion', formData.descripcion);
+      if (selectedFile) {
+        formDataToSend.append('image', selectedFile);
+      }
+      
+      await api.post('/api/v1/avisos', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
       setShowForm(false);
       setFormData({ titulo: '', descripcion: '', image_url: '' });
+      setSelectedFile(null);
       // Recargar datos
       const res = await api.get('/api/v1/avisos');
       setData(res.data);
@@ -44,6 +58,12 @@ export default function Home() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
   };
 
     if (!data || data.length === 0) {
@@ -132,14 +152,25 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-1">URL de Imagen</label>
+                  <label className="block text-gray-700 mb-1">Imagen</label>
                   <input
-                    type="url"
-                    name="image_url"
-                    value={formData.image_url}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                   />
+                  {selectedFile && (
+                    <div className="flex items-center justify-between mt-2 p-2 bg-gray-50 rounded">
+                      <p className="text-sm text-gray-600">Archivo seleccionado: {selectedFile.name}</p>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedFile(null)}
+                        className="text-red-500 hover:text-red-700 text-sm px-2 py-1 rounded hover:bg-red-50"
+                      >
+                        ✕ Eliminar
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="flex gap-2 justify-end">
                   <button
