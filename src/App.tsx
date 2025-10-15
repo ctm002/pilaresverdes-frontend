@@ -40,7 +40,7 @@ function App() {
   };
 
   return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-100"
+  <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4"
     style={{ backgroundImage: "url('https://pilaresverdes.cl/images/pilaresverdes.jpg')", backgroundRepeat: "no-repeat", backgroundSize: "cover"}}
   >
     <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">

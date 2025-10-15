@@ -78,7 +78,15 @@ export default function Home() {
       <div className="min-h-screen flex flex-col">
         <header className="bg-green-600 text-white py-4 shadow-md">
           <div className="container mx-auto px-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Pilares Verdes</h1>
+            <div className="flex items-center gap-3">
+              {/* <img 
+                src="/logo_pilares_verdes.png" 
+                alt="Pilares Verdes Logo" 
+                className="h-10 w-auto bg-transparent"
+                style={{ mixBlendMode: 'multiply' }}
+              /> */}
+              <h1 className="text-2xl font-bold">Market Pilares Verdes</h1>
+            </div>
             <button 
               onClick={() => {
                 localStorage.removeItem('token');
@@ -90,7 +98,7 @@ export default function Home() {
             </button>
           </div>
         </header>
-        <div className="p-6 bg-green-50 flex-grow">
+        <div className="p-4 bg-green-50 flex-grow">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800">Avisos</h2>
             <button 
@@ -102,19 +110,19 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-0">
           {data.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="flex justify-center items-center pt-12">
+              className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow px-6 py-4">
+              <div className="flex justify-center items-center pt-8">
                 <img
                   src={item.image_url}
                   alt={item.titulo}
                   className="object-cover"
                 />
               </div>
-              <div className="p-4">
+              <div className="px-2 py-4">
                 <h3 className="text-lg font-semibold">{item.titulo}</h3>
                 <p className="text-gray-600">{item.descripcion}</p>
               </div>
