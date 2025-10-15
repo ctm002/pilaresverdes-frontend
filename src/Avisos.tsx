@@ -10,7 +10,7 @@ interface Aviso {
   image_url: string;
 }
 
-export default function Home() {
+export default function Avisos() {
   const [data, setData] = useState<Aviso[] | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,8 +20,15 @@ export default function Home() {
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const checkAuth = () => {
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  };
 
   useEffect(() => {
+    checkAuth();
     api.get("/api/v1/avisos") // Esto va a incluir automáticamente el JWT
       .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
       .catch((err: unknown) => {
@@ -85,22 +92,26 @@ export default function Home() {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex gap-4">
-              <button 
-                onClick={() => setShowForm(true)}
-                className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors flex items-center gap-2"
-              >
-                <span>+</span>
-                Publicar Aviso
-              </button>
-              <button 
-                onClick={() => {
-                  localStorage.removeItem('token');
-                  window.location.href = '/signin';
-                }}
-                className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors"
-              >
-                Cerrar Sesión
-              </button>
+              {isAuthenticated && (
+                <button 
+                  onClick={() => setShowForm(true)}
+                  className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors flex items-center gap-2"
+                >
+                  <span>+</span>
+                  Publicar Aviso
+                </button>
+              )}
+              {isAuthenticated && (
+                <button 
+                  onClick={() => {
+                    localStorage.removeItem('token');
+                    window.location.href = '/signin';
+                  }}
+                  className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors"
+                >
+                  Cerrar Sesión
+                </button>
+              )}
             </div>
             
             {/* Mobile Menu Button */}
@@ -117,25 +128,29 @@ export default function Home() {
           {/* Mobile Menu */}
           {showMobileMenu && (
             <div className="md:hidden bg-green-700 px-4 py-2 space-y-2">
-              <button 
-                onClick={() => {
-                  setShowForm(true);
-                  setShowMobileMenu(false);
-                }}
-                className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors flex items-center gap-2"
-              >
-                <span>+</span>
-                Publicar Aviso
-              </button>
-              <button 
-                onClick={() => {
-                  localStorage.removeItem('token');
-                  window.location.href = '/signin';
-                }}
-                className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors"
-              >
-                Cerrar Sesión
-              </button>
+              {isAuthenticated && (
+                <button 
+                  onClick={() => {
+                    setShowForm(true);
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors flex items-center gap-2"
+                >
+                  <span>+</span>
+                  Publicar Aviso
+                </button>
+              )}
+              {isAuthenticated && (
+                <button 
+                  onClick={() => {
+                    localStorage.removeItem('token');
+                    window.location.href = '/signin';
+                  }}
+                  className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors"
+                >
+                  Cerrar Sesión
+                </button>
+              )}
             </div>
           )}
         </header>
@@ -153,10 +168,10 @@ export default function Home() {
                 <img
                   src={item.image_url}
                   alt={item.titulo}
-                  className="object-cover"
+                  className="object-cover max-h-48 min-h-48 w-full rounded"
                 />
               </div>
-              <div className="px-2 py-4">
+              <div className="py-4">
                 <h3 className="text-lg font-semibold">{item.titulo}</h3>
                 <p className="text-gray-600">{item.descripcion}</p>
               </div>

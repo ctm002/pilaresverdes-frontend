@@ -5,7 +5,7 @@ import axios from 'axios';
 import './index.css';
 
 
-function App() {
+function Signin() {
     
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -28,7 +28,7 @@ function App() {
       //TForce
       // Aquí podrías redirigir, por ejemplo:
       // navigate('/dashboard');
-      navigate('/home');
+      navigate('/avisos');
 
     } catch (err: any) {
       if (err.response && err.response.data && err.response.data.message) {
@@ -81,4 +81,4 @@ function App() {
   );
 }
 
-export default App;
+export default Signin;
