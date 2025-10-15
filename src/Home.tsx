@@ -1,7 +1,7 @@
 import api from "./api/axios.js";
 import { useEffect, useState } from "react";
 import { AxiosResponse } from "axios";
-import defaultImage from "./assets/no_image_available.svg";
+//import defaultImage from "./assets/no_image_available.svg";
 
 interface Aviso {
   id: number;
