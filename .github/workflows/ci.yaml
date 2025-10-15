@@ -20,11 +20,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       -
-        name: Build and (not) push
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
           tags: ctm002/pilaresverdes-frontend:${{ github.sha }}
+          build-args: |
+            BUILD_HASH=${{ github.sha }}
       - name: Set permissions for private key
         run: |
             mkdir -p ~/.ssh/
