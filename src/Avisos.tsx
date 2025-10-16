@@ -92,24 +92,31 @@ export default function Avisos() {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex gap-4">
-              {isAuthenticated && (
+              {isAuthenticated ? (
+                <>
+                  <button 
+                    onClick={() => setShowForm(true)}
+                    className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors flex items-center gap-2"
+                  >
+                    <span>+</span>
+                    Publicar Aviso
+                  </button>
+                  <button 
+                    onClick={() => {
+                      localStorage.removeItem('token');
+                      setIsAuthenticated(false);
+                    }}
+                    className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors"
+                  >
+                    Cerrar Sesión
+                  </button>
+                </>
+              ) : (
                 <button 
-                  onClick={() => setShowForm(true)}
-                  className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors flex items-center gap-2"
-                >
-                  <span>+</span>
-                  Publicar Aviso
-                </button>
-              )}
-              {isAuthenticated && (
-                <button 
-                  onClick={() => {
-                    localStorage.removeItem('token');
-                    window.location.href = '/signin';
-                  }}
+                  onClick={() => window.location.href = '/signin'}
                   className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors"
                 >
-                  Cerrar Sesión
+                  Iniciar Sesión
                 </button>
               )}
             </div>
@@ -128,27 +135,38 @@ export default function Avisos() {
           {/* Mobile Menu */}
           {showMobileMenu && (
             <div className="md:hidden bg-green-700 px-4 py-2 space-y-2">
-              {isAuthenticated && (
+              {isAuthenticated ? (
+                <>
+                  <button 
+                    onClick={() => {
+                      setShowForm(true);
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors flex items-center gap-2"
+                  >
+                    <span>+</span>
+                    Publicar Aviso
+                  </button>
+                  <button 
+                    onClick={() => {
+                      localStorage.removeItem('token');
+                      setIsAuthenticated(false);
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors"
+                  >
+                    Cerrar Sesión
+                  </button>
+                </>
+              ) : (
                 <button 
                   onClick={() => {
-                    setShowForm(true);
-                    setShowMobileMenu(false);
-                  }}
-                  className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors flex items-center gap-2"
-                >
-                  <span>+</span>
-                  Publicar Aviso
-                </button>
-              )}
-              {isAuthenticated && (
-                <button 
-                  onClick={() => {
-                    localStorage.removeItem('token');
                     window.location.href = '/signin';
+                    setShowMobileMenu(false);
                   }}
                   className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors"
                 >
-                  Cerrar Sesión
+                  Iniciar Sesión
                 </button>
               )}
             </div>

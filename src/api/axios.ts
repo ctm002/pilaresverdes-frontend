@@ -23,7 +23,7 @@ const isTokenExpiring = (token: string | null): boolean => {
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     let token = localStorage.getItem("token");
-
+    /*
     if (isTokenExpiring(token)) {
       try {
         const response = await axios.post("/v1/auth/refresh-token", null, {
@@ -38,7 +38,7 @@ api.interceptors.request.use(
         window.location.href = '/signin';
       }
     }
-
+    */
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
