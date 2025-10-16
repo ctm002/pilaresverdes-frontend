@@ -9,6 +9,7 @@ interface JWTPayload {
   exp: number;
 }
 
+/*
 const isTokenExpiring = (token: string | null): boolean => {
   if (!token) return true;
   try {
@@ -19,6 +20,7 @@ const isTokenExpiring = (token: string | null): boolean => {
     return true;
   }
 };
+*/
 
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
