@@ -1,13 +1,13 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode";
 
 const api = axios.create({
   baseURL: "",
 });
 
-interface JWTPayload {
-  exp: number;
-}
+// interface JWTPayload {
+//   exp: number;
+// }
 
 /*
 const isTokenExpiring = (token: string | null): boolean => {
