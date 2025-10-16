@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Signin from './Signin.tsx'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import ProtectedRoute from './ProtectedRoute.tsx'
+// import ProtectedRoute from './ProtectedRoute.tsx'
 
 import './index.css'
 import Avisos from './Avisos.tsx'
