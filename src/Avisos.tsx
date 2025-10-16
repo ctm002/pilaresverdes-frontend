@@ -16,11 +16,12 @@ export default function Avisos() {
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
-    image_url: ''
+    imageBase64: ''
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const checkAuth = () => {
     const token = localStorage.getItem('token');
@@ -37,30 +38,46 @@ export default function Avisos() {
       });
   }, []);
 
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('titulo', formData.titulo);
-      formDataToSend.append('descripcion', formData.descripcion);
+      let imageBase64 = '';
       if (selectedFile) {
-        formDataToSend.append('image', selectedFile);
+        imageBase64 = await convertToBase64(selectedFile);
       }
       
-      await api.post('/api/v1/avisos', formDataToSend, {
+      const dto = {
+        titulo: formData.titulo,
+        descripcion: formData.descripcion,
+        imageBase64: imageBase64
+      };
+      
+      await api.post('/api/v1/avisos', dto, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/json'
         }
       });
       
       setShowForm(false);
-      setFormData({ titulo: '', descripcion: '', image_url: '' });
+      setFormData({ titulo: '', descripcion: '', imageBase64: '' });
       setSelectedFile(null);
       // Recargar datos
       const res = await api.get('/api/v1/avisos');
       setData(res.data);
     } catch (error) {
       console.error('Error al crear aviso:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -181,7 +198,7 @@ export default function Avisos() {
           {data.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow px-6 py-4">
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow px-6 py-4">
               <div className="flex justify-center items-center pt-8">
                 <img
                   src={item.image_url}
@@ -257,9 +274,14 @@ export default function Avisos() {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    disabled={isSubmitting}
+                    className={`px-4 py-2 text-white rounded transition-colors ${
+                      isSubmitting 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-green-600 hover:bg-green-700'
+                    }`}
                   >
-                    Guardar
+                    {isSubmitting ? 'Guardando...' : 'Guardar'}
                   </button>
                 </div>
               </form>
