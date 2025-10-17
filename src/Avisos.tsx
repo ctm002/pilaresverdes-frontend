@@ -94,6 +94,18 @@ export default function Avisos() {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    if (confirm('¿Estás seguro de que quieres eliminar este aviso?')) {
+      try {
+        await api.delete(`/api/v1/avisos/${id}`);
+        const res = await api.get('/api/v1/avisos');
+        setData(res.data);
+      } catch (error) {
+        console.error('Error al eliminar aviso:', error);
+      }
+    }
+  };
+
     if (!data || data.length === 0) {
       return (
         <div className="p-4 text-center text-gray-500">
@@ -201,7 +213,17 @@ export default function Avisos() {
           {data.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow px-6 py-4">
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow px-6 py-4 relative">
+              {isAuthenticated && (
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
               <div className="flex justify-center items-center pt-8">
                 <img
                   src={item.image_url}
