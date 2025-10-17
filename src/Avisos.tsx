@@ -264,13 +264,14 @@ export default function Avisos() {
                     name="celular"
                     value={formData.celular}
                     onChange={handleInputChange}
-                    placeholder="573001234567"
+                    placeholder="57912345678"
+                    maxLength={12}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-1">Imagen</label>
+                  <label className="block text-gray-700 mb-1">Subir imagen</label>
                   <input
                     type="file"
                     accept="image/*"
