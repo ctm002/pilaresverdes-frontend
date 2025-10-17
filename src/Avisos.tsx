@@ -24,6 +24,7 @@ export default function Avisos() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   const checkAuth = () => {
     const token = localStorage.getItem('token');
@@ -65,20 +66,29 @@ export default function Avisos() {
         celular: formData.celular
       };
       
-      await api.post('/api/v1/avisos', dto, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      if (editingId) {
+        await api.put(`/api/v1/avisos/${editingId}`, dto, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      } else {
+        await api.post('/api/v1/avisos', dto, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      }
       
       setShowForm(false);
       setFormData({ titulo: '', descripcion: '', imageBase64: '', celular: '' });
       setSelectedFile(null);
+      setEditingId(null);
       // Recargar datos
       const res = await api.get('/api/v1/avisos');
       setData(res.data);
     } catch (error) {
-      console.error('Error al crear aviso:', error);
+      console.error('Error al crear/actualizar aviso:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -104,6 +114,17 @@ export default function Avisos() {
         console.error('Error al eliminar aviso:', error);
       }
     }
+  };
+
+  const handleEdit = (item: Aviso) => {
+    setFormData({
+      titulo: item.titulo,
+      descripcion: item.descripcion,
+      imageBase64: '',
+      celular: item.celular
+    });
+    setEditingId(item.id);
+    setShowForm(true);
   };
 
     if (!data || data.length === 0) {
@@ -215,14 +236,24 @@ export default function Avisos() {
               key={item.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow px-6 py-4 relative">
               {isAuthenticated && (
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <button
+                    onClick={() => handleEdit(item)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white p-1 rounded-full transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               )}
               <div className="flex justify-center items-center pt-8">
                 <img
@@ -255,7 +286,7 @@ export default function Avisos() {
         {showForm && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg w-full max-w-md">
-              <h3 className="text-xl font-bold mb-4">Agregar Nuevo Aviso</h3>
+              <h3 className="text-xl font-bold mb-4">{editingId ? 'Editar Aviso' : 'Agregar Nuevo Aviso'}</h3>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-gray-700 mb-1">Título</label>
@@ -316,7 +347,11 @@ export default function Avisos() {
                 <div className="flex gap-2 justify-end">
                   <button
                     type="button"
-                    onClick={() => setShowForm(false)}
+                    onClick={() => {
+                      setShowForm(false);
+                      setEditingId(null);
+                      setFormData({ titulo: '', descripcion: '', imageBase64: '', celular: '' });
+                    }}
                     className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
                   >
                     Cancelar
@@ -330,7 +365,7 @@ export default function Avisos() {
                         : 'bg-green-600 hover:bg-green-700'
                     }`}
                   >
-                    {isSubmitting ? 'Guardando...' : 'Guardar'}
+                    {isSubmitting ? 'Guardando...' : (editingId ? 'Actualizar' : 'Guardar')}
                   </button>
                 </div>
               </form>
