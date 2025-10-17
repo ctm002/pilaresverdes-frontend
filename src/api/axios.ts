@@ -37,7 +37,7 @@ api.interceptors.request.use(
       //   localStorage.setItem("token", token!);
       // } catch (error) {
       // console.error("Error al refrescar token", error);
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
       // window.location.href = '/signin';
       // }
     }
