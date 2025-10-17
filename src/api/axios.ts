@@ -38,7 +38,7 @@ api.interceptors.request.use(
       // } catch (error) {
       // console.error("Error al refrescar token", error);
       localStorage.removeItem("token");
-      window.location.href = '/signin';
+      // window.location.href = '/signin';
       // }
     }
     
