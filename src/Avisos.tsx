@@ -437,7 +437,7 @@ export default function Avisos() {
         
         {/* Floating Search Input - Mobile only */}
         {showSearch && (
-          <div className="fixed bottom-24 right-6 z-50 md:hidden">
+          <div className="fixed top-20 left-4 right-4 z-50 md:hidden">
             <input
               type="text"
               placeholder="Buscar avisos..."
@@ -448,7 +448,7 @@ export default function Avisos() {
                   setShowSearch(false);
                 }
               }}
-              className="w-64 px-4 py-3 rounded-lg text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-3 rounded-lg text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               autoFocus
             />
           </div>
