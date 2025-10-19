@@ -145,8 +145,8 @@ export default function Avisos() {
               <h1 className={`text-xl md:text-2xl font-bold ${showSearch ? 'hidden md:block' : ''}`}>Market Pilares Verdes</h1>
             </div>
             
-            {/* Search */}
-            <div className="flex items-center gap-2">
+            {/* Search - Mobile only */}
+            <div className="flex items-center gap-2 md:hidden">
               {showSearch && (
                 <input
                   type="text"
@@ -158,17 +158,52 @@ export default function Avisos() {
                 />
               )}
               <button
-                onClick={() => setShowSearch(!showSearch)}
+                onClick={() => {
+                  setShowSearch(!showSearch);
+                  if (showSearch) setSearchTerm('');
+                }}
                 className="p-2 hover:bg-green-700 rounded transition-colors"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
+                {showSearch ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                )}              </button>
             </div>
             
             {/* Desktop Menu */}
-            <div className="hidden md:flex gap-4">
+            <div className="hidden md:flex items-center gap-2">
+              {showSearch && (
+                <input
+                  type="text"
+                  placeholder="Buscar avisos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="px-3 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-300"
+                  autoFocus
+                />
+              )}
+              <button
+                onClick={() => {
+                  setShowSearch(!showSearch);
+                  if (showSearch) setSearchTerm('');
+                }}
+                className="p-2 hover:bg-green-700 rounded transition-colors"
+              >
+                {showSearch ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                )}
+              </button>
               {isAuthenticated ? (
                 <>
                   <button 
