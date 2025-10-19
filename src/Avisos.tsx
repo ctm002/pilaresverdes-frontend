@@ -25,6 +25,8 @@ export default function Avisos() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const checkAuth = () => {
     const token = localStorage.getItem('token');
@@ -140,7 +142,29 @@ export default function Avisos() {
         <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <h1 className="text-xl md:text-2xl font-bold">Market Pilares Verdes</h1>
+              <h1 className={`text-xl md:text-2xl font-bold ${showSearch ? 'hidden md:block' : ''}`}>Market Pilares Verdes</h1>
+            </div>
+            
+            {/* Search */}
+            <div className="flex items-center gap-2">
+              {showSearch && (
+                <input
+                  type="text"
+                  placeholder="Buscar avisos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="px-3 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-300"
+                  autoFocus
+                />
+              )}
+              <button
+                onClick={() => setShowSearch(!showSearch)}
+                className="p-2 hover:bg-green-700 rounded transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
             </div>
             
             {/* Desktop Menu */}
@@ -231,7 +255,10 @@ export default function Avisos() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-0">
-          {data.map((item) => (
+          {data.filter(item => 
+            item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+          ).map((item) => (
             <div
               key={item.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow px-6 py-4 relative">
