@@ -422,7 +422,9 @@ export default function Avisos() {
             setShowSearch(!showSearch);
             if (showSearch) setSearchTerm('');
           }}
-          className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-colors z-50 md:hidden"
+          className={`fixed bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 z-50 md:hidden ${
+            showSearch ? 'top-1/2 right-6 transform -translate-y-1/2' : 'bottom-6 right-6'
+          }`}
         >
           {showSearch ? (
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
