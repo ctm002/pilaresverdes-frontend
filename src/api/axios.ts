@@ -42,6 +42,8 @@ api.interceptors.request.use(
         });
         token = response.data.token;
         localStorage.setItem("token", token!);
+
+        
       } catch (error) {
         console.error("Error al refrescar token", error);
         localStorage.removeItem("token");
