@@ -85,7 +85,8 @@ export default function Avisos() {
         titulo: formData.titulo,
         descripcion: formData.descripcion,
         imageBase64: imageBase64,
-        celular: formData.celular
+        celular: formData.celular,
+        likes: 0
       };
       
       if (editingId) {
@@ -157,7 +158,7 @@ export default function Avisos() {
 
   const handleLikeCount = async (id: number) => {
     try {
-      await api.post(`/api/v1/avisos/${id}/like`);
+      await api.patch(`/api/v1/avisos/${id}/like`);
       // Recargar datos para obtener el contador actualizado
       const res = await api.get('/api/v1/avisos');
       setData(res.data);
