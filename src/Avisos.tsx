@@ -149,7 +149,7 @@ export default function Avisos() {
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-2">
-              {showSearch && (
+              {(showSearch || searchTerm) && (
                 <input
                   type="text"
                   placeholder="Buscar avisos..."
@@ -160,7 +160,7 @@ export default function Avisos() {
                       setShowSearch(false);
                     }
                   }}
-                  className="px-3 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-300"
+                  className="px-3 py-2 rounded text-green-800 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-300"
                   autoFocus
                 />
               )}
@@ -175,7 +175,7 @@ export default function Avisos() {
                 }}
                 className={`p-2 rounded transition-colors ${
                   showSearch || searchTerm 
-                    ? 'bg-gray-500 hover:bg-gray-600' 
+                    ? 'bg-green-800 hover:bg-green-900' 
                     : 'hover:bg-green-700'
                 }`}
               >
@@ -276,11 +276,24 @@ export default function Avisos() {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Avisos</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-0">
-          {data.filter(item => 
-            item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
-          ).map((item) => (
+          {(() => {
+            const filteredData = data.filter(item => 
+              item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              item.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            if (filteredData.length === 0 && searchTerm) {
+              return (
+                <div className="text-center text-gray-500 py-8">
+                  <p className="text-lg">No se encontraron resultados para "{searchTerm}"</p>
+                  <p className="text-sm mt-2">Intenta con otros términos de búsqueda</p>
+                </div>
+              );
+            }
+            
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-0">
+                {filteredData.map((item) => (
             <div
               key={item.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow px-6 py-4 relative">
@@ -327,8 +340,10 @@ export default function Avisos() {
                 </a>
               </div>
             </div>
-          ))}
-          </div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
         
         {/* Modal para agregar aviso */}
@@ -444,7 +459,7 @@ export default function Avisos() {
           }}
           className={`fixed text-white p-4 rounded-full shadow-lg transition-all duration-300 z-50 md:hidden ${
             showSearch || searchTerm
-              ? 'top-1/2 right-6 transform -translate-y-1/2 bg-gray-500 hover:bg-gray-600' 
+              ? 'top-1/2 right-6 transform -translate-y-1/2 bg-green-800 hover:bg-green-900' 
               : 'bottom-6 right-6 bg-green-600 hover:bg-green-700'
           }`}
         >
@@ -472,7 +487,7 @@ export default function Avisos() {
                   setShowSearch(false);
                 }
               }}
-              className="w-full px-4 py-3 rounded-lg text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-3 rounded-lg text-green-800 bg-white placeholder-gray-500 shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               autoFocus
             />
           </div>
