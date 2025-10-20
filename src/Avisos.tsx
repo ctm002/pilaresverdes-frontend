@@ -155,18 +155,31 @@ export default function Avisos() {
                   placeholder="Buscar avisos..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setShowSearch(false);
+                    }
+                  }}
                   className="px-3 py-2 rounded text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-300"
                   autoFocus
                 />
               )}
               <button
                 onClick={() => {
-                  setShowSearch(!showSearch);
-                  if (showSearch) setSearchTerm('');
+                  if (showSearch || searchTerm) {
+                    setShowSearch(false);
+                    setSearchTerm('');
+                  } else {
+                    setShowSearch(true);
+                  }
                 }}
-                className="p-2 hover:bg-green-700 rounded transition-colors"
+                className={`p-2 rounded transition-colors ${
+                  showSearch || searchTerm 
+                    ? 'bg-gray-500 hover:bg-gray-600' 
+                    : 'hover:bg-green-700'
+                }`}
               >
-                {showSearch ? (
+                {showSearch || searchTerm ? (
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -421,20 +434,21 @@ export default function Avisos() {
         {/* Floating Search Button - Mobile only */}
         <button
           onClick={() => {
-            setShowSearch(!showSearch);
-            if (showSearch) {
+            if (showSearch || searchTerm) {
+              setShowSearch(false);
               setSearchTerm('');
             } else {
+              setShowSearch(true);
               setShowMobileMenu(false);
             }
           }}
           className={`fixed text-white p-4 rounded-full shadow-lg transition-all duration-300 z-50 md:hidden ${
-            showSearch 
-              ? 'top-1/2 right-6 transform -translate-y-1/2 bg-red-500 hover:bg-red-600' 
+            showSearch || searchTerm
+              ? 'top-1/2 right-6 transform -translate-y-1/2 bg-gray-500 hover:bg-gray-600' 
               : 'bottom-6 right-6 bg-green-600 hover:bg-green-700'
           }`}
         >
-          {showSearch ? (
+          {showSearch || searchTerm ? (
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
