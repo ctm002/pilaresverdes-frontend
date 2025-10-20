@@ -9,6 +9,7 @@ interface Aviso {
   descripcion: string;
   image_url: string;
   celular: string;
+  likes: number;
 }
 
 export default function Avisos() {
@@ -152,6 +153,17 @@ export default function Avisos() {
     const newLikes = { ...likes, [id]: !likes[id] };
     setLikes(newLikes);
     localStorage.setItem('avisoLikes', JSON.stringify(newLikes));
+  };
+
+  const handleLikeCount = async (id: number) => {
+    try {
+      await api.post(`/api/v1/avisos/${id}/like`);
+      // Recargar datos para obtener el contador actualizado
+      const res = await api.get('/api/v1/avisos');
+      setData(res.data);
+    } catch (error) {
+      console.error('Error al dar like:', error);
+    }
   };
 
     if (!data || data.length === 0) {
@@ -358,7 +370,7 @@ export default function Avisos() {
               <div className="py-4">
                 <h3 className="text-lg font-semibold">{item.titulo}</h3>
                 <p className="text-gray-600">{item.descripcion}</p>
-                <div className="flex justify-between mt-3">
+                <div className="flex justify-between items-center mt-3">
                   <a
                     href={`https://wa.me/${item.celular}?text=Hola, me interesa tu aviso: ${item.titulo}`}
                     target="_blank"
@@ -370,18 +382,29 @@ export default function Avisos() {
                     </svg>
                     WhatsApp
                   </a>
-                  <button
-                    onClick={() => handleLike(item.id)}
-                    className={`inline-flex items-center justify-center px-3 py-2 rounded-lg transition-colors ${
-                      likes[item.id] 
-                        ? 'bg-yellow-500 hover:bg-yellow-600 text-white' 
-                        : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                    }`}
-                  >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                    </svg>
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleLikeCount(item.id)}
+                      className="inline-flex items-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M7.493 18.75c-.425 0-.82-.236-.975-.632A7.48 7.48 0 016 15.375c0-1.75.599-3.358 1.602-4.634.151-.192.373-.309.6-.397.473-.183.89-.514 1.212-.924a9.042 9.042 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75 2.25 2.25 0 012.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558-.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H14.23c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23h-.777zM2.331 10.977a11.969 11.969 0 00-.831 4.398 12 12 0 00.52 3.507c.26.85 1.084 1.368 1.973 1.368H4.9c.445 0 .72-.498.523-.898a8.963 8.963 0 01-.924-3.977c0-1.708.476-3.305 1.302-4.666.245-.403-.028-.959-.5-.959H4.25c-.832 0-1.612.453-1.918 1.227z"/>
+                      </svg>
+                      <span className="text-sm">{item.likes || 0}</span>
+                    </button>
+                    <button
+                      onClick={() => handleLike(item.id)}
+                      className={`inline-flex items-center justify-center px-3 py-2 rounded-lg transition-colors ${
+                        likes[item.id] 
+                          ? 'bg-yellow-500 hover:bg-yellow-600 text-white' 
+                          : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                      }`}
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
