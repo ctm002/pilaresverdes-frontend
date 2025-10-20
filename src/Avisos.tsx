@@ -344,17 +344,17 @@ export default function Avisos() {
                 <div className="absolute top-2 right-2 flex gap-1">
                   <button
                     onClick={() => handleEdit(item)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white p-1 rounded-full transition-colors"
+                    className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors"
+                    className="bg-red-500 hover:bg-red-600 text-white p-2 rounded transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
@@ -417,7 +417,7 @@ export default function Avisos() {
         {/* Modal para agregar aviso */}
         {showForm && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
               <h3 className="text-xl font-bold mb-4">{editingId ? 'Editar Aviso' : 'Agregar Nuevo Aviso'}</h3>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
