@@ -27,6 +27,7 @@ export default function Avisos() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [lastAccess, setLastAccess] = useState<string>('');
 
   const checkAuth = () => {
     const token = localStorage.getItem('token');
@@ -35,6 +36,17 @@ export default function Avisos() {
 
   useEffect(() => {
     checkAuth();
+    
+    // Recuperar último acceso
+    const savedLastAccess = localStorage.getItem('lastAccess');
+    if (savedLastAccess) {
+      setLastAccess(savedLastAccess);
+    }
+    
+    // Guardar acceso actual
+    const currentAccess = new Date().toLocaleString('es-ES');
+    localStorage.setItem('lastAccess', currentAccess);
+    
     api.get("/api/v1/avisos") // Esto va a incluir automáticamente el JWT
       .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
       .catch((err: unknown) => {
@@ -441,6 +453,9 @@ export default function Avisos() {
           <div className="container mx-auto px-4 text-center">
             <p>&copy; 2024 Pilares Verdes. Todos los derechos reservados.</p>
             <p className="text-green-200 text-sm mt-1">v1.0.0 - {import.meta.env.VITE_BUILD_HASH || 'dev'}</p>
+            {lastAccess && (
+              <p className="text-green-200 text-xs mt-1">Último acceso: {lastAccess}</p>
+            )}
           </div>
         </footer>
         
