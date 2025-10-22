@@ -1,6 +1,7 @@
 import api from "./api/axios.js";
 import { useEffect, useState } from "react";
 import { AxiosResponse } from "axios";
+import { useNavigate } from "react-router-dom";
 //import defaultImage from "./assets/no_image_available.svg";
 
 interface Aviso {
@@ -13,19 +14,10 @@ interface Aviso {
 }
 
 export default function Avisos() {
+  const navigate = useNavigate();
   const [data, setData] = useState<Aviso[] | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    titulo: '',
-    descripcion: '',
-    imageBase64: '',
-    celular: ''
-  });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [lastAccess, setLastAccess] = useState<string>('');
@@ -34,6 +26,14 @@ export default function Avisos() {
   const checkAuth = () => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
+  };
+
+  const loadData = () => {
+    api.get("/api/v1/avisos")
+      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
+      .catch((err: unknown) => {
+        console.error("Error al llamar servicio protegido:", err);
+      });
   };
 
   useEffect(() => {
@@ -55,84 +55,23 @@ export default function Avisos() {
       setLikes(JSON.parse(savedLikes));
     }
     
-    api.get("/api/v1/avisos") // Esto va a incluir automáticamente el JWT
-      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
-      .catch((err: unknown) => {
-        console.error("Error al llamar servicio protegido:", err);
-        // Podés redirigir a login si querés acá
-      });
+    loadData();
   }, []);
 
-  const convertToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
-    });
-  };
+  // Recargar datos cuando se regrese a la página
+  useEffect(() => {
+    const handleFocus = () => loadData();
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      let imageBase64 = '';
-      if (selectedFile) {
-        imageBase64 = await convertToBase64(selectedFile);
-      }
-      
-      const dto = {
-        titulo: formData.titulo,
-        descripcion: formData.descripcion,
-        imageBase64: imageBase64,
-        celular: formData.celular,
-        likes: 0
-      };
-      
-      if (editingId) {
-        await api.put(`/api/v1/avisos/${editingId}`, dto, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-      } else {
-        await api.post('/api/v1/avisos', dto, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-      }
-      
-      setShowForm(false);
-      setFormData({ titulo: '', descripcion: '', imageBase64: '', celular: '' });
-      setSelectedFile(null);
-      setEditingId(null);
-      // Recargar datos
-      const res = await api.get('/api/v1/avisos');
-      setData(res.data);
-    } catch (error) {
-      console.error('Error al crear/actualizar aviso:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
 
   const handleDelete = async (id: number) => {
     if (confirm('¿Estás seguro de que quieres eliminar este aviso?')) {
       try {
         await api.delete(`/api/v1/avisos/${id}`);
-        const res = await api.get('/api/v1/avisos');
-        setData(res.data);
+        loadData();
       } catch (error) {
         console.error('Error al eliminar aviso:', error);
       }
@@ -140,14 +79,7 @@ export default function Avisos() {
   };
 
   const handleEdit = (item: Aviso) => {
-    setFormData({
-      titulo: item.titulo,
-      descripcion: item.descripcion,
-      imageBase64: '',
-      celular: item.celular
-    });
-    setEditingId(item.id);
-    setShowForm(true);
+    navigate(`/editar/${item.id}`);
   };
 
   const handleLike = (id: number) => {
@@ -159,9 +91,7 @@ export default function Avisos() {
   const handleLikeCount = async (id: number) => {
     try {
       await api.patch(`/api/v1/avisos/${id}/like`);
-      // Recargar datos para obtener el contador actualizado
-      const res = await api.get('/api/v1/avisos');
-      setData(res.data);
+      loadData();
     } catch (error) {
       console.error('Error al dar like:', error);
     }
@@ -230,7 +160,7 @@ export default function Avisos() {
               {isAuthenticated ? (
                 <>
                   <button 
-                    onClick={() => setShowForm(true)}
+                    onClick={() => navigate('/crear')}
                     className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors flex items-center gap-2"
                   >
                     <span>+</span>
@@ -276,7 +206,7 @@ export default function Avisos() {
                 <>
                   <button 
                     onClick={() => {
-                      setShowForm(true);
+                      navigate('/crear');
                       setShowMobileMenu(false);
                     }}
                     className="w-full text-left py-2 px-3 rounded hover:bg-green-800 transition-colors flex items-center gap-2"
@@ -414,96 +344,7 @@ export default function Avisos() {
           })()}
         </div>
         
-        {/* Modal para agregar aviso */}
-        {showForm && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
-              <h3 className="text-xl font-bold mb-4">{editingId ? 'Editar Aviso' : 'Agregar Nuevo Aviso'}</h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-gray-700 mb-1">Título</label>
-                  <input
-                    type="text"
-                    name="titulo"
-                    value={formData.titulo}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-1">Descripción</label>
-                  <textarea
-                    name="descripcion"
-                    value={formData.descripcion}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                    rows={3}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-1">Celular</label>
-                  <input
-                    type="tel"
-                    name="celular"
-                    value={formData.celular}
-                    onChange={handleInputChange}
-                    placeholder="57912345678"
-                    maxLength={12}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700 mb-1">Subir imagen</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                  />
-                  {selectedFile && (
-                    <div className="flex items-center justify-between mt-2 p-2 bg-gray-50 rounded">
-                      <p className="text-sm text-gray-600">Archivo seleccionado: {selectedFile.name}</p>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedFile(null)}
-                        className="text-red-500 hover:text-red-700 text-sm px-2 py-1 rounded hover:bg-red-50"
-                      >
-                        ✕ Eliminar
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-2 justify-end">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowForm(false);
-                      setEditingId(null);
-                      setFormData({ titulo: '', descripcion: '', imageBase64: '', celular: '' });
-                    }}
-                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`px-4 py-2 text-white rounded transition-colors ${
-                      isSubmitting 
-                        ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-green-600 hover:bg-green-700'
-                    }`}
-                  >
-                    {isSubmitting ? 'Guardando...' : (editingId ? 'Actualizar' : 'Guardar')}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+
         
         <footer className="bg-green-800 text-white py-6 mt-auto">
           <div className="container mx-auto px-4 text-center">

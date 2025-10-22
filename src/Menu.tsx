@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 import './index.css'
 import Avisos from './Avisos.tsx'
+import EditarAviso from './EditarAviso.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -13,6 +14,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path='/signin' element={<Signin/>} ></Route>
         <Route path='/avisos' element={ <Avisos/>}></Route>
+        <Route path='/crear' element={<EditarAviso/>} ></Route>
+        <Route path='/editar/:id' element={<EditarAviso/>} ></Route>
         <Route path='/' element={<Avisos/>} ></Route>
         <Route path='*' element={<Avisos/>} ></Route>
       </Routes>
