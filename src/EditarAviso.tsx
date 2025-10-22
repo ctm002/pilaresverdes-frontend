@@ -2,14 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from './api/axios.js';
 
-interface Aviso {
-  id: number;
-  titulo: string;
-  descripcion: string;
-  image_url: string;
-  celular: string;
-  likes: number;
-}
 
 export default function EditarAviso() {
   const navigate = useNavigate();
