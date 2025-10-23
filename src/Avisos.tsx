@@ -270,11 +270,15 @@ export default function Avisos() {
                 {filteredData.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative cursor-pointer">
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative cursor-pointer"
+              onClick={() => navigate(`/detalle/${item.id}`)}>
               {isAuthenticated && (
                 <div className="absolute top-2 right-2 flex gap-1">
                   <button
-                    onClick={() => handleEdit(item)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(item);
+                    }}
                     className="bg-gray-500 hover:bg-blue-600 text-white p-2 rounded transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -282,7 +286,10 @@ export default function Avisos() {
                     </svg>
                   </button>
                   <button
-                    onClick={() => handleDelete(item.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(item.id);
+                    }}
                     className="bg-gray-500 hover:bg-red-600 text-white p-2 rounded transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -303,7 +310,10 @@ export default function Avisos() {
                 <p className="text-gray-600">{item.descripcion}</p>
                 <div className="flex justify-between items-center mt-3">
                   <button
-                    onClick={() => handleLikeCount(item.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLikeCount(item.id);
+                    }}
                     className="inline-flex items-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -313,7 +323,10 @@ export default function Avisos() {
                   </button>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleLike(item.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLike(item.id);
+                      }}
                       className={`inline-flex items-center justify-center px-3 py-2 rounded-lg transition-colors ${
                         likes[item.id] 
                           ? 'bg-yellow-500 hover:bg-yellow-600 text-white' 
@@ -328,6 +341,7 @@ export default function Avisos() {
                       href={`https://wa.me/${item.celular}?text=Hola, me interesa tu aviso: ${item.titulo}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="inline-flex items-center justify-center bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
                     >
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
