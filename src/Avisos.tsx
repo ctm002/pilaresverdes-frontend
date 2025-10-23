@@ -110,7 +110,7 @@ export default function Avisos() {
         <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <h1 className={`text-xl md:text-2xl font-bold ${showSearch ? 'hidden md:block' : ''}`}>Pilares Verdes</h1>
+              <h1 className={`text-xl md:text-2xl font-bold ${showSearch ? 'hidden md:block' : ''}`}>Avisos</h1>
             </div>
             
 
@@ -240,9 +240,6 @@ export default function Avisos() {
           )}
         </header>
         <div className={`p-4 bg-green-50 flex-grow pt-20 transition-all duration-300 ${showSearch ? 'blur-sm' : ''}`}>
-          <div className="mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Avisos</h2>
-          </div>
 
           {(() => {
             const filteredData = data.filter(item => 

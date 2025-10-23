@@ -62,11 +62,8 @@ export default function DetalleAviso() {
   return (
     <div className="min-h-screen bg-green-50 pt-20">
       <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
-        <button
-          onClick={() => navigate('/')}
-          className="hover:bg-green-700 px-4 py-2 rounded transition-colors ml-2"
-        >
-          ← Volver
+        <button onClick={() => navigate('/')} className="hover:bg-green-700 px-4 py-2 rounded transition-colors ml-2">
+          ← Detalle aviso
         </button>
       </header>
 
@@ -80,7 +77,7 @@ export default function DetalleAviso() {
             />
             
             {/* Carousel de imágenes pequeñas */}
-            <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+            <div className="flex gap-2 mb-4 overflow-x-auto pt-2 pb-2 pl-2">
               <img
                 src={aviso.image_url}
                 alt={`${aviso.titulo} - vista 1`}
@@ -107,7 +104,7 @@ export default function DetalleAviso() {
               />
             </div>
             
-            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-4">{aviso.titulo}</h1>
+            <h1 className="text-xl lg:text-2xl font-bold text-gray-800 mb-4">{aviso.titulo}</h1>
             <p className="text-gray-600 text-lg mb-6 leading-relaxed">{aviso.descripcion}</p>
             
             <div className="flex justify-between items-center">

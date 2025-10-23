@@ -88,19 +88,17 @@ export default function EditarAviso() {
     <div className="min-h-screen bg-green-50 pt-20">
       <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-xl md:text-2xl font-bold">Pilares Verdes</h1>
           <button
             onClick={() => navigate('/')}
-            className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded transition-colors"
-          >
-            Volver
+            className="hover:bg-green-700 p-2 rounded transition-colors">
+            ← {isEditing ? 'Editar aviso' : 'Crear nuevo aviso'}
           </button>
+
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-6">{isEditing ? 'Editar Aviso' : 'Crear Nuevo Aviso'}</h2>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
