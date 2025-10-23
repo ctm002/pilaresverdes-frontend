@@ -273,19 +273,15 @@ export default function Avisos() {
             }
             
             return (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6 px-0">
                 {filteredData.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative cursor-pointer"
-              onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative flex flex-col h-full">
               {isAuthenticated && (
-                <div className="absolute top-2 right-2 flex gap-1">
+                <div className="absolute top-2 right-2 flex gap-1 z-10">
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(item);
-                    }}
+                    onClick={() => handleEdit(item)}
                     className="bg-gray-500 hover:bg-blue-600 text-white p-2 rounded transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,10 +289,7 @@ export default function Avisos() {
                     </svg>
                   </button>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(item.id);
-                    }}
+                    onClick={() => handleDelete(item.id)}
                     className="bg-gray-500 hover:bg-red-600 text-white p-2 rounded transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -307,7 +300,7 @@ export default function Avisos() {
               )}
               <div className="flex justify-center items-center pt-8 relative">
                 {item.imagesAvisoList && item.imagesAvisoList.length > 0 ? (
-                  <div className="relative w-full">
+                  <div className="relative w-full cursor-pointer" onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
                     <img
                       src={item.imagesAvisoList[0].url || item.image_url}
                       alt={item.titulo}
@@ -323,14 +316,15 @@ export default function Avisos() {
                   <img
                     src={item.image_url}
                     alt={item.titulo}
-                    className="object-cover max-h-48 min-h-48 w-full rounded"
+                    className="object-cover max-h-48 min-h-48 w-full rounded cursor-pointer"
+                    onClick={() => navigate(`/aviso/${item.slug}/ver`)}
                   />
                 )}
               </div>
-              <div className="py-4">
+              <div className="py-4 flex-grow flex flex-col">
                 <h3 className="text-lg font-semibold">{item.titulo}</h3>
-                <p className="text-gray-600">{item.descripcion}</p>
-                <div className="flex justify-between items-center mt-3">
+                <p className="text-gray-600 flex-grow">{item.descripcion}</p>
+                <div className="flex justify-between items-center">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
