@@ -11,6 +11,7 @@ interface Aviso {
   image_url: string;
   celular: string;
   likes: number;
+  slug: string;
 }
 
 export default function Avisos() {
@@ -79,7 +80,7 @@ export default function Avisos() {
   };
 
   const handleEdit = (item: Aviso) => {
-    navigate(`/editar/${item.id}`);
+    navigate(`/editar/${item.slug}`);
   };
 
   const handleLike = (id: number) => {
@@ -266,7 +267,7 @@ export default function Avisos() {
             <div
               key={item.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative cursor-pointer"
-              onClick={() => navigate(`/detalle/${item.id}`)}>
+              onClick={() => navigate(`/${item.slug}`)}>
               {isAuthenticated && (
                 <div className="absolute top-2 right-2 flex gap-1">
                   <button

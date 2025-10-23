@@ -5,34 +5,36 @@ import api from './api/axios.js';
 
 export default function EditarAviso() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { slug } = useParams();
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
     imageBase64: '',
-    celular: ''
+    celular: '',
+    slug: ''
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (id) {
+    if (slug) {
       setIsEditing(true);
       // Cargar datos del aviso para editar
-      api.get(`/api/v1/avisos/${id}`)
+      api.get(`/api/v1/avisos/slug/${slug}`)
         .then(res => {
           const aviso = res.data;
           setFormData({
             titulo: aviso.titulo,
             descripcion: aviso.descripcion,
             imageBase64: '',
-            celular: aviso.celular
+            celular: aviso.celular,
+            slug: aviso.slug || ''
           });
         })
         .catch(err => console.error('Error al cargar aviso:', err));
     }
-  }, [id]);
+  }, [slug]);
 
   const convertToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -60,8 +62,8 @@ export default function EditarAviso() {
         likes: 0
       };
       
-      if (isEditing && id) {
-        await api.put(`/api/v1/avisos/${id}`, dto);
+      if (isEditing && slug) {
+        await api.put(`/api/v1/avisos/${slug}`, dto);
       } else {
         await api.post('/api/v1/avisos', dto);
       }
@@ -129,6 +131,7 @@ export default function EditarAviso() {
               />
             </div>
             
+
             <div>
               <label className="block text-gray-700 mb-1">Celular</label>
               <input

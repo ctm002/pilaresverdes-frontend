@@ -9,18 +9,19 @@ interface Aviso {
   image_url: string;
   celular: string;
   likes: number;
+  slug: string;
 }
 
 export default function DetalleAviso() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { slug } = useParams();
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const [likes, setLikes] = useState<{[key: number]: boolean}>({});
   const [selectedImage, setSelectedImage] = useState(0);
 
   useEffect(() => {
-    if (id) {
-      api.get(`/api/v1/avisos/${id}`)
+    if (slug) {
+      api.get(`/api/v1/avisos/slug/${slug}`)
         .then(res => setAviso(res.data))
         .catch(err => console.error('Error al cargar aviso:', err));
     }
@@ -30,7 +31,7 @@ export default function DetalleAviso() {
     if (savedLikes) {
       setLikes(JSON.parse(savedLikes));
     }
-  }, [id]);
+  }, [slug]);
 
   const handleLike = (avisoId: number) => {
     const newLikes = { ...likes, [avisoId]: !likes[avisoId] };
@@ -42,7 +43,7 @@ export default function DetalleAviso() {
     try {
       await api.patch(`/api/v1/avisos/${avisoId}/like`);
       // Recargar datos para obtener el contador actualizado
-      const res = await api.get(`/api/v1/avisos/${avisoId}`);
+      const res = await api.get(`/api/v1/avisos/slug/${aviso?.slug}`);
       setAviso(res.data);
     } catch (error) {
       console.error('Error al dar like:', error);
