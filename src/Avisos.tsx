@@ -12,6 +12,14 @@ interface Aviso {
   celular: string;
   likes: number;
   slug: string;
+  imagesAvisoList?: ImagesAvisoDto[];
+}
+
+interface ImagesAvisoDto {
+  imageBase64: string;
+  url: string;
+  id: number;
+  avisoId: number;
 }
 
 export default function Avisos() {
@@ -111,6 +119,9 @@ export default function Avisos() {
         <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
+              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+              </svg>
               <h1 className={`text-xl md:text-2xl ${showSearch ? 'hidden md:block' : ''}`}>Avisos</h1>
             </div>
           
@@ -294,12 +305,27 @@ export default function Avisos() {
                   </button>
                 </div>
               )}
-              <div className="flex justify-center items-center pt-8">
-                <img
-                  src={item.image_url}
-                  alt={item.titulo}
-                  className="object-cover max-h-48 min-h-48 w-full rounded"
-                />
+              <div className="flex justify-center items-center pt-8 relative">
+                {item.imagesAvisoList && item.imagesAvisoList.length > 0 ? (
+                  <div className="relative w-full">
+                    <img
+                      src={item.imagesAvisoList[0].url || item.image_url}
+                      alt={item.titulo}
+                      className="object-cover max-h-48 min-h-48 w-full rounded"
+                    />
+                    {item.imagesAvisoList.length > 1 && (
+                      <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                        +{item.imagesAvisoList.length - 1} más
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <img
+                    src={item.image_url}
+                    alt={item.titulo}
+                    className="object-cover max-h-48 min-h-48 w-full rounded"
+                  />
+                )}
               </div>
               <div className="py-4">
                 <h3 className="text-lg font-semibold">{item.titulo}</h3>

@@ -11,9 +11,10 @@ export default function EditarAviso() {
     descripcion: '',
     imageBase64: '',
     celular: '',
-    slug: ''
+    slug: '',
+    id: 0
   });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -29,7 +30,8 @@ export default function EditarAviso() {
             descripcion: aviso.descripcion,
             imageBase64: '',
             celular: aviso.celular,
-            slug: aviso.slug || ''
+            slug: aviso.slug || '',
+            id: aviso.id || 0
           });
         })
         .catch(err => console.error('Error al cargar aviso:', err));
@@ -49,15 +51,21 @@ export default function EditarAviso() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      let imageBase64 = '';
-      if (selectedFile) {
-        imageBase64 = await convertToBase64(selectedFile);
+      let imagesBase64: string[] = [];
+      if (selectedFiles.length > 0) {
+        imagesBase64 = await Promise.all(selectedFiles.map(file => convertToBase64(file)));
       }
       
       const dto = {
         titulo: formData.titulo,
         descripcion: formData.descripcion,
-        imageBase64: imageBase64,
+        imageBase64: imagesBase64.length > 0 ? imagesBase64[0] : '',
+        imagesAvisoList: imagesBase64.map((base64, index) => ({
+          imageBase64: base64,
+          url: '',
+          id: 0,
+          avisoId: formData.id || 0
+        })),
         celular: formData.celular,
         likes: 0
       };
@@ -81,9 +89,13 @@ export default function EditarAviso() {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+    if (e.target.files) {
+      setSelectedFiles(Array.from(e.target.files));
     }
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles(selectedFiles.filter((_, i) => i !== index));
   };
 
   return (
@@ -147,23 +159,28 @@ export default function EditarAviso() {
             </div>
             
             <div>
-              <label className="block text-gray-700 mb-1">Subir imagen</label>
+              <label className="block text-gray-700 mb-1">Subir imágenes</label>
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleFileChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
               />
-              {selectedFile && (
-                <div className="flex items-center justify-between mt-2 p-2 bg-gray-50 rounded">
-                  <p className="text-sm text-gray-600">Archivo seleccionado: {selectedFile.name}</p>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedFile(null)}
-                    className="text-red-500 hover:text-red-700 text-sm px-2 py-1 rounded hover:bg-red-50"
-                  >
-                    ✕ Eliminar
-                  </button>
+              {selectedFiles.length > 0 && (
+                <div className="mt-2 space-y-2">
+                  {selectedFiles.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <p className="text-sm text-gray-600">{file.name}</p>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        className="text-red-500 hover:text-red-700 text-sm px-2 py-1 rounded hover:bg-red-50"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>

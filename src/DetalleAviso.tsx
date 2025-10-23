@@ -10,6 +10,14 @@ interface Aviso {
   celular: string;
   likes: number;
   slug: string;
+  imagesAvisoList?: ImagesAvisoDto[];
+}
+
+interface ImagesAvisoDto {
+  imageBase64: string;
+  url: string;
+  id: number;
+  avisoId: number;
 }
 
 export default function DetalleAviso() {
@@ -80,39 +88,37 @@ export default function DetalleAviso() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="p-4">
-            <img
-              src={aviso.image_url}
-              alt={aviso.titulo}
-              className="w-full h-80 object-cover rounded-lg mb-4"
-            />
-            
-            {/* Carousel de imágenes pequeñas */}
-            <div className="flex gap-2 mb-4 overflow-x-auto pt-2 pb-2 pl-2">
-              <img
-                src={aviso.image_url}
-                alt={`${aviso.titulo} - vista 1`}
-                className={`w-16 h-16 object-cover rounded cursor-pointer transition-all ${
-                  selectedImage === 0 ? 'ring-2 ring-green-500 opacity-100' : 'opacity-70 hover:opacity-100'
-                }`}
-                onClick={() => setSelectedImage(0)}
-              />
-              <img
-                src={aviso.image_url}
-                alt={`${aviso.titulo} - vista 2`}
-                className={`w-16 h-16 object-cover rounded cursor-pointer transition-all ${
-                  selectedImage === 1 ? 'ring-2 ring-green-500 opacity-100' : 'opacity-70 hover:opacity-100'
-                }`}
-                onClick={() => setSelectedImage(1)}
-              />
-              <img
-                src={aviso.image_url}
-                alt={`${aviso.titulo} - vista 3`}
-                className={`w-16 h-16 object-cover rounded cursor-pointer transition-all ${
-                  selectedImage === 2 ? 'ring-2 ring-green-500 opacity-100' : 'opacity-70 hover:opacity-100'
-                }`}
-                onClick={() => setSelectedImage(2)}
-              />
-            </div>
+            {(() => {
+              const images = aviso.imagesAvisoList && aviso.imagesAvisoList.length > 0 
+                ? aviso.imagesAvisoList 
+                : [{ url: aviso.image_url, id: 0, imageBase64: '', avisoId: aviso.id }];
+              
+              return (
+                <>
+                  <img
+                    src={images[selectedImage]?.url || aviso.image_url}
+                    alt={aviso.titulo}
+                    className="w-full h-80 object-cover rounded-lg mb-4"
+                  />
+                  
+                  {images.length > 1 && (
+                    <div className="flex gap-2 mb-4 overflow-x-auto pt-2 pb-2 pl-2">
+                      {images.map((image, index) => (
+                        <img
+                          key={image.id || index}
+                          src={image.url}
+                          alt={`${aviso.titulo} - vista ${index + 1}`}
+                          className={`w-16 h-16 object-cover rounded cursor-pointer transition-all ${
+                            selectedImage === index ? 'ring-2 ring-green-500 opacity-100' : 'opacity-70 hover:opacity-100'
+                          }`}
+                          onClick={() => setSelectedImage(index)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
             
             <h1 className="text-xl lg:text-2xl font-bold text-gray-800 mb-4">{aviso.titulo}</h1>
             <p className="text-gray-600 text-lg mb-6 leading-relaxed">{aviso.descripcion}</p>
