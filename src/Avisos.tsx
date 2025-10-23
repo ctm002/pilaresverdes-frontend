@@ -277,7 +277,7 @@ export default function Avisos() {
                 {filteredData.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative flex flex-col h-full">
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative h-96">
               {isAuthenticated && (
                 <div className="absolute top-2 right-2 flex gap-1 z-10">
                   <button
@@ -304,7 +304,7 @@ export default function Avisos() {
                     <img
                       src={item.imagesAvisoList[0].url || item.image_url}
                       alt={item.titulo}
-                      className="object-cover max-h-48 min-h-48 w-full rounded"
+                      className="object-cover h-48 w-full rounded"
                     />
                     {item.imagesAvisoList.length > 1 && (
                       <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
@@ -316,14 +316,16 @@ export default function Avisos() {
                   <img
                     src={item.image_url}
                     alt={item.titulo}
-                    className="object-cover max-h-48 min-h-48 w-full rounded cursor-pointer"
+                    className="object-cover h-48 w-full rounded cursor-pointer"
                     onClick={() => navigate(`/aviso/${item.slug}/ver`)}
                   />
                 )}
               </div>
-              <div className="py-4 flex-grow flex flex-col">
-                <h3 className="text-lg font-semibold">{item.titulo}</h3>
-                <p className="text-gray-600 flex-grow">{item.descripcion}</p>
+              <div className="py-4 flex flex-col justify-between h-32">
+                <div>
+                  <h3 className="text-lg font-semibold truncate">{item.titulo}</h3>
+                  <p className="text-gray-600 text-sm overflow-hidden" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical'}}>{item.descripcion}</p>
+                </div>
                 <div className="flex justify-between items-center">
                   <button
                     onClick={(e) => {
