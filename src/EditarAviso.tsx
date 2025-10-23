@@ -60,7 +60,7 @@ export default function EditarAviso() {
         titulo: formData.titulo,
         descripcion: formData.descripcion,
         imageBase64: imagesBase64.length > 0 ? imagesBase64[0] : '',
-        imagesAvisoList: imagesBase64.map((base64, index) => ({
+        imagesAvisoList: imagesBase64.map((base64) => ({
           imageBase64: base64,
           url: '',
           id: 0,
