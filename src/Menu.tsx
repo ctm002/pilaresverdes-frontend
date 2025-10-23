@@ -16,8 +16,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path='/signin' element={<Signin/>} ></Route>
         <Route path='/avisos' element={ <Avisos/>}></Route>
         <Route path='/crear' element={<EditarAviso/>} ></Route>
-        <Route path='/editar/:slug' element={<EditarAviso/>} ></Route>
-        <Route path='/:slug' element={<DetalleAviso/>} ></Route>
+        <Route path='/aviso/:slug/editar' element={<EditarAviso/>} ></Route>
+        <Route path='/aviso/:slug/ver' element={<DetalleAviso/>} ></Route>
         <Route path='/' element={<Avisos/>} ></Route>
         <Route path='*' element={<Avisos/>} ></Route>
       </Routes>

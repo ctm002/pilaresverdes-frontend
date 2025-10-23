@@ -80,7 +80,7 @@ export default function Avisos() {
   };
 
   const handleEdit = (item: Aviso) => {
-    navigate(`/editar/${item.slug}`);
+    navigate(`/aviso/${item.slug}/editar`);
   };
 
   const handleLike = (id: number) => {
@@ -267,7 +267,7 @@ export default function Avisos() {
             <div
               key={item.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative cursor-pointer"
-              onClick={() => navigate(`/${item.slug}`)}>
+              onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
               {isAuthenticated && (
                 <div className="absolute top-2 right-2 flex gap-1">
                   <button
