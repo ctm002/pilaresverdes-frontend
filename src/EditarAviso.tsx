@@ -87,12 +87,16 @@ export default function EditarAviso() {
   return (
     <div className="min-h-screen bg-green-50 pt-20">
       <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
-        <div className="container mx-auto px-4 flex justify-between items-center">
+        <div className="container mx-auto px-4 flex items-center gap-2">
           <button
             onClick={() => navigate('/')}
-            className="hover:bg-green-700 p-2 rounded transition-colors">
-            ← {isEditing ? 'Editar aviso' : 'Crear nuevo aviso'}
+            className="hover:bg-green-700 p-2 rounded transition-colors md:hidden"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
           </button>
+          <h1 className="text-xl md:text-2xl md:mx-auto">{isEditing ? 'Editar Aviso' : 'Crear Nuevo Aviso'}</h1>
 
         </div>
       </header>
@@ -167,7 +171,7 @@ export default function EditarAviso() {
                 onClick={() => navigate('/')}
                 className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
               >
-                Cancelar
+                Volver
               </button>
               <button
                 type="submit"

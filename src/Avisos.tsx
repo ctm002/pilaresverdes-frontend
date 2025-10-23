@@ -110,11 +110,9 @@ export default function Avisos() {
         <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
           <div className="container mx-auto px-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <h1 className={`text-xl md:text-2xl font-bold ${showSearch ? 'hidden md:block' : ''}`}>Avisos</h1>
+              <h1 className={`text-xl md:text-2xl ${showSearch ? 'hidden md:block' : ''}`}>Avisos</h1>
             </div>
-            
-
-            
+          
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-2">
               {(showSearch || searchTerm) && (

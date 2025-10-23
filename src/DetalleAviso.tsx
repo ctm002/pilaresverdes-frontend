@@ -60,11 +60,20 @@ export default function DetalleAviso() {
   }
 
   return (
-    <div className="min-h-screen bg-green-50 pt-20">
+    <div className="min-h-screen bg-green-50 md:pt-8 pt-20">
       <header className="fixed top-0 left-0 right-0 bg-green-600 text-white py-4 shadow-md z-40">
-        <button onClick={() => navigate('/')} className="hover:bg-green-700 px-4 py-2 rounded transition-colors ml-2">
-          ← Detalle aviso
-        </button>
+        <div className="container mx-auto px-4 flex items-center gap-4">
+          <button
+            onClick={() => navigate('/')}
+            className="hover:bg-green-700 p-2 rounded transition-colors md:hidden"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 className="text-xl md:text-2xl md:mx-auto">Detalle Aviso</h1>
+
+        </div>
       </header>
 
       <div className="container mx-auto px-4 py-8">
@@ -144,7 +153,15 @@ export default function DetalleAviso() {
             </div>
           </div>
         </div>
-
+        
+        <div className="max-w-2xl mx-auto mt-4 hidden md:block">
+          <button
+            onClick={() => navigate('/')}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors"
+          >
+            ← Volver
+          </button>
+        </div>
       </div>
     </div>
   );
