@@ -80,7 +80,7 @@ export default function DetalleAviso() {
             />
             
             {/* Carousel de imágenes pequeñas */}
-            <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+            <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
               <img
                 src={aviso.image_url}
                 alt={`${aviso.titulo} - vista 1`}
@@ -106,6 +106,8 @@ export default function DetalleAviso() {
                 onClick={() => setSelectedImage(2)}
               />
             </div>
+            
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-4">{aviso.titulo}</h1>
             <p className="text-gray-600 text-lg mb-6 leading-relaxed">{aviso.descripcion}</p>
             
             <div className="flex justify-between items-center">
