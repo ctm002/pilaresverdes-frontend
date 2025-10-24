@@ -11,7 +11,6 @@ interface JWTPayload {
 
 
 const isTokenExpiring = (token: string | null): boolean => {
-  if (!token) return true;
   try {
     const { exp } = jwtDecode<JWTPayload>(token);
     const now = Date.now() / 1000;
@@ -26,6 +25,9 @@ api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     let token = localStorage.getItem("token");
     
+    console.log(`token: ${token}`);
+    if (!token) return config;
+
     if (isTokenExpiring(token)) {
       try {
 
