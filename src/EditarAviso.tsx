@@ -208,7 +208,6 @@ export default function EditarAviso() {
               />
             </div>
             
-
             <div>
               <label className="block text-gray-700 mb-1">Celular</label>
               <input
