@@ -89,24 +89,25 @@ export default function DetalleAviso() {
         <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="p-4">
             {(() => {
-              const images = aviso.imagesAvisoList && aviso.imagesAvisoList.length > 0 
-                ? aviso.imagesAvisoList 
-                : [{ url: aviso.image_url, id: 0, imageBase64: '', avisoId: aviso.id }];
+              const allImages = [
+                { url: aviso.image_url, id: 0, imageBase64: '', avisoId: aviso.id },
+                ...(aviso.imagesAvisoList || [])
+              ];
               
               return (
                 <>
                   <img
-                    src={images[selectedImage]?.url || aviso.image_url}
+                    src={allImages[selectedImage]?.url || allImages[selectedImage]?.imageBase64 || aviso.image_url}
                     alt={aviso.titulo}
                     className="w-full h-80 object-cover rounded-lg mb-4"
                   />
                   
-                  {images.length > 1 && (
+                  {allImages.length > 0 && (
                     <div className="flex gap-2 mb-4 overflow-x-auto pt-2 pb-2 pl-2">
-                      {images.map((image, index) => (
+                      {allImages.map((image, index) => (
                         <img
                           key={image.id || index}
-                          src={image.url}
+                          src={image.url || image.imageBase64}
                           alt={`${aviso.titulo} - vista ${index + 1}`}
                           className={`w-16 h-16 object-cover rounded cursor-pointer transition-all ${
                             selectedImage === index ? 'ring-2 ring-green-500 opacity-100' : 'opacity-70 hover:opacity-100'

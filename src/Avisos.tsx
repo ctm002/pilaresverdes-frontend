@@ -302,27 +302,18 @@ export default function Avisos() {
               </div>
               
               <div id="2" className={`flex justify-center items-center relative`}>
-                {item.imagesAvisoList && item.imagesAvisoList.length > 0 ? (
-                  <div className="relative w-full cursor-pointer" onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
-                    <img
-                      src={item.imagesAvisoList[0].url || item.image_url}
-                      alt={item.titulo}
-                      className="object-cover h-48 w-full rounded"
-                    />
-                    {item.imagesAvisoList.length > 1 && (
-                      <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
-                        +{item.imagesAvisoList.length - 1} más
-                      </div>
-                    )}
-                  </div>
-                ) : (
+                <div className="relative w-full cursor-pointer" onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
                   <img
                     src={item.image_url}
                     alt={item.titulo}
-                    className="object-cover h-48 w-full rounded cursor-pointer"
-                    onClick={() => navigate(`/aviso/${item.slug}/ver`)}
+                    className="object-cover h-48 w-full rounded"
                   />
-                )}
+                  {item.imagesAvisoList && item.imagesAvisoList.length > 0 && (
+                    <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                      +{item.imagesAvisoList.length} más
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div id="3" className="flex flex-col flex-grow h-26">
