@@ -277,8 +277,8 @@ export default function Avisos() {
                 {filteredData.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative h-96 flex flex-col">
-              <div id="1" className={`absolute top-2 right-2 flex gap-1 z-10 ${!isAuthenticated ? 'hidden' : ''}`}>
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-4 py-4 relative flex flex-col gap-2">
+              <div id="1" className={`flex gap-2 justify-end ${!isAuthenticated ? 'hidden' : ''}`}>
                 {isAuthenticated && (
                   <>
                     <button
@@ -301,7 +301,7 @@ export default function Avisos() {
                 )}
               </div>
               
-              <div id="2" className={`flex justify-center items-center relative ${isAuthenticated ? 'pt-8' : 'pt-2'}`}>
+              <div id="2" className={`flex justify-center items-center relative`}>
                 {item.imagesAvisoList && item.imagesAvisoList.length > 0 ? (
                   <div className="relative w-full cursor-pointer" onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
                     <img
@@ -325,7 +325,7 @@ export default function Avisos() {
                 )}
               </div>
               
-              <div id="3" className="py-4 flex flex-col flex-grow h-24">
+              <div id="3" className="flex flex-col flex-grow h-26">
                 <div className="py-2 flex-grow">
                   <h3 className="text-lg font-semibold truncate">{item.titulo}</h3>
                   <p className="text-gray-600 text-sm overflow-hidden" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical'}}>{item.descripcion}</p>
@@ -333,7 +333,7 @@ export default function Avisos() {
 
               </div>
 
-              <div id="4" className="flex justify-between mt-auto">
+              <div id="4" className="flex justify-between items-center">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
