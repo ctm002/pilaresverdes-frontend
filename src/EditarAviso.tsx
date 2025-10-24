@@ -50,12 +50,39 @@ export default function EditarAviso() {
     }
   }, [slug]);
 
-  const convertToBase64 = (file: File): Promise<string> => {
+  const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        const maxWidth = 600;
+        const maxHeight = 400;
+        let { width, height } = img;
+        
+        if (width > height) {
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = (width * maxHeight) / height;
+            height = maxHeight;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        ctx?.drawImage(img, 0, 0, width, height);
+        
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+        resolve(compressedBase64);
+      };
+      
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
     });
   };
 
@@ -65,7 +92,7 @@ export default function EditarAviso() {
     try {
       let imagesBase64: string[] = [];
       if (selectedFiles.length > 0) {
-        imagesBase64 = await Promise.all(selectedFiles.map(file => convertToBase64(file)));
+        imagesBase64 = await Promise.all(selectedFiles.map(file => compressImage(file)));
       }
       
       const dto = {
@@ -103,7 +130,18 @@ export default function EditarAviso() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files));
+      const files = Array.from(e.target.files);
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      
+      const validFiles = files.filter(file => {
+        if (file.size > maxSize) {
+          alert(`El archivo ${file.name} es muy grande. Máximo 5MB.`);
+          return false;
+        }
+        return true;
+      });
+      
+      setSelectedFiles(validFiles);
     }
   };
 
