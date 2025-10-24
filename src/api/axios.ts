@@ -10,7 +10,7 @@ interface JWTPayload {
 }
 
 
-const isTokenExpiring = (token: string | null): boolean => {
+const isTokenExpiring = (token: string): boolean => {
   try {
     const { exp } = jwtDecode<JWTPayload>(token);
     const now = Date.now() / 1000;
