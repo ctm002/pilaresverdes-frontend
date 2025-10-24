@@ -278,7 +278,7 @@ export default function Avisos() {
             <div
               key={item.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-4 relative h-96 flex flex-col">
-              <div id="1" className="absolute top-2 right-2 flex gap-1 z-10">
+              <div id="1" className={`absolute top-2 right-2 flex gap-1 z-10 ${!isAuthenticated ? 'hidden' : ''}`}>
                 {isAuthenticated && (
                   <>
                     <button
@@ -301,7 +301,7 @@ export default function Avisos() {
                 )}
               </div>
               
-              <div id="2" className="flex justify-center items-center pt-8 relative">
+              <div id="2" className={`flex justify-center items-center relative ${isAuthenticated ? 'pt-8' : 'pt-2'}`}>
                 {item.imagesAvisoList && item.imagesAvisoList.length > 0 ? (
                   <div className="relative w-full cursor-pointer" onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
                     <img
