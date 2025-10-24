@@ -303,10 +303,18 @@ export default function Avisos() {
               
               <div id="2" className={`flex justify-center items-center relative`}>
                 <div className="relative w-full cursor-pointer" onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
+                  <div className="bg-gray-200 animate-pulse rounded h-48 w-full flex items-center justify-center">
+                    <div className="w-12 h-12 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
+                  </div>
                   <img
                     src={item.image_url}
                     alt={item.titulo}
-                    className="object-cover h-48 w-full rounded"
+                    loading="lazy"
+                    className="object-cover h-48 w-full rounded absolute inset-0 opacity-0 transition-opacity duration-300"
+                    onLoad={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.opacity = '1';
+                    }}
                   />
                   {item.imagesAvisoList && item.imagesAvisoList.length > 0 && (
                     <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
