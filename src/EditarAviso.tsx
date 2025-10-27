@@ -77,7 +77,7 @@ export default function EditarAviso() {
         canvas.height = height;
         ctx?.drawImage(img, 0, 0, width, height);
         
-        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
         resolve(compressedBase64);
       };
       
