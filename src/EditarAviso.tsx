@@ -57,8 +57,8 @@ export default function EditarAviso() {
       const img = new Image();
       
       img.onload = () => {
-        const maxWidth = 600;
-        const maxHeight = 400;
+        const maxWidth = 800;
+        const maxHeight = 600;
         let { width, height } = img;
         
         if (width > height) {
