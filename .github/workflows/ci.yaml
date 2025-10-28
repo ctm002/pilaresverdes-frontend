@@ -2,7 +2,7 @@ on:
   push:
     branches:
     - main
-name: DEPLOY
+name: FRONTEND
 jobs:
   docker:
     runs-on: ubuntu-latest
