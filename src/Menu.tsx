@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Signin from './Signin.tsx'
 import Signup from './Signup.tsx'
+import ForgotPassword from './ForgotPassword.tsx'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 // import ProtectedRoute from './ProtectedRoute.tsx'
 
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path='/crear' element={<EditarAviso/>} ></Route>
         <Route path='/avisos/:slug/editar' element={<EditarAviso/>} ></Route>
         <Route path='/avisos/:slug' element={<DetalleAviso/>} ></Route>
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path='/' element={<Avisos/>} ></Route>
         <Route path='*' element={<Avisos/>} ></Route>
       </Routes>

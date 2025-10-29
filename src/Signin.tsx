@@ -76,12 +76,18 @@ function Signin() {
           Entrar
         </button>
       </form>
-      <p className="text-center text-gray-600 mt-4">
-        ¿No tienes cuenta?{' '}
-        <Link to="/signup" className="text-green-600 hover:underline">
-          Crear cuenta
+      
+      <div className="text-center mt-4 space-y-2">
+        <Link to="/forgot-password" className="text-green-600 hover:underline block text-sm">
+          ¿Olvidaste tu contraseña?
         </Link>
-      </p>
+        <p className="text-gray-600">
+          ¿No tienes cuenta?{' '}
+          <Link to="/signup" className="text-green-600 hover:underline">
+            Crear cuenta
+          </Link>
+        </p>
+      </div>
     </div>
   </div>
   );
