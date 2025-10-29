@@ -32,6 +32,7 @@ export default function Avisos() {
   const [lastAccess, setLastAccess] = useState<string>('');
   const [likes, setLikes] = useState<{[key: number]: boolean}>({});
 
+
   const checkAuth = () => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
@@ -88,7 +89,7 @@ export default function Avisos() {
   };
 
   const handleEdit = (item: Aviso) => {
-    navigate(`/aviso/${item.slug}/editar`);
+    navigate(`/avisos/${item.slug}/editar`);
   };
 
   const handleLike = (id: number) => {
@@ -278,7 +279,7 @@ export default function Avisos() {
             <div
               key={item.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-4 py-4 relative flex flex-col gap-2">
-              <div id="1" className={`flex gap-2 justify-end ${!isAuthenticated ? 'hidden' : ''}`}>
+              <div id="1" className={`flex gap-2 justify-end ${'hidden'}`}>
                 {isAuthenticated && (
                   <>
                     <button
@@ -302,7 +303,7 @@ export default function Avisos() {
               </div>
               
               <div id="2" className={`flex justify-center items-center relative`}>
-                <div className="relative w-full cursor-pointer" onClick={() => navigate(`/aviso/${item.slug}/ver`)}>
+                <div className="relative w-full cursor-pointer" onClick={() => navigate(`/avisos/${item.slug}`)}>
                   <div className="bg-gray-200 animate-pulse rounded h-48 w-full flex items-center justify-center">
                     <div className="w-12 h-12 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
                   </div>

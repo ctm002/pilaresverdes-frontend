@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import axios from 'axios';
 import './index.css';
@@ -16,12 +16,12 @@ function Signin() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/v2/auth/signin', {
+      const response = await axios.post('/api/v1/auth/signin', {
         username,
         password
       });
 
-      const token = response.data.accessToken;
+      const token = response.data;
       localStorage.setItem('token', token);
 
       // alert('Login exitoso');
@@ -76,6 +76,12 @@ function Signin() {
           Entrar
         </button>
       </form>
+      <p className="text-center text-gray-600 mt-4">
+        ¿No tienes cuenta?{' '}
+        <Link to="/signup" className="text-green-600 hover:underline">
+          Crear cuenta
+        </Link>
+      </p>
     </div>
   </div>
   );
