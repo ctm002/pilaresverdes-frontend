@@ -13,6 +13,8 @@ interface Aviso {
   likes: number;
   slug: string;
   imagesAvisoList?: ImagesAvisoDto[];
+  username: string;
+  visitas: number;
 }
 
 interface ImagesAvisoDto {
@@ -279,27 +281,30 @@ export default function Avisos() {
             <div
               key={item.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-4 py-4 relative flex flex-col gap-2">
-              <div id="1" className={`flex gap-2 justify-end ${'hidden'}`}>
-                {isAuthenticated && (
-                  <>
-                    <button
-                      onClick={() => handleEdit(item)}
-                      className="bg-gray-500 hover:bg-blue-600 text-white p-2 rounded transition-colors"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="bg-gray-500 hover:bg-red-600 text-white p-2 rounded transition-colors"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </>
-                )}
+              <div id="1" className="flex justify-between items-center">
+                <p className="text-gray-500 text-xs">Por: {item.username}</p>
+                <div className={`flex gap-2 ${'hidden'}`}>
+                  {isAuthenticated && (
+                    <>
+                      <button
+                        onClick={() => handleEdit(item)}
+                        className="bg-gray-500 hover:bg-blue-600 text-white p-2 rounded transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        className="bg-gray-500 hover:bg-red-600 text-white p-2 rounded transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
               
               <div id="2" className={`flex justify-center items-center relative`}>
@@ -329,6 +334,8 @@ export default function Avisos() {
                 <div className="py-2 flex-grow">
                   <h3 className="text-lg font-semibold truncate">{item.titulo}</h3>
                   <p className="text-gray-600 text-sm overflow-hidden" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical'}}>{item.descripcion}</p>
+
+                  <p className="text-gray-500 text-xs mt-1">Visitas <span className="font-bold">{item.visitas}</span></p>
                 </div>
 
               </div>
