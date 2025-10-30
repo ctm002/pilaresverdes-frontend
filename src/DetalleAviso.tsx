@@ -192,41 +192,43 @@ export default function DetalleAviso() {
         </div>
       </div>
       
-      {/* Botones flotantes para móvil */}
-      <button
-        onClick={() => {
-          setIsNavigating(true);
-          setTimeout(() => {
-            const prevIndex = currentIndex === 0 ? allAvisos.length - 1 : currentIndex - 1;
-            const prevAviso = allAvisos[prevIndex];
-            if (prevAviso) {
-              navigate(`/avisos/${prevAviso.slug}`);
-            }
-          }, 500);
-        }}
-        className="fixed bottom-6 left-6 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-colors md:hidden"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <button
-        onClick={() => {
-          setIsNavigating(true);
-          setTimeout(() => {
-            const nextIndex = (currentIndex + 1) % allAvisos.length;
-            const nextAviso = allAvisos[nextIndex];
-            if (nextAviso) {
-              navigate(`/avisos/${nextAviso.slug}`);
-            }
-          }, 500);
-        }}
-        className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-colors md:hidden"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
+      {/* Botones de navegación para móvil */}
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4 md:hidden">
+        <button
+          onClick={() => {
+            setIsNavigating(true);
+            setTimeout(() => {
+              const prevIndex = currentIndex === 0 ? allAvisos.length - 1 : currentIndex - 1;
+              const prevAviso = allAvisos[prevIndex];
+              if (prevAviso) {
+                navigate(`/avisos/${prevAviso.slug}`);
+              }
+            }, 500);
+          }}
+          className="bg-gray-500 hover:bg-gray-600 text-white p-4 rounded-full shadow-lg transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={() => {
+            setIsNavigating(true);
+            setTimeout(() => {
+              const nextIndex = (currentIndex + 1) % allAvisos.length;
+              const nextAviso = allAvisos[nextIndex];
+              if (nextAviso) {
+                navigate(`/avisos/${nextAviso.slug}`);
+              }
+            }, 500);
+          }}
+          className="bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
