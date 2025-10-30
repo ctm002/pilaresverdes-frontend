@@ -32,7 +32,7 @@ export default function Avisos() {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [lastAccess, setLastAccess] = useState<string>('');
-  const [likes, setLikes] = useState<{[key: number]: boolean}>({});
+  const [favorites, setFavorites] = useState<{[key: number]: boolean}>({});
 
 
   const checkAuth = () => {
@@ -62,9 +62,9 @@ export default function Avisos() {
     localStorage.setItem('lastAccess', currentAccess);
     
     // Cargar likes desde localStorage
-    const savedLikes = localStorage.getItem('avisoLikes');
-    if (savedLikes) {
-      setLikes(JSON.parse(savedLikes));
+    const savedFavorites= localStorage.getItem('favorites');
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
     }
     
     loadData();
@@ -95,9 +95,9 @@ export default function Avisos() {
   };
 
   const handleLike = (id: number) => {
-    const newLikes = { ...likes, [id]: !likes[id] };
-    setLikes(newLikes);
-    localStorage.setItem('avisoLikes', JSON.stringify(newLikes));
+    const newLikes = { ...favorites, [id]: !favorites[id] };
+    setFavorites(newLikes);
+    localStorage.setItem('favorites', JSON.stringify(newLikes));
   };
 
   const handleLikeCount = async (id: number) => {
@@ -259,8 +259,8 @@ export default function Avisos() {
               item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
               item.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
             ).sort((a, b) => {
-              const aIsFavorite = likes[a.id] || false;
-              const bIsFavorite = likes[b.id] || false;
+              const aIsFavorite = favorites[a.id] || false;
+              const bIsFavorite = favorites[b.id] || false;
               if (aIsFavorite && !bIsFavorite) return -1;
               if (!aIsFavorite && bIsFavorite) return 1;
               return 0;
@@ -334,10 +334,8 @@ export default function Avisos() {
                 <div className="py-2 flex-grow">
                   <h3 className="text-lg font-semibold truncate">{item.titulo}</h3>
                   <p className="text-gray-600 text-sm overflow-hidden" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical'}}>{item.descripcion}</p>
-
-                  <p className="text-gray-500 text-xs mt-1">Visitas <span className="font-bold">{item.visitas}</span></p>
                 </div>
-
+                <p className="text-gray-500 text-xs">Visitas <span className="font-bold">{item.visitas}</span></p>
               </div>
 
               <div id="4" className="flex justify-between items-center">
@@ -361,7 +359,7 @@ export default function Avisos() {
                       handleLike(item.id);
                     }}
                     className={`inline-flex items-center justify-center px-3 py-2 rounded-lg transition-colors ${
-                      likes[item.id] 
+                      favorites[item.id] 
                         ? 'bg-yellow-500 hover:bg-yellow-600 text-white' 
                         : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
                     }`}

@@ -35,16 +35,16 @@ export default function DetalleAviso() {
     }
 
     // Cargar likes desde localStorage
-    const savedLikes = localStorage.getItem('avisoLikes');
-    if (savedLikes) {
-      setLikes(JSON.parse(savedLikes));
+    const savedFavorites = localStorage.getItem('favorites');
+    if (savedFavorites) {
+      setLikes(JSON.parse(savedFavorites));
     }
   }, [slug]);
 
   const handleLike = (avisoId: number) => {
     const newLikes = { ...likes, [avisoId]: !likes[avisoId] };
     setLikes(newLikes);
-    localStorage.setItem('avisoLikes', JSON.stringify(newLikes));
+    localStorage.setItem('favorites', JSON.stringify(newLikes));
   };
 
   const handleLikeCount = async (avisoId: number) => {
