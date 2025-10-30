@@ -193,7 +193,7 @@ export default function DetalleAviso() {
       </div>
       
       {/* Botones de navegación para móvil */}
-      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4 md:hidden">
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-10 md:hidden bg-white bg-opacity-90 backdrop-blur-sm rounded-full p-2 shadow-xl">
         <button
           onClick={() => {
             setIsNavigating(true);
