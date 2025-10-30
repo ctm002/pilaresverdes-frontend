@@ -11,6 +11,7 @@ interface Aviso {
   likes: number;
   slug: string;
   imagesAvisoList?: ImagesAvisoDto[];
+  username: string;
 }
 
 interface ImagesAvisoDto {
@@ -26,8 +27,21 @@ export default function DetalleAviso() {
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const [likes, setLikes] = useState<{[key: number]: boolean}>({});
   const [selectedImage, setSelectedImage] = useState(0);
+  const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
+    setIsNavigating(false);
+    // Cargar todos los avisos
+    api.get('/api/v1/avisos')
+      .then(res => {
+        setAllAvisos(res.data);
+        const index = res.data.findIndex((a: Aviso) => a.slug === slug);
+        setCurrentIndex(index >= 0 ? index : 0);
+      })
+      .catch(err => console.error('Error al cargar avisos:', err));
+
     if (slug) {
       api.get(`/api/v1/avisos/slug/${slug}`)
         .then(res => setAviso(res.data))
@@ -86,7 +100,12 @@ export default function DetalleAviso() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden relative">
+          {isNavigating && (
+            <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+              <div className="w-12 h-12 border-4 border-green-300 border-t-green-600 rounded-full animate-spin"></div>
+            </div>
+          )}
           <div className="p-4">
             {(() => {
               const allImages = [
@@ -121,7 +140,8 @@ export default function DetalleAviso() {
               );
             })()}
             
-            <h1 className="text-xl lg:text-2xl font-bold text-gray-800 mb-4">{aviso.titulo}</h1>
+            <h1 className="text-xl lg:text-2xl font-bold text-gray-800 mb-2">{aviso.titulo}</h1>
+            <p className="text-gray-500 text-sm mb-4">Por: {aviso.username}</p>
             <p className="text-gray-600 text-lg mb-6 leading-relaxed">{aviso.descripcion}</p>
             
             <div className="flex justify-between items-center">
@@ -171,6 +191,42 @@ export default function DetalleAviso() {
           </button>
         </div>
       </div>
+      
+      {/* Botones flotantes para móvil */}
+      <button
+        onClick={() => {
+          setIsNavigating(true);
+          setTimeout(() => {
+            const prevIndex = currentIndex === 0 ? allAvisos.length - 1 : currentIndex - 1;
+            const prevAviso = allAvisos[prevIndex];
+            if (prevAviso) {
+              navigate(`/avisos/${prevAviso.slug}`);
+            }
+          }, 500);
+        }}
+        className="fixed bottom-6 left-6 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-colors md:hidden"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button
+        onClick={() => {
+          setIsNavigating(true);
+          setTimeout(() => {
+            const nextIndex = (currentIndex + 1) % allAvisos.length;
+            const nextAviso = allAvisos[nextIndex];
+            if (nextAviso) {
+              navigate(`/avisos/${nextAviso.slug}`);
+            }
+          }, 500);
+        }}
+        className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg transition-colors md:hidden"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
     </div>
   );
 }
