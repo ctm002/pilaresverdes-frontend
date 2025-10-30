@@ -32,21 +32,22 @@ export default function DetalleAviso() {
   const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
+    if (!slug) return;
+    
     setIsNavigating(false);
-    // Cargar todos los avisos
-    api.get('/api/v1/avisos')
-      .then(res => {
-        setAllAvisos(res.data);
-        const index = res.data.findIndex((a: Aviso) => a.slug === slug);
-        setCurrentIndex(index >= 0 ? index : 0);
-      })
-      .catch(err => console.error('Error al cargar avisos:', err));
-
-    if (slug) {
+    
+    // Cargar datos en paralelo
+    Promise.all([
+      api.get('/api/v1/avisos'),
       api.get(`/api/v1/avisos/slug/${slug}`)
-        .then(res => setAviso(res.data))
-        .catch(err => console.error('Error al cargar aviso:', err));
-    }
+    ])
+    .then(([avisosRes, avisoRes]) => {
+      setAllAvisos(avisosRes.data);
+      setAviso(avisoRes.data);
+      const index = avisosRes.data.findIndex((a: Aviso) => a.slug === slug);
+      setCurrentIndex(index >= 0 ? index : 0);
+    })
+    .catch(err => console.error('Error al cargar datos:', err));
 
     // Cargar likes desde localStorage
     const savedFavorites = localStorage.getItem('favorites');
