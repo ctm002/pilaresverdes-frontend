@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from './api/axios.js';
 
@@ -30,10 +30,12 @@ export default function DetalleAviso() {
   const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    if (!slug) return;
+    if (!slug || hasFetched.current) return;
     
+    hasFetched.current = true;
     setIsNavigating(false);
     
     // Cargar datos en paralelo
@@ -54,6 +56,10 @@ export default function DetalleAviso() {
     if (savedFavorites) {
       setLikes(JSON.parse(savedFavorites));
     }
+
+    return () => {
+      hasFetched.current = false;
+    };
   }, [slug]);
 
   const handleLike = (avisoId: number) => {
