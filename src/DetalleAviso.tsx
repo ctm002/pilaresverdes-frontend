@@ -58,7 +58,7 @@ export default function DetalleAviso() {
     }
 
     return () => {
-      // hasFetched.current = false;
+      hasFetched.current = false;
       console.log("desmontando");
     };
   }, [slug]);
