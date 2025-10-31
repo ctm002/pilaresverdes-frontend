@@ -60,7 +60,7 @@ export default function DetalleAviso() {
     return () => {
       hasFetched.current = false;
     };
-  }, []);
+  }, [slug]);
 
   const handleLike = (avisoId: number) => {
     const newLikes = { ...likes, [avisoId]: !likes[avisoId] };
