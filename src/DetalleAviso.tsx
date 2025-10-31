@@ -30,15 +30,18 @@ export default function DetalleAviso() {
   const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
-  const hasFetched = useRef(false);
+  // track last fetched slug to avoid duplicate requests for the same resource
+  const hasFetched = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!slug || hasFetched.current) return;
+  // if no slug yet or we already fetched this slug, skip
+  if (!slug || hasFetched.current === slug) return;
     
 
     console.log('userEffect');
 
-    hasFetched.current = true;
+  // mark this slug as fetched
+  hasFetched.current = slug;
     setIsNavigating(false);
     
     // Cargar datos en paralelo
@@ -62,7 +65,8 @@ export default function DetalleAviso() {
     }
 
     return () => {
-      hasFetched.current = false;
+      // Not resetting hasFetched here prevents immediate duplicate fetches
+      // if the component unmounts/remounts quickly (avoids double-calls).
       console.log("desmontando");
     };
   }, [slug]);
