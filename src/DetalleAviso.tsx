@@ -25,7 +25,7 @@ export default function DetalleAviso() {
   const navigate = useNavigate();
   const { slug } = useParams();
   const [aviso, setAviso] = useState<Aviso | null>(null);
-  const [likes, setLikes] = useState<{[key: number]: boolean}>({});
+  const [favorities, setFavorities] = useState<{[key: number]: boolean}>({});
   const [selectedImage, setSelectedImage] = useState(0);
   const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -35,6 +35,9 @@ export default function DetalleAviso() {
   useEffect(() => {
     if (!slug || hasFetched.current) return;
     
+
+    console.log('userEffect');
+
     hasFetched.current = true;
     setIsNavigating(false);
     
@@ -44,6 +47,7 @@ export default function DetalleAviso() {
       api.get(`/api/v1/avisos/slug/${slug}`)
     ])
     .then(([avisosRes, avisoRes]) => {
+      console.log('respuesta servicio');
       setAllAvisos(avisosRes.data);
       setAviso(avisoRes.data);
       const index = avisosRes.data.findIndex((a: Aviso) => a.slug === slug);
@@ -51,10 +55,10 @@ export default function DetalleAviso() {
     })
     .catch(err => console.error('Error al cargar datos:', err));
 
-    // Cargar likes desde localStorage
+    // Cargar favorities desde localStorage
     const savedFavorites = localStorage.getItem('favorites');
     if (savedFavorites) {
-      setLikes(JSON.parse(savedFavorites));
+      setFavorities(JSON.parse(savedFavorites));
     }
 
     return () => {
@@ -63,10 +67,10 @@ export default function DetalleAviso() {
     };
   }, [slug]);
 
-  const handleLike = (avisoId: number) => {
-    const newLikes = { ...likes, [avisoId]: !likes[avisoId] };
-    setLikes(newLikes);
-    localStorage.setItem('favorites', JSON.stringify(newLikes));
+  const handleFavorities = (avisoId: number) => {
+    const favoritiesTmp = { ...favorities, [avisoId]: !favorities[avisoId] };
+    setFavorities(favoritiesTmp);
+    localStorage.setItem('favorites', JSON.stringify(favoritiesTmp));
   };
 
   const handleLikeCount = async (avisoId: number) => {
@@ -164,9 +168,9 @@ export default function DetalleAviso() {
               </button>
               <div className="flex gap-2">
                 <button
-                  onClick={() => handleLike(aviso.id)}
+                  onClick={() => handleFavorities(aviso.id)}
                   className={`inline-flex items-center justify-center px-3 py-2 rounded-lg transition-colors ${
-                    likes[aviso.id] 
+                    favorities[aviso.id] 
                       ? 'bg-yellow-500 hover:bg-yellow-600 text-white' 
                       : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
                   }`}

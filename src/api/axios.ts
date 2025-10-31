@@ -25,7 +25,7 @@ api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     let token = localStorage.getItem("token");
     
-    console.log(`token: ${token}`);
+    // console.log(`token: ${token}`);
     if (!token) return config;
 
     if (isTokenExpiring(token)) {
