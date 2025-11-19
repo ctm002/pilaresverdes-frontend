@@ -12,6 +12,7 @@ interface Aviso {
   slug: string;
   imagesAvisoList?: ImagesAvisoDto[];
   username: string;
+  fecha_creacion: string;
 }
 
 interface ImagesAvisoDto {
@@ -157,7 +158,12 @@ export default function DetalleAviso() {
             })()}
             
             <h1 className="text-xl lg:text-2xl font-bold text-gray-800 mb-2">{aviso.titulo}</h1>
-            <p className="text-gray-500 text-sm mb-4">Por: {aviso.username}</p>
+            <div className="flex flex-col gap-1 mb-4">
+              <p className="text-gray-500 text-sm">Por: {aviso.username}</p>
+              <p className="text-gray-500 text-sm">
+                {`Creado el: ${aviso.fecha_creacion}`}
+              </p>
+            </div>
             <p className="text-gray-600 text-lg mb-6 leading-relaxed">{aviso.descripcion}</p>
             
             <div className="flex justify-between items-center">
