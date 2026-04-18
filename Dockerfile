@@ -13,10 +13,10 @@ ENV NODE_ENV development
 WORKDIR /app
 
 # Installing dependencies
-COPY  ./package*.json /app
+COPY ./package.json /app
 
 # RUN npm install
-RUN npm ci && npm cache clean --force
+RUN npm install && npm cache clean --force
 
 # Copying all the files in our project
 COPY . /app
