@@ -4,6 +4,7 @@ import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import { useFavorites } from './hooks/useFavorites.js';
 import SimpleHeader from './components/ui/SimpleHeader.js';
+import ImageGallery from './components/ui/ImageGallery.js';
 import LikeButton from './components/aviso/LikeButton.js';
 import FavoriteButton from './components/aviso/FavoriteButton.js';
 import WhatsAppButton from './components/aviso/WhatsAppButton.js';
