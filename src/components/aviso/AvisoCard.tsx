@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Aviso } from '../../dto/AvisoDto.js';
 import LikeButton from './LikeButton.js';
 import FavoriteButton from './FavoriteButton.js';
@@ -8,6 +8,7 @@ interface AvisoCardProps {
   item: Aviso;
   isAuthenticated: boolean;
   isFavorite: boolean;
+  delay?: number;
   onNavigate: (slug: string) => void;
   onEdit: (item: Aviso) => void;
   onDelete: (id: number) => void;
@@ -19,6 +20,7 @@ export default function AvisoCard({
   item,
   isAuthenticated,
   isFavorite,
+  delay = 0,
   onNavigate,
   onEdit,
   onDelete,
@@ -26,6 +28,15 @@ export default function AvisoCard({
   onFavorite,
 }: AvisoCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [delayDone, setDelayDone] = useState(delay === 0);
+
+  useEffect(() => {
+    if (delay === 0) return;
+    const t = setTimeout(() => setDelayDone(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
+
+  const showContent = imageLoaded && delayDone;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden border border-stone-100 group">
@@ -36,7 +47,7 @@ export default function AvisoCard({
         onClick={() => onNavigate(item.slug)}
       >
         {/* Skeleton overlay — desaparece cuando la imagen cargó */}
-        {!imageLoaded && (
+        {!showContent && (
           <div className="absolute inset-0 z-10 bg-stone-200 animate-pulse" />
         )}
 
@@ -61,7 +72,7 @@ export default function AvisoCard({
       {/* ── Content area ────────────────────────────────── */}
       <div className="p-4 flex flex-col flex-grow gap-3">
 
-        {!imageLoaded ? (
+        {!showContent ? (
           /* Skeleton del texto mientras carga la imagen */
           <>
             <div className="h-3 w-24 bg-stone-200 rounded animate-pulse" />

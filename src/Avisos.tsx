@@ -23,9 +23,10 @@ export default function Avisos() {
   const [lastAccess, setLastAccess] = useState<string>('');
   const { favorites, toggleFavorite } = useFavorites();
 
-  const loadData = () => {
-    api.get("/api/v1/avisos")
-      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
+  const loadData = (minDelay = 0) => {
+    const delay = new Promise<void>(resolve => setTimeout(resolve, minDelay));
+    Promise.all([api.get("/api/v1/avisos"), delay])
+      .then(([res]) => setData((res as AxiosResponse<Aviso[]>).data))
       .catch((err: unknown) => console.error("Error al cargar avisos:", err));
   };
 
@@ -34,7 +35,7 @@ export default function Avisos() {
     const savedLastAccess = localStorage.getItem('lastAccess');
     if (savedLastAccess) setLastAccess(savedLastAccess);
     localStorage.setItem('lastAccess', new Date().toLocaleString('es-ES'));
-    loadData();
+    loadData(1500);
   }, []);
 
   useEffect(() => {
@@ -218,12 +219,13 @@ export default function Avisos() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {filteredData.map((item) => (
+            {filteredData.map((item, index) => (
               <AvisoCard
                 key={item.id}
                 item={item}
                 isAuthenticated={isAuthenticated}
                 isFavorite={favorites[item.id] || false}
+                delay={index * 120}
                 onNavigate={(s) => navigate(`/avisos/${s}`)}
                 onEdit={(i) => navigate(`/avisos/${i.slug}/editar`)}
                 onDelete={handleDelete}
