@@ -145,11 +145,11 @@ export default function EditarAviso() {
   };
 
   return (
-    <div className="min-h-screen bg-green-50 pt-20">
-      <SimpleHeader title={isEditing ? 'Editar Aviso' : 'Crear Nuevo Aviso'} />
+    <div className="min-h-screen bg-cream pt-16">
+      <SimpleHeader title={isEditing ? 'Editar aviso' : 'Publicar aviso'} />
 
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md">
+        <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormField
               label="Título"
@@ -187,7 +187,7 @@ export default function EditarAviso() {
                 accept="image/*"
                 multiple
                 onChange={handleFileChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                className="w-full px-4 py-3 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-forest-700/40 focus:border-forest-700 transition-all file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-forest-50 file:text-forest-800 file:text-xs file:font-medium hover:file:bg-forest-100"
               />
               {(existingImages.length > 0 || selectedFiles.length > 0 || (isEditing && mainImageUrl)) && (
                 <>
@@ -230,15 +230,15 @@ export default function EditarAviso() {
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+                className="px-5 py-2.5 text-stone-600 border border-stone-200 rounded-xl hover:bg-stone-50 transition-colors text-sm font-medium"
               >
                 Volver
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`px-4 py-2 text-white rounded-xl transition-colors ${
-                  isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+                className={`px-5 py-2.5 text-white rounded-xl transition-colors text-sm font-semibold ${
+                  isSubmitting ? 'bg-stone-400 cursor-not-allowed' : 'bg-forest-900 hover:bg-forest-800'
                 }`}
               >
                 {isSubmitting ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Guardar')}

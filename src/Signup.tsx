@@ -36,8 +36,8 @@ function Signup() {
   };
 
   return (
-    <AuthLayout title="Crear cuenta">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <AuthLayout title="Crear cuenta" subtitle="Únete a la comunidad de Pilares Verdes">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <FormField
           label="Nombre de usuario"
           type="text"
@@ -57,7 +57,7 @@ function Signup() {
         <FormField
           label="Contraseña"
           type="password"
-          placeholder="********"
+          placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -65,25 +65,31 @@ function Signup() {
         <FormField
           label="Confirmar contraseña"
           type="password"
-          placeholder="********"
+          placeholder="••••••••"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-xs bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded-xl hover:bg-green-700 transition duration-300"
+          className="w-full bg-forest-900 text-white py-3 rounded-xl hover:bg-forest-800 transition-colors font-semibold text-sm tracking-wide mt-2"
         >
           Crear cuenta
         </button>
       </form>
 
-      <p className="text-center text-gray-600 mt-4">
+      <p className="text-center text-stone-400 text-xs mt-6">
         ¿Ya tienes cuenta?{' '}
-        <Link to="/signin" className="text-green-600 hover:underline">Inicia sesión</Link>
+        <Link to="/signin" className="text-forest-700 hover:text-forest-900 font-semibold transition-colors">
+          Inicia sesión
+        </Link>
       </p>
     </AuthLayout>
   );

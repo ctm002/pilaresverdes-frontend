@@ -1,5 +1,26 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
+@import 'tailwindcss';
 
-@import 'tailwindcss'
+@theme {
+  --color-forest-950: #0D2818;
+  --color-forest-900: #1B4332;
+  --color-forest-800: #2D6A4F;
+  --color-forest-700: #40916C;
+  --color-forest-600: #52B788;
+  --color-forest-300: #95D5B2;
+  --color-forest-100: #D8F3DC;
+  --color-forest-50:  #EDF7EE;
+  --color-cream:      #F5F0E8;
+  --color-ivory:      #FAFAF7;
+  --color-gold:       #C4871A;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #1a1a1a;
+  }
+}

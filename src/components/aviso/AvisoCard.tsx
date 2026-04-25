@@ -25,81 +25,99 @@ export default function AvisoCard({
   onFavorite,
 }: AvisoCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 px-4 py-4 relative flex flex-col gap-2">
-      <div className="flex justify-between items-center">
-        <p className="text-gray-500 text-xs">Por: {item.username}</p>
-        <div className="hidden flex gap-2">
-          {isAuthenticated && (
-            <>
-              <button
-                onClick={() => onEdit(item)}
-                className="bg-gray-500 hover:bg-blue-600 text-white p-2 rounded transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-              </button>
-              <button
-                onClick={() => onDelete(item.id)}
-                className="bg-gray-500 hover:bg-red-600 text-white p-2 rounded transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden group border border-stone-100">
 
-      <div className="relative w-full cursor-pointer" onClick={() => onNavigate(item.slug)}>
-        <div className="bg-gray-200 animate-pulse rounded h-48 w-full flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
-        </div>
+      {/* Image */}
+      <div
+        className="relative overflow-hidden h-52 cursor-pointer flex-shrink-0"
+        onClick={() => onNavigate(item.slug)}
+      >
+        {/* Skeleton */}
+        <div className="absolute inset-0 bg-stone-100 animate-pulse" />
+        {/* Photo */}
         <img
           src={item.image_url}
           alt={item.titulo}
           loading="lazy"
-          className="object-cover h-48 w-full rounded absolute inset-0 opacity-0 transition-opacity duration-300"
+          className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:scale-105 transition-transform duration-700"
           onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
         />
+        {/* Gradient veil */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent pointer-events-none" />
+        {/* Extra images badge */}
         {item.imagesAvisoList && item.imagesAvisoList.length > 0 && (
-          <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
-            +{item.imagesAvisoList.length} más
-          </div>
+          <span className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
+            +{item.imagesAvisoList.length} fotos
+          </span>
         )}
       </div>
 
-      <div className="flex flex-col flex-grow">
-        <div className="py-2 flex-grow">
-          <h3 className="text-lg font-semibold truncate">{item.titulo}</h3>
-          <p
-            className="text-gray-600 text-sm overflow-hidden"
-            style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
+      {/* Content */}
+      <div className="p-4 flex flex-col flex-grow gap-3">
+
+        {/* Author + admin actions */}
+        <div className="flex justify-between items-center">
+          <span className="text-[11px] text-forest-700 font-medium">Por {item.username}</span>
+          {/* Admin buttons – intentionally hidden until activated */}
+          <div className="hidden gap-1.5">
+            {isAuthenticated && (
+              <>
+                <button
+                  onClick={() => onEdit(item)}
+                  className="p-1.5 bg-stone-100 hover:bg-sky-100 hover:text-sky-700 text-stone-400 rounded-lg transition-colors"
+                  title="Editar"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => onDelete(item.id)}
+                  className="p-1.5 bg-stone-100 hover:bg-red-100 hover:text-red-600 text-stone-400 rounded-lg transition-colors"
+                  title="Eliminar"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Title & description */}
+        <div className="flex-grow">
+          <h3
+            className="font-display text-[15px] font-semibold text-forest-950 truncate leading-snug mb-1 cursor-pointer hover:text-forest-800 transition-colors"
+            onClick={() => onNavigate(item.slug)}
           >
+            {item.titulo}
+          </h3>
+          <p className="text-stone-500 text-xs leading-relaxed line-clamp-2">
             {item.descripcion}
           </p>
         </div>
-        <p className="text-gray-500 text-xs">
-          Visitas <span className="font-bold">{item.visitas ?? 0}</span>
-        </p>
-      </div>
 
-      <div className="flex justify-between items-center">
-        <LikeButton
-          count={item.likes || 0}
-          onClick={(e) => { e.stopPropagation(); onLikeCount(item.id); }}
-        />
-        <div className="inline-flex gap-2">
-          <FavoriteButton
-            isFavorite={isFavorite}
-            onClick={(e) => { e.stopPropagation(); onFavorite(item.id); }}
-          />
-          <WhatsAppButton
-            phone={item.celular}
-            title={item.titulo}
-            onClick={(e) => e.stopPropagation()}
-          />
+        {/* Footer row */}
+        <div className="flex justify-between items-center pt-3 border-t border-stone-100">
+          <span className="text-[11px] text-stone-400">
+            <span className="font-medium text-stone-500">{item.visitas ?? 0}</span> visitas
+          </span>
+          <div className="flex items-center gap-1.5">
+            <LikeButton
+              count={item.likes || 0}
+              onClick={(e) => { e.stopPropagation(); onLikeCount(item.id); }}
+            />
+            <FavoriteButton
+              isFavorite={isFavorite}
+              onClick={(e) => { e.stopPropagation(); onFavorite(item.id); }}
+            />
+            <WhatsAppButton
+              phone={item.celular}
+              title={item.titulo}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -40,12 +40,8 @@ function ForgotPassword() {
   };
 
   return (
-    <AuthLayout title="Recuperar contraseña">
-      <p className="text-gray-600 text-center mb-6">
-        Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña
-      </p>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <AuthLayout title="Recuperar contraseña" subtitle="Te enviaremos un enlace para restablecer tu acceso">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <FormField
           label="Correo electrónico"
           type="email"
@@ -55,25 +51,35 @@ function ForgotPassword() {
           required
         />
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {message && <p className="text-green-600 text-sm">{message}</p>}
+        {error && (
+          <p className="text-red-500 text-xs bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+            {error}
+          </p>
+        )}
+        {message && (
+          <p className="text-forest-700 text-xs bg-forest-50 border border-forest-100 rounded-lg px-3 py-2">
+            {message}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-green-600 text-white py-2 rounded-xl hover:bg-green-700 transition duration-300 disabled:opacity-50"
+          className="w-full bg-forest-900 text-white py-3 rounded-xl hover:bg-forest-800 transition-colors font-semibold text-sm tracking-wide disabled:opacity-50 mt-2"
         >
-          {isLoading ? 'Enviando...' : 'Enviar enlace'}
+          {isLoading ? 'Enviando…' : 'Enviar enlace'}
         </button>
       </form>
 
-      <div className="text-center mt-6 space-y-2">
-        <Link to="/signin" className="text-green-600 hover:underline block">
-          Volver al inicio de sesión
+      <div className="text-center mt-6 space-y-2.5">
+        <Link to="/signin" className="text-forest-700 hover:text-forest-900 text-xs block transition-colors">
+          ← Volver al inicio de sesión
         </Link>
-        <p className="text-gray-600">
+        <p className="text-stone-400 text-xs">
           ¿No tienes cuenta?{' '}
-          <Link to="/signup" className="text-green-600 hover:underline">Crear cuenta</Link>
+          <Link to="/signup" className="text-forest-700 hover:text-forest-900 font-semibold transition-colors">
+            Crear cuenta
+          </Link>
         </p>
       </div>
     </AuthLayout>

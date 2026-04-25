@@ -99,11 +99,11 @@ function Signin() {
   };
 
   return (
-    <AuthLayout title="Iniciar sesión">
-      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+    <AuthLayout title="Bienvenido">
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <FormField
           id="signin-username"
-          label="Correo electrónico o Celular"
+          label="Correo o Celular"
           type="text"
           placeholder="ejemplo@correo.com"
           value={username}
@@ -117,7 +117,7 @@ function Signin() {
           id="signin-password"
           label="Contraseña"
           type="password"
-          placeholder="********"
+          placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
@@ -126,24 +126,30 @@ function Signin() {
           disabled={loading}
         />
 
-        {error && <p role="alert" className="text-red-500 text-sm">{error}</p>}
+        {error && (
+          <p role="alert" className="text-red-500 text-xs bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-600 text-white py-2 rounded-xl hover:bg-green-700 transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full bg-forest-900 text-white py-3 rounded-xl hover:bg-forest-800 transition-colors font-semibold text-sm tracking-wide disabled:opacity-50 disabled:cursor-not-allowed mt-2"
         >
-          {loading ? 'Ingresando...' : 'Entrar'}
+          {loading ? 'Ingresando…' : 'Entrar'}
         </button>
       </form>
 
-      <div className="text-center mt-4 space-y-2">
-        <Link to="/forgot-password" className="text-green-600 hover:underline block text-sm">
+      <div className="text-center mt-6 space-y-2.5">
+        <Link to="/forgot-password" className="text-forest-700 hover:text-forest-900 text-xs block transition-colors">
           ¿Olvidaste tu contraseña?
         </Link>
-        <p className="text-gray-600">
+        <p className="text-stone-400 text-xs">
           ¿No tienes cuenta?{' '}
-          <Link to="/signup" className="text-green-600 hover:underline">Crear cuenta</Link>
+          <Link to="/signup" className="text-forest-700 hover:text-forest-900 font-semibold transition-colors">
+            Crear cuenta
+          </Link>
         </p>
       </div>
     </AuthLayout>
