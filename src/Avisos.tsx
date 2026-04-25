@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Aviso } from "./dto/AvisoDto.js";
 import { useFavorites } from "./hooks/useFavorites.js";
 import AvisoCard from "./components/aviso/AvisoCard.js";
+import AvisoCardSkeleton from "./components/aviso/AvisoCardSkeleton.js";
 
 const LeafIcon = () => (
   <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -61,15 +62,9 @@ export default function Avisos() {
     }
   };
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="min-h-screen bg-ivory flex items-center justify-center">
-        <p className="text-stone-400 text-sm">No hay avisos para mostrar.</p>
-      </div>
-    );
-  }
+  const isLoading = data === null;
 
-  const filteredData = data
+  const filteredData = (data ?? [])
     .filter(item =>
       item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
@@ -205,10 +200,20 @@ export default function Avisos() {
 
       {/* ── Main content ───────────────────────────────── */}
       <main className={`flex-grow pt-16 px-4 py-6 transition-all duration-300 ${showSearch ? 'blur-sm' : ''}`}>
-        {filteredData.length === 0 && searchTerm ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <AvisoCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : filteredData.length === 0 && searchTerm ? (
           <div className="text-center py-20">
             <p className="font-display text-2xl text-forest-900 mb-2">Sin resultados</p>
             <p className="text-stone-400 text-sm">No encontramos avisos para "{searchTerm}"</p>
+          </div>
+        ) : filteredData.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-stone-400 text-sm">No hay avisos para mostrar.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">

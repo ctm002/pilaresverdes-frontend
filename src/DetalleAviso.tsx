@@ -49,8 +49,41 @@ export default function DetalleAviso() {
 
   if (!aviso) {
     return (
-      <div className="min-h-screen bg-cream pt-16 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-forest-300 border-t-forest-700 rounded-full animate-spin" />
+      <div className="min-h-screen bg-cream md:pt-8 pt-16">
+        <SimpleHeader title="Detalle del aviso" />
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+            <div className="p-5 space-y-4">
+              {/* Image skeleton */}
+              <div className="w-full h-80 bg-stone-200 rounded-xl animate-pulse" />
+              {/* Title skeleton */}
+              <div className="space-y-2 pt-1">
+                <div className="h-7 w-3/4 bg-stone-200 rounded animate-pulse" />
+                <div className="h-7 w-1/2 bg-stone-200 rounded animate-pulse" />
+              </div>
+              {/* Meta skeleton */}
+              <div className="flex gap-4 pt-1">
+                <div className="h-3 w-28 bg-stone-100 rounded animate-pulse" />
+                <div className="h-3 w-36 bg-stone-100 rounded animate-pulse" />
+              </div>
+              {/* Description skeleton */}
+              <div className="space-y-2 pt-2">
+                <div className="h-4 w-full bg-stone-100 rounded animate-pulse" />
+                <div className="h-4 w-full bg-stone-100 rounded animate-pulse" />
+                <div className="h-4 w-5/6 bg-stone-100 rounded animate-pulse" />
+                <div className="h-4 w-4/6 bg-stone-100 rounded animate-pulse" />
+              </div>
+              {/* Actions skeleton */}
+              <div className="flex justify-between items-center pt-4 border-t border-stone-100">
+                <div className="h-8 w-16 bg-stone-100 rounded-lg animate-pulse" />
+                <div className="flex gap-2">
+                  <div className="h-8 w-8 bg-stone-100 rounded-lg animate-pulse" />
+                  <div className="h-8 w-8 bg-stone-100 rounded-lg animate-pulse" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
