@@ -23,9 +23,10 @@ export default function Avisos() {
   const [lastAccess, setLastAccess] = useState<string>('');
   const { favorites, toggleFavorite } = useFavorites();
 
-  const loadData = () => {
-    api.get("/api/v1/avisos")
-      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
+  const loadData = (minDelay = 0) => {
+    const delay = new Promise<void>(resolve => setTimeout(resolve, minDelay));
+    Promise.all([api.get("/api/v1/avisos"), delay])
+      .then(([res]) => setData((res as AxiosResponse<Aviso[]>).data))
       .catch((err: unknown) => console.error("Error al cargar avisos:", err));
   };
 
@@ -34,12 +35,13 @@ export default function Avisos() {
     const savedLastAccess = localStorage.getItem('lastAccess');
     if (savedLastAccess) setLastAccess(savedLastAccess);
     localStorage.setItem('lastAccess', new Date().toLocaleString('es-ES'));
-    loadData();
+    loadData(800);
   }, []);
 
   useEffect(() => {
-    window.addEventListener('focus', loadData);
-    return () => window.removeEventListener('focus', loadData);
+    const onFocus = () => loadData();
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
   }, []);
 
   const handleDelete = async (id: number) => {
