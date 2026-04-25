@@ -1,18 +1,19 @@
 import { useState, useRef } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import AuthLayout from './components/ui/AuthLayout.js';
+import FormField from './components/ui/FormField.js';
 import './index.css';
 
 const MAX_ATTEMPTS = 5;
-const LOCKOUT_MS = 60_000; // 1 minuto
-const REQUEST_TIMEOUT_MS = 10_000; // 10 segundos
+const LOCKOUT_MS = 60_000;
+const REQUEST_TIMEOUT_MS = 10_000;
 
 function sanitizeInput(value: string): string {
   return value.trim().slice(0, 255);
 }
 
 function isValidUsernameFormat(value: string): boolean {
-  // Acepta correo o número de celular (solo dígitos, +, -)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phoneRegex = /^\+?[\d\s\-]{7,20}$/;
   return emailRegex.test(value) || phoneRegex.test(value);
@@ -25,7 +26,6 @@ function Signin() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Rate limiting en cliente
   const attemptsRef = useRef(0);
   const lockoutUntilRef = useRef<number>(0);
 
@@ -33,18 +33,15 @@ function Signin() {
     e.preventDefault();
     setError('');
 
-    // Verificar lockout
     if (Date.now() < lockoutUntilRef.current) {
       const remaining = Math.ceil((lockoutUntilRef.current - Date.now()) / 1000);
       setError(`Demasiados intentos fallidos. Espera ${remaining} segundos.`);
       return;
     }
 
-    // Sanitizar inputs
     const sanitizedUsername = sanitizeInput(username);
     const sanitizedPassword = sanitizeInput(password);
 
-    // Validar formato básico
     if (!isValidUsernameFormat(sanitizedUsername)) {
       setError('Ingresa un correo electrónico o número de celular válido.');
       return;
@@ -65,19 +62,12 @@ function Signin() {
       );
 
       const token: unknown = response.data;
-
-      if (typeof token !== 'string' || !token) {
-        throw new Error('Respuesta inválida del servidor.');
-      }
+      if (typeof token !== 'string' || !token) throw new Error('Respuesta inválida del servidor.');
 
       localStorage.setItem('token', token);
-
-      // Resetear contador de intentos al autenticarse correctamente
       attemptsRef.current = 0;
       lockoutUntilRef.current = 0;
-
       navigate('/avisos');
-
     } catch (err: unknown) {
       attemptsRef.current += 1;
 
@@ -91,7 +81,6 @@ function Signin() {
 
       if (axios.isAxiosError(err)) {
         const status = err.response?.status;
-
         if (err.code === 'ECONNABORTED') {
           setError('La solicitud tardó demasiado. Verifica tu conexión e intenta de nuevo.');
         } else if (status === 401 || status === 403) {
@@ -110,81 +99,54 @@ function Signin() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-gray-100 px-4"
-      style={{
-        backgroundImage: "url('https://pilaresverdes.cl/images/pilaresverdes.jpg')",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover"
-      }}
-    >
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Iniciar sesión</h2>
-        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-          <div>
-            <label htmlFor="signin-username" className="block text-gray-600 mb-1">
-              Correo electrónico o Celular
-            </label>
-            <input
-              id="signin-username"
-              type="text"
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="ejemplo@correo.com"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
-              maxLength={255}
-              required
-              disabled={loading}
-            />
-          </div>
-          <div>
-            <label htmlFor="signin-password" className="block text-gray-600 mb-1">
-              Contraseña
-            </label>
-            <input
-              id="signin-password"
-              type="password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="********"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              maxLength={255}
-              required
-              disabled={loading}
-            />
-          </div>
+    <AuthLayout title="Iniciar sesión">
+      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+        <FormField
+          id="signin-username"
+          label="Correo electrónico o Celular"
+          type="text"
+          placeholder="ejemplo@correo.com"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          autoComplete="username"
+          maxLength={255}
+          required
+          disabled={loading}
+        />
+        <FormField
+          id="signin-password"
+          label="Contraseña"
+          type="password"
+          placeholder="********"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
+          maxLength={255}
+          required
+          disabled={loading}
+        />
 
-          {error && (
-            <p role="alert" className="text-red-500 text-sm">
-              {error}
-            </p>
-          )}
+        {error && <p role="alert" className="text-red-500 text-sm">{error}</p>}
 
-          <button
-            type="submit"
-            id="signin-submit"
-            disabled={loading}
-            className="w-full bg-green-600 text-white py-2 rounded-xl hover:bg-green-700 transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Ingresando...' : 'Entrar'}
-          </button>
-        </form>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-green-600 text-white py-2 rounded-xl hover:bg-green-700 transition duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Ingresando...' : 'Entrar'}
+        </button>
+      </form>
 
-        <div className="text-center mt-4 space-y-2">
-          <Link to="/forgot-password" className="text-green-600 hover:underline block text-sm">
-            ¿Olvidaste tu contraseña?
-          </Link>
-          <p className="text-gray-600">
-            ¿No tienes cuenta?{' '}
-            <Link to="/signup" className="text-green-600 hover:underline">
-              Crear cuenta
-            </Link>
-          </p>
-        </div>
+      <div className="text-center mt-4 space-y-2">
+        <Link to="/forgot-password" className="text-green-600 hover:underline block text-sm">
+          ¿Olvidaste tu contraseña?
+        </Link>
+        <p className="text-gray-600">
+          ¿No tienes cuenta?{' '}
+          <Link to="/signup" className="text-green-600 hover:underline">Crear cuenta</Link>
+        </p>
       </div>
-    </div>
+    </AuthLayout>
   );
 }
 

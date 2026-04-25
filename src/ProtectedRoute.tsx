@@ -1,13 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
+import { JWTPayload } from "./dto/AuthDto.js";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-}
-
-interface JWTPayload {
-  exp: number;
 }
 
 function isTokenValid(token: string | null): boolean {
@@ -22,12 +19,10 @@ function isTokenValid(token: string | null): boolean {
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
   const token = localStorage.getItem("token");
-
   if (!isTokenValid(token)) {
-    localStorage.removeItem("token"); // Limpia tokens expirados o malformados
+    localStorage.removeItem("token");
     return <Navigate to="/signin" replace />;
   }
-
   return children;
 }
 
