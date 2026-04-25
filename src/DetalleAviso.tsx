@@ -14,7 +14,6 @@ export default function DetalleAviso() {
   const { slug } = useParams();
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const { favorites, toggleFavorite } = useFavorites();
-  const [selectedImage, setSelectedImage] = useState(0);
   const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
@@ -107,31 +106,7 @@ export default function DetalleAviso() {
           )}
 
           <div className="p-5">
-            {/* Main image */}
-            <img
-              src={allImages[selectedImage]?.url || allImages[selectedImage]?.imageBase64 || aviso.image_url}
-              alt={aviso.titulo}
-              className="w-full h-80 object-cover rounded-xl mb-4"
-            />
-
-            {/* Thumbnails */}
-            {allImages.length > 1 && (
-              <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
-                {allImages.map((image, index) => (
-                  <img
-                    key={image.id || index}
-                    src={image.url || image.imageBase64}
-                    alt={`${aviso.titulo} – vista ${index + 1}`}
-                    className={`w-16 h-16 object-cover rounded-lg cursor-pointer transition-all flex-shrink-0 ${
-                      selectedImage === index
-                        ? 'ring-2 ring-forest-700 ring-offset-1'
-                        : 'opacity-60 hover:opacity-90'
-                    }`}
-                    onClick={() => setSelectedImage(index)}
-                  />
-                ))}
-              </div>
-            )}
+            <ImageGallery images={allImages} title={aviso.titulo} />
 
             {/* Title */}
             <h1 className="font-display text-2xl font-bold text-forest-950 mb-2 leading-snug">
