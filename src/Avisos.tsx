@@ -219,13 +219,13 @@ export default function Avisos() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {filteredData.map((item, index) => (
+            {filteredData.map((item) => (
               <AvisoCard
                 key={item.id}
                 item={item}
                 isAuthenticated={isAuthenticated}
                 isFavorite={favorites[item.id] || false}
-                delay={index * 120}
+                delay={Math.floor(Math.random() * 1200) + 200}
                 onNavigate={(s) => navigate(`/avisos/${s}`)}
                 onEdit={(i) => navigate(`/avisos/${i.slug}/editar`)}
                 onDelete={handleDelete}
