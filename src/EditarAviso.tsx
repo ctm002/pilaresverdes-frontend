@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from './api/axios.js';
 import { ImagesAvisoDto } from './dto/AvisoDto.js';
@@ -18,9 +18,10 @@ export default function EditarAviso() {
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<ImagesAvisoDto[]>([]);
-  const [mainImageUrl, setMainImageUrl] = useState<string>('');
+  const [, setMainImageUrl] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (slug) {
@@ -122,7 +123,8 @@ export default function EditarAviso() {
         }
         return true;
       });
-      setSelectedFiles(validFiles);
+      setSelectedFiles(prev => [...prev, ...validFiles]);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -175,49 +177,82 @@ export default function EditarAviso() {
               required
             />
 
+            {/* ── Galería de imágenes ──────────────────────── */}
             <div>
-              <label className="block text-gray-600 mb-1">Subir imágenes</label>
+              <label className="block text-[11px] font-semibold text-forest-800 mb-2 tracking-widest uppercase">
+                Imágenes secundarias
+              </label>
+
               <input
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 multiple
+                className="hidden"
                 onChange={handleFileChange}
-                className="w-full px-4 py-3 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-forest-700/40 focus:border-forest-700 transition-all file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-forest-50 file:text-forest-800 file:text-xs file:font-medium hover:file:bg-forest-100"
               />
-              {(existingImages.length > 0 || selectedFiles.length > 0 || (isEditing && mainImageUrl)) && (
-                <>
-                  <div className="mt-2 flex gap-2 overflow-x-auto py-4 pl-3">
-                    {isEditing && mainImageUrl && (
-                      <div className="relative flex-shrink-0">
-                        <img src={mainImageUrl} alt="Main image" className="w-16 h-16 object-cover rounded border" />
-                        <div className="absolute -top-1 -left-1 bg-forest-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">★</div>
-                      </div>
-                    )}
-                    {existingImages.map((image, index) => (
-                      <div key={`existing-${image.id}`} className="relative flex-shrink-0">
-                        <img src={image.url || image.imageBase64} alt={`Existing ${index + 1}`} className="w-16 h-16 object-cover rounded border" />
-                        <button type="button" onClick={() => removeExistingImage(image.id)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600">✕</button>
-                      </div>
-                    ))}
-                    {selectedFiles.map((file, index) => (
-                      <div key={`new-${index}`} className="relative flex-shrink-0">
-                        <img src={URL.createObjectURL(file)} alt={`Preview ${index + 1}`} className="w-16 h-16 object-cover rounded border" />
-                        <button type="button" onClick={() => removeFile(index)} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600">✕</button>
-                      </div>
-                    ))}
+
+              <div className="grid grid-cols-3 gap-2">
+
+                {/* Imágenes existentes */}
+                {existingImages.map((image, index) => (
+                  <div key={`existing-${image.id}`} className="relative aspect-square rounded-xl overflow-hidden group border border-stone-100">
+                    <img
+                      src={image.url || image.imageBase64}
+                      alt={`Imagen ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
+                    <button
+                      type="button"
+                      onClick={() => removeExistingImage(image.id)}
+                      className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                      title="Eliminar imagen"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
-                  {selectedFiles.length > 0 && (
-                    <div className="mt-2 space-y-2">
-                      {selectedFiles.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <p className="text-sm text-gray-600">{file.name}</p>
-                          <button type="button" onClick={() => removeFile(index)} className="text-red-500 hover:text-red-700 text-sm px-2 py-1 rounded hover:bg-red-50">✕</button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
+                ))}
+
+                {/* Nuevas imágenes (pendientes de guardar) */}
+                {selectedFiles.map((file, index) => (
+                  <div key={`new-${index}`} className="relative aspect-square rounded-xl overflow-hidden group border-2 border-dashed border-forest-300">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`Nueva ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
+                    <span className="absolute bottom-1.5 left-1.5 bg-forest-700/80 text-white text-[9px] font-semibold px-1.5 py-0.5 rounded-full pointer-events-none">
+                      Nueva
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(index)}
+                      className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                      title="Quitar imagen"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+
+                {/* Tile agregar */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="aspect-square rounded-xl border-2 border-dashed border-stone-200 hover:border-forest-400 hover:bg-forest-50 flex flex-col items-center justify-center gap-1.5 text-stone-400 hover:text-forest-700 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="text-[10px] font-medium">Agregar</span>
+                </button>
+              </div>
             </div>
 
             <div className="flex gap-2 justify-end pt-4">
