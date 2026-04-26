@@ -139,11 +139,6 @@ export default function EditarAviso() {
     }
   };
 
-  const removeMainImage = () => {
-    setMainImageUrl('');
-    setFormData({ ...formData, mainImageUrl: '' });
-  };
-
   return (
     <div className="min-h-screen bg-cream pt-16">
       <SimpleHeader title={isEditing ? 'Editar aviso' : 'Publicar aviso'} />
@@ -195,8 +190,7 @@ export default function EditarAviso() {
                     {isEditing && mainImageUrl && (
                       <div className="relative flex-shrink-0">
                         <img src={mainImageUrl} alt="Main image" className="w-16 h-16 object-cover rounded border" />
-                        <div className="absolute -top-1 -left-1 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">★</div>
-                        <button type="button" onClick={removeMainImage} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600">✕</button>
+                        <div className="absolute -top-1 -left-1 bg-forest-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">★</div>
                       </div>
                     )}
                     {existingImages.map((image, index) => (
