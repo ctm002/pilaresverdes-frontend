@@ -22,7 +22,7 @@ export default function Avisos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [lastAccess, setLastAccess] = useState<string>('');
-  const { favorites, toggleFavorite } = useFavorites();
+  const { favorites } = useFavorites();
 
   const loadData = (minDelay = 0) => {
     const delay = new Promise<void>(resolve => setTimeout(resolve, minDelay));
@@ -267,13 +267,11 @@ export default function Avisos() {
                 key={item.id}
                 item={item}
                 isAuthenticated={isAuthenticated}
-                isFavorite={favorites[item.id] || false}
                 delay={Math.floor(Math.random() * 1200) + 200}
                 onNavigate={(s) => navigate(`/avisos/${s}`)}
                 onEdit={(i) => navigate(`/avisos/${i.slug}/editar`)}
                 onDelete={handleDelete}
                 onLikeCount={handleLikeCount}
-                onFavorite={toggleFavorite}
               />
             ))}
           </div>

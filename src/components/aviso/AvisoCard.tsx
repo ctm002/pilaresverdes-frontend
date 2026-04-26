@@ -1,31 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Aviso } from '../../dto/AvisoDto.js';
 import LikeButton from './LikeButton.js';
-import FavoriteButton from './FavoriteButton.js';
 import WhatsAppButton from './WhatsAppButton.js';
 
 interface AvisoCardProps {
   item: Aviso;
   isAuthenticated: boolean;
-  isFavorite: boolean;
   delay?: number;
   onNavigate: (slug: string) => void;
   onEdit: (item: Aviso) => void;
   onDelete: (id: number) => void;
   onLikeCount: (id: number) => void;
-  onFavorite: (id: number) => void;
 }
 
 export default function AvisoCard({
   item,
   isAuthenticated,
-  isFavorite,
   delay = 0,
   onNavigate,
   onEdit,
   onDelete,
   onLikeCount,
-  onFavorite,
 }: AvisoCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [delayDone, setDelayDone] = useState(delay === 0);
@@ -140,10 +135,6 @@ export default function AvisoCard({
                 <LikeButton
                   count={item.likes || 0}
                   onClick={(e) => { e.stopPropagation(); onLikeCount(item.id); }}
-                />
-                <FavoriteButton
-                  isFavorite={isFavorite}
-                  onClick={(e) => { e.stopPropagation(); onFavorite(item.id); }}
                 />
                 <WhatsAppButton
                   phone={item.celular}
