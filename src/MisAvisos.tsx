@@ -34,11 +34,11 @@ export default function MisAvisos() {
       {
       <SimpleHeader title="Mis avisos" backTo="/">
         <button
-          onClick={() => navigate('/crear')}
+          onClick={() => navigate('/avisos')}
           className="ml-auto hidden md:inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
         >
           <span className="text-base leading-none">+</span>
-          Publicar
+          Home
         </button>
       </SimpleHeader>
 }
