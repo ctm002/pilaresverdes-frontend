@@ -191,10 +191,9 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
           {/* Thumbnail strip */}
           {total > 1 && (
             <div
-              className="absolute bottom-5 left-1/2 -translate-x-1/2 max-w-[90vw] py-2 px-1"
+              className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-3 py-2 px-1"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex gap-3" style={{ overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 4 }}>
               {images.map((img, i) => (
                 <button
                   key={img.id || i}
@@ -209,7 +208,6 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
                   <img src={src(img)} alt="" className="w-full h-full object-cover rounded-lg" />
                 </button>
               ))}
-              </div>
             </div>
           )}
         </div>
