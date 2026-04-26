@@ -196,17 +196,18 @@ export default function EditarAviso() {
 
                 {/* Imágenes existentes */}
                 {existingImages.map((image, index) => (
-                  <div key={`existing-${image.id}`} className="relative aspect-square rounded-xl overflow-hidden group border border-stone-100">
+                  <div key={`existing-${image.id}-${index}`} className="relative h-24 rounded-xl overflow-hidden group border border-stone-200 bg-stone-100">
                     <img
                       src={image.url || image.imageBase64}
                       alt={`Imagen ${index + 1}`}
                       className="w-full h-full object-cover"
+                      onError={(e) => { (e.target as HTMLImageElement).src = ''; }}
                     />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
                     <button
                       type="button"
                       onClick={() => removeExistingImage(image.id)}
-                      className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                      className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
                       title="Eliminar imagen"
                     >
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,20 +219,20 @@ export default function EditarAviso() {
 
                 {/* Nuevas imágenes (pendientes de guardar) */}
                 {selectedFiles.map((file, index) => (
-                  <div key={`new-${index}`} className="relative aspect-square rounded-xl overflow-hidden group border-2 border-dashed border-forest-300">
+                  <div key={`new-${index}`} className="relative h-24 rounded-xl overflow-hidden group border-2 border-dashed border-forest-400 bg-forest-50">
                     <img
                       src={URL.createObjectURL(file)}
                       alt={`Nueva ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
-                    <span className="absolute bottom-1.5 left-1.5 bg-forest-700/80 text-white text-[9px] font-semibold px-1.5 py-0.5 rounded-full pointer-events-none">
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
+                    <span className="absolute bottom-1 left-1 bg-forest-800/70 text-white text-[9px] font-semibold px-1.5 py-0.5 rounded-full pointer-events-none">
                       Nueva
                     </span>
                     <button
                       type="button"
                       onClick={() => removeFile(index)}
-                      className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                      className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
                       title="Quitar imagen"
                     >
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,7 +246,7 @@ export default function EditarAviso() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="aspect-square rounded-xl border-2 border-dashed border-stone-200 hover:border-forest-400 hover:bg-forest-50 flex flex-col items-center justify-center gap-1.5 text-stone-400 hover:text-forest-700 transition-colors"
+                  className="h-24 rounded-xl border-2 border-dashed border-stone-200 hover:border-forest-500 hover:bg-forest-50 flex flex-col items-center justify-center gap-1.5 text-stone-400 hover:text-forest-700 transition-colors"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
