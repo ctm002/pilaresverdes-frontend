@@ -105,15 +105,15 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
 
       {/* ── Thumbnail strip ──────────────────────────────── */}
       {total > 1 && (
-        <div className="flex gap-2 my-4 overflow-x-auto py-1" style={{ scrollbarWidth: 'none' }}>
+        <div className="flex gap-3 my-4 overflow-x-auto px-1 py-2" style={{ scrollbarWidth: 'none' }}>
           {images.map((img, i) => (
             <button
               key={img.id || i}
               onClick={() => goTo(i)}
               className={`flex-shrink-0 w-16 h-16 rounded-lg transition-all ${
                 current === i
-                  ? 'ring-2 ring-forest-700 ring-offset-2 opacity-100 scale-105'
-                  : 'opacity-50 hover:opacity-80'
+                  ? 'ring-2 ring-forest-700 ring-offset-4 opacity-100'
+                  : 'opacity-50 hover:opacity-90'
               }`}
               aria-label={`Ver foto ${i + 1}`}
             >
