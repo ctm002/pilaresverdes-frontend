@@ -17,4 +17,7 @@ export interface Aviso {
   username: string;
   visitas?: number;
   fecha_creacion?: string;
+  ubicacion?: string;
+  latitud?: number;
+  longitud?: number;
 }

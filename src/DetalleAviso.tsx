@@ -5,6 +5,7 @@ import { Aviso } from './dto/AvisoDto.js';
 import { useFavorites } from './hooks/useFavorites.js';
 import SimpleHeader from './components/ui/SimpleHeader.js';
 import ImageGallery from './components/ui/ImageGallery.js';
+import MapView from './components/ui/MapView.js';
 import LikeButton from './components/aviso/LikeButton.js';
 import FavoriteButton from './components/aviso/FavoriteButton.js';
 import WhatsAppButton from './components/aviso/WhatsAppButton.js';
@@ -123,6 +124,13 @@ export default function DetalleAviso() {
 
             {/* Description */}
             <p className="text-stone-600 text-[15px] leading-relaxed mb-6">{aviso.descripcion}</p>
+
+            {/* Map */}
+            <MapView
+              latitud={aviso.latitud}
+              longitud={aviso.longitud}
+              ubicacion={aviso.ubicacion}
+            />
 
             {/* Actions */}
             <div className="flex justify-between items-center pt-4 border-t border-stone-100">
