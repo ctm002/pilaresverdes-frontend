@@ -60,7 +60,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
           <img
             src={currentSrc}
             alt={`${title} — foto ${current + 1}`}
-            className={`w-full h-72 object-cover transition-opacity duration-150 ${fade ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-96 object-cover transition-opacity duration-150 ${fade ? 'opacity-100' : 'opacity-0'}`}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
 
@@ -107,7 +107,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
         {total > 1 && (
           <div
             className="grid grid-cols-2 gap-1.5 content-start"
-            style={{ width: 108 }}
+            style={{ width: 108, alignContent: 'start' }}
           >
             {images.map((img, i) => (
               <button
