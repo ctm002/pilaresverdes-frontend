@@ -131,6 +131,14 @@ export default function DetalleAviso() {
           )}
 
           <div className="p-5">
+            {/* Favorito — encima de la galería */}
+            <div className="flex justify-end mb-2">
+              <FavoriteButton
+                isFavorite={favorites[aviso.id] || false}
+                onClick={() => toggleFavorite(aviso.id)}
+              />
+            </div>
+
             <ImageGallery images={allImages} title={aviso.titulo} />
 
             {/* Title */}
@@ -159,13 +167,7 @@ export default function DetalleAviso() {
             {/* Actions */}
             <div className="flex justify-between items-center pt-4 border-t border-stone-100">
               <LikeButton count={aviso.likes || 0} onClick={() => handleLikeCount(aviso.id)} />
-              <div className="flex gap-2">
-                <FavoriteButton
-                  isFavorite={favorites[aviso.id] || false}
-                  onClick={() => toggleFavorite(aviso.id)}
-                />
-                <WhatsAppButton phone={aviso.celular} title={aviso.titulo} />
-              </div>
+              <WhatsAppButton phone={aviso.celular} title={aviso.titulo} />
             </div>
           </div>
         </div>

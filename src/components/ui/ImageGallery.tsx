@@ -105,7 +105,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
 
       {/* ── Thumbnail strip ──────────────────────────────── */}
       {total > 1 && (
-        <div className="flex gap-2 mb-5 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+        <div className="flex gap-2 my-4 overflow-x-auto py-1" style={{ scrollbarWidth: 'none' }}>
           {images.map((img, i) => (
             <button
               key={img.id || i}
