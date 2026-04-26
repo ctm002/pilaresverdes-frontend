@@ -14,7 +14,7 @@ export default function MisAvisos() {
   const [data, setData] = useState<Aviso[] | null>(null);
 
   const loadData = () => {
-    api.get('/api/v1/avisos/my')
+    api.get('/api/v1/mis-avisos')
       .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
       .catch((err: unknown) => console.error('Error al cargar mis avisos:', err));
   };
