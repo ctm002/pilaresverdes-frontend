@@ -13,27 +13,20 @@ export default function MisAvisos() {
   const currentUsername = useCurrentUser();
   const [data, setData] = useState<Aviso[] | null>(null);
 
+  const loadData = () => {
+    api.get('/api/v1/avisos/my')
+      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
+      .catch((err: unknown) => console.error('Error al cargar mis avisos:', err));
+  };
+
   useEffect(() => {
-    if (currentUsername === null && localStorage.getItem('token') === null) {
+    if (!localStorage.getItem('token')) {
       navigate('/signin');
       return;
     }
-    api.get('/api/v1/avisos')
-      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
-      .catch((err: unknown) => console.error('Error al cargar avisos:', err));
-  }, [currentUsername, navigate]);
+    loadData();
+  }, [navigate]);
 
-  const handleDelete = async (id: number) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar este aviso?')) return;
-    try {
-      await api.delete(`/api/v1/avisos/${id}`);
-      setData(prev => prev ? prev.filter(a => a.id !== id) : prev);
-    } catch (error) {
-      console.error('Error al eliminar aviso:', error);
-    }
-  };
-
-  const myAvisos = (data ?? []).filter(a => a.username === currentUsername);
   const isLoading = data === null;
 
   return (
@@ -41,7 +34,7 @@ export default function MisAvisos() {
       <SimpleHeader title="Mis avisos" backTo="/">
         <button
           onClick={() => navigate('/crear')}
-          className="ml-auto mr-0 hidden md:inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+          className="ml-auto hidden md:inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
         >
           <span className="text-base leading-none">+</span>
           Publicar
@@ -49,11 +42,32 @@ export default function MisAvisos() {
       </SimpleHeader>
 
       <main className="flex-grow pt-20 px-4 py-6">
+
+        {/* Volver al inicio — desktop */}
+        <div className="hidden md:flex items-center justify-between mb-6 max-w-7xl mx-auto">
+          <button
+            onClick={() => navigate('/')}
+            className="inline-flex items-center gap-1.5 text-forest-700 hover:text-forest-900 text-sm font-medium transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver a todos los avisos
+          </button>
+          <button
+            onClick={() => navigate('/crear')}
+            className="inline-flex items-center gap-1.5 bg-forest-900 hover:bg-forest-800 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+          >
+            <span className="text-base leading-none">+</span>
+            Publicar aviso
+          </button>
+        </div>
+
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {Array.from({ length: 6 }).map((_, i) => <AvisoCardSkeleton key={i} />)}
           </div>
-        ) : myAvisos.length === 0 ? (
+        ) : !data || data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <div className="w-16 h-16 bg-forest-50 rounded-2xl flex items-center justify-center">
               <svg className="w-8 h-8 text-forest-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,15 +87,12 @@ export default function MisAvisos() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {myAvisos.map((item) => (
+            {data.map((item) => (
               <AvisoCard
                 key={item.id}
                 item={item}
                 currentUsername={currentUsername}
-                managing
-                onNavigate={(s) => navigate(`/avisos/${s}`)}
-                onEdit={(i) => navigate(`/avisos/${i.slug}/editar`)}
-                onDelete={handleDelete}
+                onNavigate={(s) => navigate(`/avisos/${s}/gestionar`)}
                 onLikeCount={() => {}}
               />
             ))}

@@ -281,8 +281,6 @@ export default function Avisos() {
                 currentUsername={currentUsername}
                 delay={Math.floor(Math.random() * 1200) + 200}
                 onNavigate={(s) => navigate(`/avisos/${s}`)}
-                onEdit={() => {}}
-                onDelete={() => {}}
                 onLikeCount={handleLikeCount}
               />
             ))}
