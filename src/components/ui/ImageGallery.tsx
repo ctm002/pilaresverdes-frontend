@@ -106,8 +106,8 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
         {/* Thumbnails — grilla 2 columnas a la derecha */}
         {total > 1 && (
           <div
-            className="grid grid-cols-2 gap-1.5 content-start overflow-y-auto"
-            style={{ width: 108, maxHeight: 288, scrollbarWidth: 'none' }}
+            className="grid grid-cols-2 gap-1.5 content-start"
+            style={{ width: 108 }}
           >
             {images.map((img, i) => (
               <button
