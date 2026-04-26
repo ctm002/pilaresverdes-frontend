@@ -31,6 +31,7 @@ export default function MisAvisos() {
 
   return (
     <div className="min-h-screen flex flex-col bg-cream">
+      {/*
       <SimpleHeader title="Mis avisos" backTo="/">
         <button
           onClick={() => navigate('/crear')}
@@ -40,7 +41,7 @@ export default function MisAvisos() {
           Publicar
         </button>
       </SimpleHeader>
-
+*/}
       <main className="flex-grow pt-20 px-4 py-6">
 
         {/* Volver al inicio — desktop */}

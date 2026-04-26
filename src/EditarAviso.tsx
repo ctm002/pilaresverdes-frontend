@@ -96,11 +96,11 @@ export default function EditarAviso() {
 
       if (isEditing && slug) {
         await api.put(`/api/v1/avisos/${slug}`, dto);
+        navigate('/mis-avisos');
       } else {
         await api.post('/api/v1/avisos', dto);
+        navigate('/');
       }
-
-      navigate('/');
     } catch (error) {
       console.error('Error al guardar aviso:', error);
     } finally {
@@ -229,7 +229,7 @@ export default function EditarAviso() {
             <div className="flex gap-2 justify-end pt-4">
               <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => navigate(isEditing ? '/mis-avisos' : '/')}
                 className="px-5 py-2.5 text-stone-600 border border-stone-200 rounded-xl hover:bg-stone-50 transition-colors text-sm font-medium"
               >
                 Volver
