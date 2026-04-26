@@ -97,8 +97,32 @@ export default function DetalleAviso() {
   return (
     <div className="min-h-screen bg-cream md:pt-8 pt-16">
       <SimpleHeader title="Detalle del aviso" />
+        {/* Desktop back button */}
+        <div className="max-w-2xl mx-auto mt-4 hidden md:block">
+          <button
+            onClick={() => navigate('/')}
+            className="text-forest-700 hover:text-forest-900 text-sm font-medium transition-colors flex items-center gap-1.5"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver a avisos
+          </button>
+        </div>
 
       <div className="container mx-auto px-4 py-8">
+        {/* Desktop back button */}
+        <div className="max-w-2xl mx-auto mt-4 hidden md:block">
+          <button
+            onClick={() => navigate('/')}
+            className="text-forest-700 hover:text-forest-900 text-sm font-medium transition-colors flex items-center gap-1.5"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver a avisos
+          </button>
+        </div>
         <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden relative">
           {isNavigating && (
             <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-10">
@@ -146,18 +170,7 @@ export default function DetalleAviso() {
           </div>
         </div>
 
-        {/* Desktop back button */}
-        <div className="max-w-2xl mx-auto mt-4 hidden md:block">
-          <button
-            onClick={() => navigate('/')}
-            className="text-forest-700 hover:text-forest-900 text-sm font-medium transition-colors flex items-center gap-1.5"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Volver a avisos
-          </button>
-        </div>
+
       </div>
 
       {/* Mobile navigation */}
