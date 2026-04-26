@@ -20,6 +20,7 @@ export default function Avisos() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [lastAccess, setLastAccess] = useState<string>('');
   const { favorites, toggleFavorite } = useFavorites();
 
@@ -66,11 +67,16 @@ export default function Avisos() {
 
   const isLoading = data === null;
 
+  const favCount = Object.values(favorites).filter(Boolean).length;
+
   const filteredData = (data ?? [])
-    .filter(item =>
-      item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter(item => {
+      const matchesSearch =
+        item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesFav = !showOnlyFavorites || !!favorites[item.id];
+      return matchesSearch && matchesFav;
+    })
     .sort((a, b) => {
       const aFav = favorites[a.id] || false;
       const bFav = favorites[b.id] || false;
@@ -130,6 +136,27 @@ export default function Avisos() {
               )}
             </button>
 
+            {/* Favorites filter — always visible */}
+            <button
+              onClick={() => setShowOnlyFavorites(v => !v)}
+              className={`relative p-2 rounded-lg transition-colors ${
+                showOnlyFavorites
+                  ? 'bg-gold text-white hover:bg-amber-500'
+                  : 'hover:bg-white/10 text-white/80 hover:text-white'
+              }`}
+              aria-label="Ver favoritos"
+              title="Ver solo favoritos"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+              </svg>
+              {favCount > 0 && !showOnlyFavorites && (
+                <span className="absolute -top-1 -right-1 bg-gold text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                  {favCount}
+                </span>
+              )}
+            </button>
+
             {isAuthenticated ? (
               <>
                 <button
@@ -173,6 +200,17 @@ export default function Avisos() {
         {/* Mobile dropdown */}
         {showMobileMenu && (
           <div className="md:hidden bg-forest-800 border-t border-white/10 px-4 py-3 space-y-1">
+            <button
+              onClick={() => { setShowOnlyFavorites(v => !v); setShowMobileMenu(false); }}
+              className={`w-full text-left py-2.5 px-3 rounded-lg transition-colors text-sm font-medium flex items-center gap-2 ${
+                showOnlyFavorites ? 'bg-gold/20 text-gold' : 'hover:bg-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+              </svg>
+              {showOnlyFavorites ? 'Ver todos' : `Mis favoritos${favCount > 0 ? ` (${favCount})` : ''}`}
+            </button>
             {isAuthenticated ? (
               <>
                 <button
@@ -212,6 +250,11 @@ export default function Avisos() {
           <div className="text-center py-20">
             <p className="font-display text-2xl text-forest-900 mb-2">Sin resultados</p>
             <p className="text-stone-400 text-sm">No encontramos avisos para "{searchTerm}"</p>
+          </div>
+        ) : filteredData.length === 0 && showOnlyFavorites ? (
+          <div className="text-center py-20">
+            <p className="font-display text-2xl text-forest-900 mb-2">Sin favoritos</p>
+            <p className="text-stone-400 text-sm">Marca avisos con ★ para verlos aquí</p>
           </div>
         ) : filteredData.length === 0 ? (
           <div className="text-center py-20">
