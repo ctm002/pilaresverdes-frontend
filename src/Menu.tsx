@@ -8,6 +8,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 import './index.css'
 import Avisos from './Avisos.tsx'
+import MisAvisos from './MisAvisos.tsx'
 import EditarAviso from './EditarAviso.tsx'
 import DetalleAviso from './DetalleAviso.tsx'
 
@@ -18,6 +19,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path='/signin' element={<Signin/>} ></Route>
         <Route path='/signup' element={<Signup/>} ></Route>
         <Route path='/avisos' element={ <Avisos/>}></Route>
+        <Route path='/mis-avisos' element={<MisAvisos/>} />
         <Route path='/crear' element={<EditarAviso/>} ></Route>
         <Route path='/avisos/:slug/editar' element={<EditarAviso/>} ></Route>
         <Route path='/avisos/:slug' element={<DetalleAviso/>} ></Route>
