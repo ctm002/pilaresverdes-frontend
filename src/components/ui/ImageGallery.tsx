@@ -110,14 +110,14 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
             <button
               key={img.id || i}
               onClick={() => goTo(i)}
-              className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden transition-all ${
+              className={`flex-shrink-0 w-16 h-16 rounded-lg transition-all ${
                 current === i
                   ? 'ring-2 ring-forest-700 ring-offset-2 opacity-100 scale-105'
                   : 'opacity-50 hover:opacity-80'
               }`}
               aria-label={`Ver foto ${i + 1}`}
             >
-              <img src={src(img)} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
+              <img src={src(img)} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover rounded-lg" />
             </button>
           ))}
         </div>
