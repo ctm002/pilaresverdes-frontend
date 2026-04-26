@@ -191,24 +191,25 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
           {/* Thumbnail strip */}
           {total > 1 && (
             <div
-              className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 px-4 overflow-x-auto max-w-[90vw]"
-              style={{ scrollbarWidth: 'none' }}
+              className="absolute bottom-5 left-1/2 -translate-x-1/2 max-w-[90vw] py-2 px-1"
               onClick={(e) => e.stopPropagation()}
             >
+              <div className="flex gap-3" style={{ overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 4 }}>
               {images.map((img, i) => (
                 <button
                   key={img.id || i}
                   onClick={() => goTo(i)}
-                  className={`flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden transition-all ${
+                  className={`flex-shrink-0 w-12 h-12 rounded-lg transition-all ${
                     current === i
-                      ? 'ring-2 ring-white opacity-100 scale-110'
+                      ? 'ring-2 ring-offset-2 ring-white opacity-100'
                       : 'opacity-35 hover:opacity-65'
                   }`}
                   aria-label={`Ver foto ${i + 1}`}
                 >
-                  <img src={src(img)} alt="" className="w-full h-full object-cover" />
+                  <img src={src(img)} alt="" className="w-full h-full object-cover rounded-lg" />
                 </button>
               ))}
+              </div>
             </div>
           )}
         </div>
