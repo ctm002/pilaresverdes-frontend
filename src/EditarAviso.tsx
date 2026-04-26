@@ -5,6 +5,22 @@ import { ImagesAvisoDto } from './dto/AvisoDto.js';
 import SimpleHeader from './components/ui/SimpleHeader.js';
 import FormField from './components/ui/FormField.js';
 
+function imageSrc(img: ImagesAvisoDto): string {
+  if (img.url) return img.url;
+  if (!img.imageBase64) return '';
+  return img.imageBase64.startsWith('data:')
+    ? img.imageBase64
+    : `data:image/jpeg;base64,${img.imageBase64}`;
+}
+
+const Placeholder = () => (
+  <div className="w-full h-full flex items-center justify-center bg-stone-100">
+    <svg className="w-6 h-6 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  </div>
+);
+
 export default function EditarAviso() {
   const navigate = useNavigate();
   const { slug } = useParams();
@@ -197,12 +213,21 @@ export default function EditarAviso() {
                 {/* Imágenes existentes */}
                 {existingImages.map((image, index) => (
                   <div key={`existing-${image.id}-${index}`} className="relative h-24 rounded-xl overflow-hidden group border border-stone-200 bg-stone-100">
-                    <img
-                      src={image.url || image.imageBase64}
-                      alt={`Imagen ${index + 1}`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => { (e.target as HTMLImageElement).src = ''; }}
-                    />
+                    {imageSrc(image) ? (
+                      <img
+                        src={imageSrc(image)}
+                        alt={`Imagen ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const el = e.currentTarget;
+                          el.style.display = 'none';
+                          el.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null}
+                    <div className={imageSrc(image) ? 'hidden w-full h-full' : 'w-full h-full'}>
+                      <Placeholder />
+                    </div>
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
                     <button
                       type="button"
