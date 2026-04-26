@@ -83,6 +83,17 @@ export default function GestionarAviso() {
           </div>
         </div>
 
+        {/* Volver */}
+        <button
+          onClick={() => navigate('/mis-avisos')}
+          className="inline-flex items-center gap-1.5 text-forest-700 hover:text-forest-900 text-sm font-medium transition-colors mb-4"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Volver a mis avisos
+        </button>
+
         {/* Action buttons */}
         <div className="grid grid-cols-2 gap-3">
           <button
