@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import { useFavorites } from './hooks/useFavorites.js';
+import { useCurrentUser } from './hooks/useCurrentUser.js';
 import SimpleHeader from './components/ui/SimpleHeader.js';
 import ImageGallery from './components/ui/ImageGallery.js';
 import MapView from './components/ui/MapView.js';
@@ -15,6 +16,7 @@ export default function DetalleAviso() {
   const { slug } = useParams();
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const { favorites, toggleFavorite } = useFavorites();
+  const currentUsername = useCurrentUser();
   const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
@@ -37,6 +39,17 @@ export default function DetalleAviso() {
       })
       .catch(err => console.error('Error al cargar datos:', err));
   }, [slug]);
+
+  const handleDelete = async () => {
+    if (!aviso) return;
+    if (!confirm('¿Estás seguro de que quieres eliminar este aviso?')) return;
+    try {
+      await api.delete(`/api/v1/avisos/${aviso.id}`);
+      navigate('/');
+    } catch (error) {
+      console.error('Error al eliminar aviso:', error);
+    }
+  };
 
   const handleLikeCount = async (avisoId: number) => {
     try {
@@ -145,6 +158,31 @@ export default function DetalleAviso() {
                 <p className="text-stone-400 text-xs">Publicado el {aviso.fecha_creacion}</p>
               )}
             </div>
+
+            {/* Owner actions */}
+            {currentUsername && aviso.username === currentUsername && (
+              <div className="flex gap-2 mb-5 p-3 bg-forest-50 border border-forest-100 rounded-xl">
+                <span className="text-[11px] text-forest-700 font-semibold my-auto mr-auto">Tu aviso</span>
+                <button
+                  onClick={() => navigate(`/avisos/${aviso.slug}/editar`)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-stone-200 text-forest-800 hover:bg-forest-900 hover:text-white hover:border-forest-900 rounded-lg text-xs font-medium transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Editar
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-stone-200 text-red-500 hover:bg-red-600 hover:text-white hover:border-red-600 rounded-lg text-xs font-medium transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Eliminar
+                </button>
+              </div>
+            )}
 
             {/* Description */}
             <p className="text-stone-600 text-[15px] leading-relaxed mb-6">{aviso.descripcion}</p>

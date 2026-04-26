@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
 import { Aviso } from "./dto/AvisoDto.js";
 import { useFavorites } from "./hooks/useFavorites.js";
+import { useCurrentUser } from "./hooks/useCurrentUser.js";
 import AvisoCard from "./components/aviso/AvisoCard.js";
 import AvisoCardSkeleton from "./components/aviso/AvisoCardSkeleton.js";
 
@@ -23,6 +24,7 @@ export default function Avisos() {
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [lastAccess, setLastAccess] = useState<string>('');
   const { favorites } = useFavorites();
+  const currentUsername = useCurrentUser();
 
   const loadData = (minDelay = 0) => {
     const delay = new Promise<void>(resolve => setTimeout(resolve, minDelay));
@@ -44,17 +46,6 @@ export default function Avisos() {
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
   }, []);
-
-  const handleDelete = async (id: number) => {
-    if (confirm('¿Estás seguro de que quieres eliminar este aviso?')) {
-      try {
-        await api.delete(`/api/v1/avisos/${id}`);
-        loadData();
-      } catch (error) {
-        console.error('Error al eliminar aviso:', error);
-      }
-    }
-  };
 
   const handleLikeCount = async (id: number) => {
     try {
@@ -266,11 +257,9 @@ export default function Avisos() {
               <AvisoCard
                 key={item.id}
                 item={item}
-                isAuthenticated={isAuthenticated}
+                currentUsername={currentUsername}
                 delay={Math.floor(Math.random() * 1200) + 200}
                 onNavigate={(s) => navigate(`/avisos/${s}`)}
-                onEdit={(i) => navigate(`/avisos/${i.slug}/editar`)}
-                onDelete={handleDelete}
                 onLikeCount={handleLikeCount}
               />
             ))}

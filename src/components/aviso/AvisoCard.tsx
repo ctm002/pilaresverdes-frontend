@@ -5,23 +5,20 @@ import WhatsAppButton from './WhatsAppButton.js';
 
 interface AvisoCardProps {
   item: Aviso;
-  isAuthenticated: boolean;
+  currentUsername: string | null;
   delay?: number;
   onNavigate: (slug: string) => void;
-  onEdit: (item: Aviso) => void;
-  onDelete: (id: number) => void;
   onLikeCount: (id: number) => void;
 }
 
 export default function AvisoCard({
   item,
-  isAuthenticated,
+  currentUsername,
   delay = 0,
   onNavigate,
-  onEdit,
-  onDelete,
   onLikeCount,
 }: AvisoCardProps) {
+  const isOwner = !!currentUsername && item.username === currentUsername;
   const [imageLoaded, setImageLoaded] = useState(false);
   const [delayDone, setDelayDone] = useState(delay === 0);
 
@@ -90,29 +87,11 @@ export default function AvisoCard({
           <>
             <div className="flex justify-between items-center">
               <span className="text-[11px] text-forest-700 font-medium">Por {item.username}</span>
-              {/* Admin buttons — ocultos hasta activar */}
-              <div className="hidden gap-1.5">
-                {isAuthenticated && (
-                  <>
-                    <button
-                      onClick={() => onEdit(item)}
-                      className="p-1.5 bg-stone-100 hover:bg-sky-100 hover:text-sky-700 text-stone-400 rounded-lg transition-colors"
-                    >
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => onDelete(item.id)}
-                      className="p-1.5 bg-stone-100 hover:bg-red-100 hover:text-red-600 text-stone-400 rounded-lg transition-colors"
-                    >
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </>
-                )}
-              </div>
+              {isOwner && (
+                <span className="text-[10px] font-semibold text-forest-700 bg-forest-50 border border-forest-100 px-2 py-0.5 rounded-full">
+                  Tu aviso
+                </span>
+              )}
             </div>
 
             <div className="flex-grow">
