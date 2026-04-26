@@ -114,10 +114,10 @@ export default function EditarAviso() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const maxSize = 5 * 1024 * 1024;
+      const maxSize = 10 * 1024 * 1024;
       const validFiles = Array.from(e.target.files).filter(file => {
         if (file.size > maxSize) {
-          alert(`El archivo ${file.name} es muy grande. Máximo 5MB.`);
+          alert(`El archivo ${file.name} es muy grande. Máximo 10MB.`);
           return false;
         }
         return true;
