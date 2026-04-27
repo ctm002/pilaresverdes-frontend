@@ -110,7 +110,7 @@ export default function DetalleAviso() {
           </button>
         </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4">
         {/* Desktop back button */}
         <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden relative">
           {isNavigating && (
