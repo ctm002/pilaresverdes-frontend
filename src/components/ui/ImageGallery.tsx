@@ -52,84 +52,70 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
 
   return (
     <>
-      {/* ── Layout: imagen principal + thumbnails ─────────── */}
-      <div className={`flex gap-2 mb-4 select-none ${total > 1 ? '' : ''}`}>
+      {/* ── Imagen principal ────────────────────────────── */}
+      <div className="relative rounded-xl overflow-hidden group cursor-zoom-in mb-3 select-none" onClick={() => setLightbox(true)}>
+        <img
+          src={currentSrc}
+          alt={`${title} — foto ${current + 1}`}
+          className={`w-full h-80 object-cover transition-opacity duration-150 ${fade ? 'opacity-100' : 'opacity-0'}`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
 
-        {/* Imagen principal */}
-        <div className="relative rounded-xl overflow-hidden group cursor-zoom-in flex-1 min-w-0" onClick={() => setLightbox(true)}>
-          <img
-            src={currentSrc}
-            alt={`${title} — foto ${current + 1}`}
-            className={`w-full h-96 object-cover transition-opacity duration-150 ${fade ? 'opacity-100' : 'opacity-0'}`}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+        {total > 1 && (
+          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-0.5 rounded-full pointer-events-none">
+            {current + 1} / {total}
+          </span>
+        )}
 
-          {/* Contador */}
-          {total > 1 && (
-            <span className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-0.5 rounded-full pointer-events-none">
-              {current + 1} / {total}
-            </span>
-          )}
-
-          {/* Expand hint */}
-          <div className="absolute top-2 right-2 bg-black/30 backdrop-blur-sm text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-            </svg>
-          </div>
-
-          {/* Flechas prev/next */}
-          {total > 1 && (
-            <>
-              <button
-                onClick={(e) => { e.stopPropagation(); prev(); }}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/65 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all"
-                aria-label="Foto anterior"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); next(); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/65 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all"
-                aria-label="Foto siguiente"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </>
-          )}
+        <div className="absolute top-2 right-2 bg-black/30 backdrop-blur-sm text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
         </div>
 
-        {/* Thumbnails — grilla 2 columnas a la derecha */}
         {total > 1 && (
-          <div
-            className="grid grid-cols-2 gap-1.5 content-start"
-            style={{ width: 108, alignContent: 'start' }}
-          >
-            {images.map((img, i) => (
-              <button
-                key={img.id || i}
-                onClick={() => goTo(i)}
-                className={`relative rounded-lg overflow-hidden transition-all aspect-square ${
-                  current === i
-                    ? 'ring-2 ring-forest-700 ring-offset-1 opacity-100'
-                    : 'opacity-55 hover:opacity-90'
-                }`}
-                aria-label={`Ver foto ${i + 1}`}
-              >
-                <img
-                  src={src(img)}
-                  alt={`Miniatura ${i + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); prev(); }}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/65 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all"
+              aria-label="Foto anterior"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); next(); }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/65 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all"
+              aria-label="Foto siguiente"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
         )}
       </div>
+
+      {/* ── Thumbnails debajo ────────────────────────────── */}
+      {total > 1 && (
+        <div className="flex gap-2 mb-4 py-1 px-1">
+          {images.map((img, i) => (
+            <button
+              key={img.id || i}
+              onClick={() => goTo(i)}
+              className={`flex-shrink-0 w-16 h-16 rounded-lg transition-all ${
+                current === i
+                  ? 'ring-2 ring-forest-700 ring-offset-2 opacity-100'
+                  : 'opacity-50 hover:opacity-90'
+              }`}
+              aria-label={`Ver foto ${i + 1}`}
+            >
+              <img src={src(img)} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover rounded-lg" />
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── Lightbox ─────────────────────────────────────── */}
       {lightbox && (
