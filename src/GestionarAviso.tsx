@@ -33,6 +33,7 @@ export default function GestionarAviso() {
   const { slug } = useParams();
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const isAuthenticated = !!localStorage.getItem('token');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -98,7 +99,7 @@ export default function GestionarAviso() {
   if (!aviso) {
     return (
       <div className="min-h-screen bg-cream pt-14">
-        <AppNav title="Gestionar aviso" backTo="/mis-avisos" />
+        <AppNav title="Gestionar aviso" backTo="/mis-avisos" isAuthenticated={isAuthenticated} onSignOut={() => { localStorage.removeItem("token"); navigate("/"); }} />
         <div className="container mx-auto px-4 py-8 max-w-2xl">
           <div className="bg-white rounded-2xl shadow-sm border border-stone-100 p-5 space-y-4">
             <div className="w-full h-64 bg-stone-200 rounded-xl animate-pulse" />
@@ -117,7 +118,7 @@ export default function GestionarAviso() {
 
   return (
     <div className="min-h-screen bg-cream pt-14">
-      <AppNav title="Gestionar aviso" backTo="/mis-avisos" />
+      <AppNav title="Gestionar aviso" backTo="/mis-avisos" isAuthenticated={isAuthenticated} onSignOut={() => { localStorage.removeItem("token"); navigate("/"); }} />
 
       <div className="container mx-auto px-4 py-8 max-w-2xl">
 
