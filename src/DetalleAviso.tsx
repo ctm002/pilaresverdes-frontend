@@ -98,7 +98,7 @@ export default function DetalleAviso() {
     <div className="min-h-screen bg-cream md:pt-8 pt-16">
       <AppNav title="Detalle del aviso" backTo="/" />
         {/* Desktop back button */}
-        <div className="max-w-2xl mx-auto mt-4 hidden md:block">
+        <div className="max-w-2xl mx-auto mt-8 hidden md:block">
           <button
             onClick={() => navigate('/')}
             className="text-forest-700 hover:text-forest-900 text-sm font-medium transition-colors flex items-center gap-1.5"
