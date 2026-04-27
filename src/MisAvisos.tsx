@@ -35,25 +35,7 @@ export default function MisAvisos() {
       <main className="flex-grow pt-14 px-4 py-6">
 
         {/* Volver al inicio — desktop */}
-        <div className="hidden md:flex items-center justify-between mb-6 max-w-7xl mx-auto">
-          <button
-            onClick={() => navigate('/')}
-            className="inline-flex items-center gap-1.5 text-forest-700 hover:text-forest-900 text-sm font-medium transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Volver a todos los avisos
-          </button>
-          <button
-            onClick={() => navigate('/crear')}
-            className="inline-flex items-center gap-1.5 bg-forest-900 hover:bg-forest-800 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
-          >
-            <span className="text-base leading-none">+</span>
-            Publicar aviso
-          </button>
-        </div>
-
+ 
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {Array.from({ length: 6 }).map((_, i) => <AvisoCardSkeleton key={i} />)}
