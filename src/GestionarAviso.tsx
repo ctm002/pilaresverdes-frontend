@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
-import SimpleHeader from './components/ui/SimpleHeader.js';
+import AppNav from './components/ui/AppNav.js';
 
 function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -97,8 +97,8 @@ export default function GestionarAviso() {
   /* ── Skeleton ─────────────────────────────────────────── */
   if (!aviso) {
     return (
-      <div className="min-h-screen bg-cream pt-16">
-        <SimpleHeader title="Gestionar aviso" backTo="/mis-avisos" />
+      <div className="min-h-screen bg-cream pt-14">
+        <AppNav title="Gestionar aviso" backTo="/mis-avisos" />
         <div className="container mx-auto px-4 py-8 max-w-2xl">
           <div className="bg-white rounded-2xl shadow-sm border border-stone-100 p-5 space-y-4">
             <div className="w-full h-64 bg-stone-200 rounded-xl animate-pulse" />
@@ -116,8 +116,8 @@ export default function GestionarAviso() {
   const imageSrc = previewUrl ?? aviso.image_url;
 
   return (
-    <div className="min-h-screen bg-cream pt-16">
-      <SimpleHeader title="Gestionar aviso" backTo="/mis-avisos" />
+    <div className="min-h-screen bg-cream pt-14">
+      <AppNav title="Gestionar aviso" backTo="/mis-avisos" />
 
       <div className="container mx-auto px-4 py-8 max-w-2xl">
 

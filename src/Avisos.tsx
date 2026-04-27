@@ -7,21 +7,15 @@ import { useFavorites } from "./hooks/useFavorites.js";
 import { useCurrentUser } from "./hooks/useCurrentUser.js";
 import AvisoCard from "./components/aviso/AvisoCard.js";
 import AvisoCardSkeleton from "./components/aviso/AvisoCardSkeleton.js";
-
-const LeafIcon = () => (
-  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 5.5-8 5.5L12 6l-3.5 3.5C11 9 15 9.5 17 8z"/>
-  </svg>
-);
+import AppNav from "./components/ui/AppNav.js";
 
 export default function Avisos() {
   const navigate = useNavigate();
   const [data, setData] = useState<Aviso[] | null>(null);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const [showOnlyFavorites] = useState(false);
   const [lastAccess, setLastAccess] = useState<string>('');
   const { favorites } = useFavorites();
   const currentUsername = useCurrentUser();
@@ -58,8 +52,6 @@ export default function Avisos() {
 
   const isLoading = data === null;
 
-  const favCount = Object.values(favorites).filter(Boolean).length;
-
   const filteredData = (data ?? [])
     .filter(item => {
       const matchesSearch =
@@ -79,179 +71,13 @@ export default function Avisos() {
   return (
     <div className="min-h-screen flex flex-col bg-cream">
 
-      {/* ── Header ─────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 right-0 bg-forest-900 text-white shadow-lg z-40">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-3">
-
-          {/* Brand */}
-          <div className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-              <LeafIcon />
-            </div>
-            <span className={`font-display font-semibold text-lg tracking-tight ${showSearch ? 'hidden md:block' : ''}`}>
-              Pilares Verdes
-            </span>
-          </div>
-
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-2">
-            {(showSearch || searchTerm) && (
-              <input
-                type="text"
-                placeholder="Buscar avisos..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') setShowSearch(false); }}
-                className="px-3 py-1.5 rounded-lg text-forest-950 bg-white text-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-300 w-48"
-                autoFocus
-              />
-            )}
-            <button
-              onClick={() => {
-                if (showSearch || searchTerm) { setShowSearch(false); setSearchTerm(''); }
-                else setShowSearch(true);
-              }}
-              className={`p-2 rounded-lg transition-colors ${
-                showSearch || searchTerm ? 'bg-white/20 hover:bg-white/30' : 'hover:bg-white/10'
-              }`}
-              aria-label="Buscar"
-            >
-              {showSearch || searchTerm ? (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              )}
-            </button>
-
-            {/* Mis avisos — solo cuando hay sesión */}
-            {currentUsername && (
-              <button
-                onClick={() => navigate('/mis-avisos')}
-                className="hover:bg-white/10 text-white/80 hover:text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
-              >
-                Mis avisos
-              </button>
-            )}
-
-            {/* Favorites filter — always visible */}
-            <button
-              onClick={() => setShowOnlyFavorites(v => !v)}
-              className={`relative p-2 rounded-lg transition-colors ${
-                showOnlyFavorites
-                  ? 'bg-gold text-white hover:bg-amber-500'
-                  : 'hover:bg-white/10 text-white/80 hover:text-white'
-              }`}
-              aria-label="Ver favoritos"
-              title="Ver solo favoritos"
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-              </svg>
-              {favCount > 0 && !showOnlyFavorites && (
-                <span className="absolute -top-1 -right-1 bg-gold text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
-                  {favCount}
-                </span>
-              )}
-            </button>
-
-            {isAuthenticated ? (
-              <>
-                <button
-                  onClick={() => navigate('/crear')}
-                  className="bg-white text-forest-900 hover:bg-forest-100 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-1.5"
-                >
-                  <span className="text-base leading-none">+</span>
-                  Publicar
-                </button>
-                <button
-                  onClick={() => { localStorage.removeItem('token'); setIsAuthenticated(false); }}
-                  className="text-white/70 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-lg text-sm transition-colors"
-                >
-                  Salir
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => window.location.href = '/signin'}
-                className="bg-white text-forest-900 hover:bg-forest-100 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors"
-              >
-                Iniciar sesión
-              </button>
-            )}
-          </div>
-
-          {/* Mobile hamburger */}
-          {!showSearch && (
-            <button
-              onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
-              aria-label="Menú"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          )}
-        </div>
-
-        {/* Mobile dropdown */}
-        {showMobileMenu && (
-          <div className="md:hidden bg-forest-800 border-t border-white/10 px-4 py-3 space-y-1">
-            {currentUsername && (
-              <button
-                onClick={() => { navigate('/mis-avisos'); setShowMobileMenu(false); }}
-                className="w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium flex items-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                Mis avisos
-              </button>
-            )}
-            <button
-              onClick={() => { setShowOnlyFavorites(v => !v); setShowMobileMenu(false); }}
-              className={`w-full text-left py-2.5 px-3 rounded-lg transition-colors text-sm font-medium flex items-center gap-2 ${
-                showOnlyFavorites ? 'bg-gold/20 text-gold' : 'hover:bg-white/10'
-              }`}
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-              </svg>
-              {showOnlyFavorites ? 'Ver todos' : `Mis favoritos${favCount > 0 ? ` (${favCount})` : ''}`}
-            </button>
-            {isAuthenticated ? (
-              <>
-                <button
-                  onClick={() => { navigate('/crear'); setShowMobileMenu(false); }}
-                  className="w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium flex items-center gap-2"
-                >
-                  <span>+</span> Publicar aviso
-                </button>
-                <button
-                  onClick={() => { localStorage.removeItem('token'); setIsAuthenticated(false); setShowMobileMenu(false); }}
-                  className="w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/10 transition-colors text-sm text-white/70"
-                >
-                  Cerrar sesión
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => { window.location.href = '/signin'; setShowMobileMenu(false); }}
-                className="w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-              >
-                Iniciar sesión
-              </button>
-            )}
-          </div>
-        )}
-      </header>
+      <AppNav
+        isAuthenticated={isAuthenticated}
+        onSignOut={() => { localStorage.removeItem('token'); setIsAuthenticated(false); }}
+      />
 
       {/* ── Main content ───────────────────────────────── */}
-      <main className={`flex-grow pt-16 px-4 py-6 transition-all duration-300 ${showSearch ? 'blur-sm' : ''}`}>
+      <main className={`flex-grow pt-14 px-4 py-6 transition-all duration-300 ${showSearch ? 'blur-sm' : ''}`}>
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {Array.from({ length: 10 }).map((_, i) => (
@@ -303,7 +129,7 @@ export default function Avisos() {
       <button
         onClick={() => {
           if (showSearch || searchTerm) { setShowSearch(false); setSearchTerm(''); }
-          else { setShowSearch(true); setShowMobileMenu(false); }
+          else { setShowSearch(true); }
         }}
         className={`fixed text-white p-4 rounded-full shadow-xl transition-all duration-300 z-50 md:hidden ${
           showSearch || searchTerm

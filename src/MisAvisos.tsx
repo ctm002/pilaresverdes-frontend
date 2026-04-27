@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import { useCurrentUser } from './hooks/useCurrentUser.js';
-import SimpleHeader from './components/ui/SimpleHeader.js';
+import AppNav from './components/ui/AppNav.js';
 import AvisoCard from './components/aviso/AvisoCard.js';
 import AvisoCardSkeleton from './components/aviso/AvisoCardSkeleton.js';
 
@@ -31,18 +31,8 @@ export default function MisAvisos() {
 
   return (
     <div className="min-h-screen flex flex-col bg-cream">
-      {
-      <SimpleHeader title="Mis avisos" backTo="/">
-        <button
-          onClick={() => navigate('/avisos')}
-          className="ml-auto hidden md:inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
-        >
-          <span className="text-base leading-none">+</span>
-          Home
-        </button>
-      </SimpleHeader>
-}
-      <main className="flex-grow pt-20 px-4 py-6">
+      <AppNav title="Mis avisos" backTo="/" />
+      <main className="flex-grow pt-14 px-4 py-6">
 
         {/* Volver al inicio — desktop */}
         <div className="hidden md:flex items-center justify-between mb-6 max-w-7xl mx-auto">

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from './api/axios.js';
 import { ImagesAvisoDto } from './dto/AvisoDto.js';
-import SimpleHeader from './components/ui/SimpleHeader.js';
+import AppNav from './components/ui/AppNav.js';
 import FormField from './components/ui/FormField.js';
 
 function imageSrc(img: ImagesAvisoDto): string {
@@ -158,8 +158,8 @@ export default function EditarAviso() {
   };
 
   return (
-    <div className="min-h-screen bg-cream pt-16">
-      <SimpleHeader title={isEditing ? 'Editar aviso' : 'Publicar aviso'} />
+    <div className="min-h-screen bg-cream pt-14">
+      <AppNav title={isEditing ? 'Editar aviso' : 'Publicar aviso'} backTo={isEditing && slug ? `/avisos/${slug}/gestionar` : '/'} />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-stone-100">

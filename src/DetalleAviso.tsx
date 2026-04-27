@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import { useFavorites } from './hooks/useFavorites.js';
-import SimpleHeader from './components/ui/SimpleHeader.js';
+import AppNav from './components/ui/AppNav.js';
 import ImageGallery from './components/ui/ImageGallery.js';
 import MapView from './components/ui/MapView.js';
 import LikeButton from './components/aviso/LikeButton.js';
@@ -51,7 +51,7 @@ export default function DetalleAviso() {
   if (!aviso) {
     return (
       <div className="min-h-screen bg-cream md:pt-8 pt-16">
-        <SimpleHeader title="Detalle del aviso" />
+        <AppNav title="Detalle del aviso" backTo="/" />
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
             <div className="p-5 space-y-4">
@@ -96,7 +96,7 @@ export default function DetalleAviso() {
 
   return (
     <div className="min-h-screen bg-cream md:pt-8 pt-16">
-      <SimpleHeader title="Detalle del aviso" />
+      <AppNav title="Detalle del aviso" backTo="/" />
         {/* Desktop back button */}
         <div className="max-w-2xl mx-auto mt-4 hidden md:block">
           <button
