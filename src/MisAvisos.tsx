@@ -12,6 +12,7 @@ export default function MisAvisos() {
   const navigate = useNavigate();
   const currentUsername = useCurrentUser();
   const [data, setData] = useState<Aviso[] | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
   const loadData = () => {
     api.get('/api/v1/mis-avisos')
@@ -31,7 +32,12 @@ export default function MisAvisos() {
 
   return (
     <div className="min-h-screen flex flex-col bg-cream">
-      <AppNav title="Mis avisos" backTo="/" />
+      <AppNav
+        title="Mis avisos"
+        backTo="/"
+        isAuthenticated={isAuthenticated}
+        onSignOut={() => { localStorage.removeItem('token'); setIsAuthenticated(false); navigate('/'); }}
+      />
       <main className="flex-grow pt-14 px-4 py-6">
 
         {/* Volver al inicio — desktop */}
