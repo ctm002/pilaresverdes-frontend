@@ -22,4 +22,5 @@ export interface Aviso {
   longitud?: number;
   precio?: number;
   precio_uf?: number;
+  metros_cuadrados?: number;
 }

@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import api from '../api/axios.js';
 import { Favorito } from '../dto/FavoritoDto.js';
 
-type FavEntry = { favoritoId: number; notas: string };
+type FavEntry = { favoritoId: number; guid: string; notas: string };
 type FavMap = Record<number, FavEntry>;
 
 export function useFavorites() {
@@ -14,7 +14,7 @@ export function useFavorites() {
     api.get('/api/v1/favoritos')
       .then((res: AxiosResponse<Favorito[]>) => {
         const map: FavMap = {};
-        res.data.forEach(f => { map[f.propiedadId] = { favoritoId: f.id, notas: f.notas }; });
+        res.data.forEach(f => { map[f.propiedadId] = { favoritoId: f.id, guid: f.guid, notas: f.notas }; });
         setFavorites(map);
       })
       .catch((err: unknown) => console.error('Error al cargar favoritos:', err));
@@ -22,7 +22,7 @@ export function useFavorites() {
 
   const addFavorite = async (propiedadId: number, notas: string) => {
     const res: AxiosResponse<Favorito> = await api.post('/api/v1/favoritos', { propiedadId, notas });
-    setFavorites(prev => ({ ...prev, [propiedadId]: { favoritoId: res.data.id, notas: res.data.notas } }));
+    setFavorites(prev => ({ ...prev, [propiedadId]: { favoritoId: res.data.id, guid: res.data.guid, notas: res.data.notas } }));
   };
 
   const removeFavorite = async (idaviso: number) => {

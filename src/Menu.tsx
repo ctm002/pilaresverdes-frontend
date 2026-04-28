@@ -14,6 +14,7 @@ import CompararAvisos from './CompararAvisos.tsx'
 import GestionarAviso from './GestionarAviso.tsx'
 import EditarAviso from './EditarAviso.tsx'
 import DetalleAviso from './DetalleAviso.tsx'
+import DetalleFavorito from './DetalleFavorito.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -24,7 +25,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path='/avisos' element={ <Avisos/>}></Route>
         <Route path='/mis-avisos' element={<MisAvisos/>} />
         <Route path='/mis-favoritos' element={<MisFavoritos/>} />
-        <Route path='/comparar' element={<CompararAvisos/>} />
+        <Route path='/mis-favoritos/:guid' element={<DetalleFavorito/>} />
+        <Route path='/comparador' element={<CompararAvisos/>} />
         <Route path='/avisos/:slug/gestionar' element={<GestionarAviso/>} />
         <Route path='/crear' element={<EditarAviso/>} ></Route>
         <Route path='/avisos/:slug/editar' element={<EditarAviso/>} ></Route>

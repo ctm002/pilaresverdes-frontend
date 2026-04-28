@@ -67,7 +67,7 @@ export default function CompararAvisos() {
           {selected.length < MAX && (
             <button
               onClick={() => setShowPicker(v => !v)}
-              className="inline-flex items-center gap-1.5 bg-forest-900 hover:bg-forest-800 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+              className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
             >
               <span className="text-base leading-none">+</span>
               Agregar aviso

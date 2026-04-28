@@ -78,7 +78,7 @@ export default function MisFavoritos() {
                 key={item.id}
                 item={item}
                 currentUsername={currentUsername}
-                onNavigate={s => navigate(`/avisos/${s}`)}
+                onNavigate={() => navigate(`/mis-favoritos/${favorites[item.id]?.guid}`)}
                 onLikeCount={handleLikeCount}
               />
             ))}

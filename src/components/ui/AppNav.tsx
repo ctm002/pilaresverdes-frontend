@@ -21,7 +21,7 @@ const NAV_LINKS = [
   { label: 'Inicio',        href: '/' },
   { label: 'Mis avisos',    href: '/mis-avisos' },
   { label: 'Mis favoritos', href: '/mis-favoritos' },
-  { label: 'Comparador',      href: '/comparar' },
+  { label: 'Comparador',      href: '/comparador' },
 ];
 
 export default function AppNav({ title, backTo, isAuthenticated, onSignOut }: AppNavProps) {

@@ -95,17 +95,23 @@ export default function AvisoCard({
               <p className="text-stone-500 text-xs leading-relaxed line-clamp-2">
                 {item.descripcion}
               </p>
+            </div>
+
+            <div className="flex flex-col gap-0.5">
               {item.precio != null && (
-                <div className="mt-2 flex items-baseline gap-1.5">
-                  <span className="text-forest-900 font-bold text-sm">
-                    ${item.precio.toLocaleString('es-CL')}
-                  </span>
-                  {item.precio_uf != null && (
-                    <span className="text-stone-400 text-[11px]">
-                      · {item.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF
-                    </span>
-                  )}
-                </div>
+                <span className="text-forest-900 font-bold text-base">
+                  ${item.precio.toLocaleString('es-CL')}
+                </span>
+              )}
+              {item.precio_uf != null && (
+                <span className="text-stone-400 text-[11px]">
+                  {item.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF
+                </span>
+              )}
+              {item.metros_cuadrados != null && (
+                <span className="text-stone-500 text-[11px] font-medium">
+                  {item.metros_cuadrados} m²
+                </span>
               )}
             </div>
 
