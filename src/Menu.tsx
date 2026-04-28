@@ -11,6 +11,7 @@ import Avisos from './Avisos.tsx'
 import MisAvisos from './MisAvisos.tsx'
 import MisFavoritos from './MisFavoritos.tsx'
 import CompararAvisos from './CompararAvisos.tsx'
+import MapaComparador from './MapaComparador.tsx'
 import GestionarAviso from './GestionarAviso.tsx'
 import EditarAviso from './EditarAviso.tsx'
 import DetalleAviso from './DetalleAviso.tsx'
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path='/mis-favoritos' element={<MisFavoritos/>} />
         <Route path='/mis-favoritos/:guid' element={<DetalleFavorito/>} />
         <Route path='/comparador' element={<CompararAvisos/>} />
+        <Route path='/comparador/mapa' element={<MapaComparador/>} />
         <Route path='/avisos/:slug/gestionar' element={<GestionarAviso/>} />
         <Route path='/crear' element={<EditarAviso/>} ></Route>
         <Route path='/avisos/:slug/editar' element={<EditarAviso/>} ></Route>

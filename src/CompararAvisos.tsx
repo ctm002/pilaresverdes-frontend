@@ -5,7 +5,6 @@ import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import AppNav from './components/ui/AppNav.js';
 import WhatsAppButton from './components/aviso/WhatsAppButton.js';
-import MultiMarkerMap from './components/ui/MultiMarkerMap.js';
 
 const MAX = 3;
 
@@ -82,15 +81,28 @@ export default function CompararAvisos() {
             <h1 className="font-display text-2xl font-bold text-forest-950">Comparador de avisos</h1>
             <p className="text-stone-400 text-sm mt-0.5">Agrega hasta {MAX} avisos para compararlos</p>
           </div>
-          {selected.length < MAX && (
-            <button
-              onClick={() => setShowPicker(v => !v)}
-              className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
-            >
-              <span className="text-base leading-none">+</span>
-              Agregar aviso
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {selected.some(a => a.latitud != null && a.longitud != null) && (
+              <button
+                onClick={() => navigate('/comparador/mapa')}
+                className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                Ver mapa
+              </button>
+            )}
+            {selected.length < MAX && (
+              <button
+                onClick={() => setShowPicker(v => !v)}
+                className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+              >
+                <span className="text-base leading-none">+</span>
+                Agregar aviso
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Picker */}
@@ -244,14 +256,6 @@ export default function CompararAvisos() {
           </div>
         )}
 
-        {/* Mapa múltiple */}
-        {selected.length > 0 && (
-          <MultiMarkerMap
-            markers={selected
-              .filter(a => a.latitud != null && a.longitud != null)
-              .map(a => ({ lat: a.latitud!, lng: a.longitud!, label: a.titulo }))}
-          />
-        )}
       </main>
     </div>
   );

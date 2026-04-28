@@ -6,9 +6,10 @@ interface Marker {
 
 interface MultiMarkerMapProps {
   markers: Marker[];
+  fullHeight?: boolean;
 }
 
-export default function MultiMarkerMap({ markers }: MultiMarkerMapProps) {
+export default function MultiMarkerMap({ markers, fullHeight = false }: MultiMarkerMapProps) {
   const valid = markers.filter(m => m.lat != null && m.lng != null);
   if (valid.length === 0) return null;
 
@@ -51,10 +52,10 @@ export default function MultiMarkerMap({ markers }: MultiMarkerMapProps) {
         </svg>
         Ubicaciones
       </h2>
-      <div className="rounded-xl overflow-hidden border border-stone-200 shadow-sm">
+      <div className={fullHeight ? '' : 'rounded-xl overflow-hidden border border-stone-200 shadow-sm'}>
         <iframe
           srcDoc={html}
-          className="w-full h-72 border-0 block"
+          className={`w-full border-0 block ${fullHeight ? 'h-[calc(100vh-260px)] min-h-[400px]' : 'h-72'}`}
           title="Mapa comparador"
         />
       </div>
