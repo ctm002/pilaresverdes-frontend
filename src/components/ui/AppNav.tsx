@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useCurrentUser } from '../../hooks/useCurrentUser.js';
 
 interface AppNavProps {
   /** Título de la página — aparece en mobile centrado */
@@ -20,12 +21,14 @@ const NAV_LINKS = [
   { label: 'Inicio',        href: '/' },
   { label: 'Mis avisos',    href: '/mis-avisos' },
   { label: 'Mis favoritos', href: '/mis-favoritos' },
+  { label: 'Comparador',      href: '/comparar' },
 ];
 
 export default function AppNav({ title, backTo, isAuthenticated, onSignOut }: AppNavProps) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const username = useCurrentUser();
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' || pathname === '/avisos' : pathname.startsWith(href);
@@ -92,10 +95,21 @@ export default function AppNav({ title, backTo, isAuthenticated, onSignOut }: Ap
             <>
               <button
                 onClick={() => navigate('/crear')}
-                className="bg-white text-forest-900 hover:bg-forest-100 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-1"
+                className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 border border-white/50 hover:border-white"
               >
-                <span className="text-base leading-none">+</span> Publicar
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                </svg>
+                Publicar aviso
               </button>
+              {username && (
+                <span className="flex items-center gap-1.5 text-white/80 text-sm px-1">
+                  <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-[11px] font-bold uppercase">
+                    {username[0]}
+                  </span>
+                  {username}
+                </span>
+              )}
               <button
                 onClick={onSignOut}
                 className="text-white/70 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-lg text-sm transition-colors"
@@ -144,6 +158,14 @@ export default function AppNav({ title, backTo, isAuthenticated, onSignOut }: Ap
           <div className="border-t border-white/10 pt-2 mt-2">
             {isAuthenticated ? (
               <>
+                {username && (
+                  <div className="flex items-center gap-2 px-3 py-2 mb-1">
+                    <span className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold uppercase flex-shrink-0">
+                      {username[0]}
+                    </span>
+                    <span className="text-sm text-white/90 font-medium truncate">{username}</span>
+                  </div>
+                )}
                 <button
                   onClick={() => { navigate('/crear'); setMenuOpen(false); }}
                   className="w-full text-left py-2.5 px-3 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors flex items-center gap-2"

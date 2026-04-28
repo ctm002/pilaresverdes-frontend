@@ -20,4 +20,6 @@ export interface Aviso {
   ubicacion?: string;
   latitud?: number;
   longitud?: number;
+  precio?: number;
+  precio_uf?: number;
 }

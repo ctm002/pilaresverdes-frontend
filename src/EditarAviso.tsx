@@ -30,14 +30,24 @@ export default function EditarAviso() {
     celular: '',
     slug: '',
     id: 0,
-    mainImageUrl: ''
+    mainImageUrl: '',
+    precio: ''
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<ImagesAvisoDto[]>([]);
   const [, setMainImageUrl] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [ufValue, setUfValue] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fetch('https://mindicador.cl/api/uf')
+      .then(r => r.json())
+      .then((data: { serie: { valor: number }[] }) => setUfValue(data.serie[0]?.valor ?? null))
+      .catch(() => null);
+  }, []);
 
   useEffect(() => {
     if (slug) {
@@ -51,7 +61,8 @@ export default function EditarAviso() {
             celular: aviso.celular,
             slug: aviso.slug || '',
             id: aviso.id || 0,
-            mainImageUrl: aviso.image_url || ''
+            mainImageUrl: aviso.image_url || '',
+            precio: aviso.precio != null ? String(aviso.precio) : ''
           });
           setExistingImages(aviso.imagesAvisoList || []);
           setMainImageUrl(aviso.image_url || '');
@@ -108,7 +119,11 @@ export default function EditarAviso() {
             ? []
             : imagesBase64.map((base64) => ({ imageBase64: base64, url: '', id: 0, avisoId: formData.id })),
         celular: formData.celular,
-        likes: 0
+        likes: 0,
+        precio: formData.precio !== '' ? Number(formData.precio) : null,
+        precio_uf: formData.precio !== '' && ufValue
+          ? parseFloat((Number(formData.precio) / ufValue).toFixed(2))
+          : null
       };
 
       if (isEditing && slug) {
@@ -159,7 +174,12 @@ export default function EditarAviso() {
 
   return (
     <div className="min-h-screen bg-cream pt-14">
-      <AppNav title={isEditing ? 'Editar aviso' : 'Publicar aviso'} backTo={isEditing && slug ? `/avisos/${slug}/gestionar` : '/'} />
+      <AppNav
+        title={isEditing ? 'Editar aviso' : 'Publicar aviso'}
+        backTo={isEditing && slug ? `/avisos/${slug}/gestionar` : '/'}
+        isAuthenticated={isAuthenticated}
+        onSignOut={() => { localStorage.removeItem('token'); navigate('/signin'); }}
+      />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
@@ -191,6 +211,30 @@ export default function EditarAviso() {
               placeholder="57912345678"
               maxLength={12}
               required
+            />
+
+            <FormField
+              label="Precio"
+              type="number"
+              name="precio"
+              value={formData.precio}
+              onChange={handleInputChange}
+              placeholder="Ej: 150000"
+              min={0}
+            />
+
+            <FormField
+              label="Precio en UF"
+              type="number"
+              name="precio_uf"
+              value={
+                formData.precio !== '' && ufValue
+                  ? (Number(formData.precio) / ufValue).toFixed(2)
+                  : ''
+              }
+              onChange={() => {}}
+              placeholder="Se calcula automáticamente"
+              disabled
             />
 
             {/* ── Galería de imágenes ──────────────────────── */}

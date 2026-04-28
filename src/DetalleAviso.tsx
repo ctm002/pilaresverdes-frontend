@@ -8,13 +8,15 @@ import ImageGallery from './components/ui/ImageGallery.js';
 import MapView from './components/ui/MapView.js';
 import LikeButton from './components/aviso/LikeButton.js';
 import FavoriteButton from './components/aviso/FavoriteButton.js';
+import FavoritoModal from './components/aviso/FavoritoModal.js';
 import WhatsAppButton from './components/aviso/WhatsAppButton.js';
 
 export default function DetalleAviso() {
   const navigate = useNavigate();
   const { slug } = useParams();
   const [aviso, setAviso] = useState<Aviso | null>(null);
-  const { favorites, toggleFavorite } = useFavorites();
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
+  const [showFavModal, setShowFavModal] = useState(false);
   const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
@@ -123,10 +125,26 @@ export default function DetalleAviso() {
             {/* Favorito — encima de la galería */}
             <div className="flex justify-end mb-2">
               <FavoriteButton
-                isFavorite={favorites[aviso.id] || false}
-                onClick={() => toggleFavorite(aviso.id)}
+                isFavorite={!!favorites[aviso.id]}
+                onClick={() => {
+                  if (favorites[aviso.id]) {
+                    removeFavorite(aviso.id);
+                  } else {
+                    setShowFavModal(true);
+                  }
+                }}
               />
             </div>
+
+            {showFavModal && (
+              <FavoritoModal
+                onConfirm={async (notas) => {
+                  setShowFavModal(false);
+                  await addFavorite(aviso.id, notas);
+                }}
+                onClose={() => setShowFavModal(false)}
+              />
+            )}
 
             <ImageGallery images={allImages} title={aviso.titulo} />
 
