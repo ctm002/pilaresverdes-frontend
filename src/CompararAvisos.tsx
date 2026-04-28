@@ -5,6 +5,7 @@ import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import AppNav from './components/ui/AppNav.js';
 import WhatsAppButton from './components/aviso/WhatsAppButton.js';
+import MultiMarkerMap from './components/ui/MultiMarkerMap.js';
 
 const MAX = 3;
 
@@ -22,10 +23,21 @@ export default function CompararAvisos() {
   const isAuthenticated = !!localStorage.getItem('token');
 
   const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
-  const [selected, setSelected] = useState<Aviso[]>([]);
+  const [selected, setSelected] = useState<Aviso[]>(() => {
+    try {
+      const stored = localStorage.getItem('comparador_selected');
+      return stored ? (JSON.parse(stored) as Aviso[]) : [];
+    } catch {
+      return [];
+    }
+  });
   const [search, setSearch] = useState('');
   const [showPicker, setShowPicker] = useState(false);
   const [ufValue, setUfValue] = useState<number | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem('comparador_selected', JSON.stringify(selected));
+  }, [selected]);
 
   useEffect(() => {
     api.get('/api/v1/avisos')
@@ -218,6 +230,7 @@ export default function CompararAvisos() {
 
             {/* Slot vacío */}
             {selected.length < MAX && (
+
               <button
                 onClick={() => setShowPicker(true)}
                 className="border-2 border-dashed border-stone-200 hover:border-forest-400 hover:bg-forest-50 rounded-2xl flex flex-col items-center justify-center gap-2 text-stone-400 hover:text-forest-700 transition-colors min-h-[400px]"
@@ -229,6 +242,15 @@ export default function CompararAvisos() {
               </button>
             )}
           </div>
+        )}
+
+        {/* Mapa múltiple */}
+        {selected.length > 0 && (
+          <MultiMarkerMap
+            markers={selected
+              .filter(a => a.latitud != null && a.longitud != null)
+              .map(a => ({ lat: a.latitud!, lng: a.longitud!, label: a.titulo }))}
+          />
         )}
       </main>
     </div>
