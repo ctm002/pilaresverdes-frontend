@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import AppNav from './components/ui/AppNav.js';
+import WhatsAppButton from './components/aviso/WhatsAppButton.js';
 
 const MAX = 3;
 
@@ -24,11 +25,16 @@ export default function CompararAvisos() {
   const [selected, setSelected] = useState<Aviso[]>([]);
   const [search, setSearch] = useState('');
   const [showPicker, setShowPicker] = useState(false);
+  const [ufValue, setUfValue] = useState<number | null>(null);
 
   useEffect(() => {
     api.get('/api/v1/avisos')
       .then((res: AxiosResponse<Aviso[]>) => setAllAvisos(res.data))
       .catch((err: unknown) => console.error('Error al cargar avisos:', err));
+    fetch('https://mindicador.cl/api/uf')
+      .then(r => r.json())
+      .then((data: { serie: { valor: number }[] }) => setUfValue(data.serie[0]?.valor ?? null))
+      .catch(() => null);
   }, []);
 
   const addAviso = (aviso: Aviso) => {
@@ -161,36 +167,51 @@ export default function CompararAvisos() {
                   <Field label="Descripción">
                     <span className="text-stone-500 line-clamp-3 leading-relaxed">{aviso.descripcion}</span>
                   </Field>
-                  <Field label="Contacto">
-                    <a
-                      href={`https://wa.me/${aviso.celular}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-forest-700 hover:text-forest-900 font-medium"
-                    >
-                      {aviso.celular}
-                    </a>
-                  </Field>
                   <Field label="Publicado por">
                     <span className="text-forest-700 font-medium">{aviso.username}</span>
                   </Field>
                   {aviso.fecha_creacion && (
                     <Field label="Fecha">{aviso.fecha_creacion}</Field>
                   )}
-                  <Field label="Visitas">
-                    <span className="font-semibold">{aviso.visitas ?? 0}</span>
-                  </Field>
-                  <Field label="Likes">
-                    <span className="font-semibold">{aviso.likes}</span>
-                  </Field>
+                  {aviso.metros_cuadrados != null && (
+                    <Field label="Metros cuadrados">
+                      <span className="font-semibold">{aviso.metros_cuadrados} m²</span>
+                    </Field>
+                  )}
+                  {aviso.precio != null && (
+                    <Field label="Precio">
+                      <span className="font-bold text-forest-900">${aviso.precio.toLocaleString('es-CL')}</span>
+                    </Field>
+                  )}
+                  {aviso.precio_uf != null && (
+                    <Field label="Precio UF">
+                      <span className="font-semibold">{aviso.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF</span>
+                    </Field>
+                  )}
+                  {aviso.precio_uf != null && ufValue != null && (
+                    <Field label="Valor actual">
+                      <span className="font-bold text-forest-900">
+                        ${Math.round(aviso.precio_uf * ufValue).toLocaleString('es-CL')}
+                      </span>
+                      <span className="text-[10px] text-stone-400 ml-1">(UF {ufValue.toLocaleString('es-CL')})</span>
+                    </Field>
+                  )}
 
-                  {/* Ver detalle */}
-                  <button
-                    onClick={() => navigate(`/avisos/${aviso.slug}`)}
-                    className="mt-auto pt-4 text-xs text-forest-700 hover:text-forest-900 font-medium transition-colors text-center"
-                  >
-                    Ver detalle →
-                  </button>
+                  {/* Acciones */}
+                  <div className="mt-auto pt-4 flex flex-col gap-2">
+                    <WhatsAppButton
+                      phone={aviso.celular}
+                      title={aviso.titulo}
+                      label="Contactar por WhatsApp"
+                      className="w-full py-2 px-3 rounded-xl text-xs font-semibold"
+                    />
+                    <button
+                      onClick={() => navigate(`/avisos/${aviso.slug}`)}
+                      className="w-full py-2 px-3 rounded-xl text-xs font-medium border border-stone-200 bg-white hover:bg-stone-50 text-stone-500 hover:text-stone-700 transition-colors"
+                    >
+                      Más detalles
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

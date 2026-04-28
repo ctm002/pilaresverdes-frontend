@@ -12,10 +12,9 @@ export interface Favorito {
 
 import { Aviso } from './AvisoDto.js';
 
-export interface FavoritoDetalle {
-  id: number;
+export interface FavoritoDetalle extends Aviso {
   guid: string;
   propiedadId: number;
-  notas: string;
-  aviso: Aviso;
+  notasPersonales: string;
+  urlFotoBackup: string;
 }
