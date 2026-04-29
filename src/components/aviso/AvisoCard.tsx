@@ -104,7 +104,7 @@ export default function AvisoCard({
                 </span>
               )}
               {item.precio_uf != null && (
-                <span className="text-stone-400 text-[11px]">
+                <span className="text-stone-500 text-[11px] font-bold">
                   {item.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF
                 </span>
               )}
