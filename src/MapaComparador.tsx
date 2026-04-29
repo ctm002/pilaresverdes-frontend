@@ -6,6 +6,7 @@ import MultiMarkerMap from './components/ui/MultiMarkerMap.js';
 
 export default function MapaComparador() {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
   const [selected] = useState<Aviso[]>(() => {
     try {
@@ -22,7 +23,12 @@ export default function MapaComparador() {
 
   return (
     <div className="min-h-screen flex flex-col bg-cream">
-      <AppNav title="Mapa comparador" backTo="/comparador" />
+      <AppNav
+        title="Mapa comparador"
+        backTo="/comparador"
+        isAuthenticated={isAuthenticated}
+        onSignOut={() => { localStorage.removeItem('token'); setIsAuthenticated(false); }}
+      />
 
       <main className="flex-grow pt-14 px-4 py-6 max-w-6xl mx-auto w-full">
         <div className="flex items-center justify-between mb-6">
