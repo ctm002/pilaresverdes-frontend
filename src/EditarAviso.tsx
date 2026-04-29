@@ -31,7 +31,8 @@ export default function EditarAviso() {
     slug: '',
     id: 0,
     mainImageUrl: '',
-    precio: ''
+    precio: '',
+    metros_cuadrados: ''
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<ImagesAvisoDto[]>([]);
@@ -62,7 +63,8 @@ export default function EditarAviso() {
             slug: aviso.slug || '',
             id: aviso.id || 0,
             mainImageUrl: aviso.image_url || '',
-            precio: aviso.precio != null ? String(aviso.precio) : ''
+            precio: aviso.precio != null ? String(aviso.precio) : '',
+            metros_cuadrados: aviso.metros_cuadrados != null ? String(aviso.metros_cuadrados) : ''
           });
           setExistingImages(aviso.imagesAvisoList || []);
           setMainImageUrl(aviso.image_url || '');
@@ -123,7 +125,8 @@ export default function EditarAviso() {
         precio: formData.precio !== '' ? Number(formData.precio) : null,
         precio_uf: formData.precio !== '' && ufValue
           ? parseFloat((Number(formData.precio) / ufValue).toFixed(2))
-          : null
+          : null,
+        metros_cuadrados: formData.metros_cuadrados !== '' ? Number(formData.metros_cuadrados) : null
       };
 
       if (isEditing && slug) {
@@ -235,6 +238,16 @@ export default function EditarAviso() {
               onChange={() => {}}
               placeholder="Se calcula automáticamente"
               disabled
+            />
+
+            <FormField
+              label="Metros cuadrados"
+              type="number"
+              name="metros_cuadrados"
+              value={formData.metros_cuadrados}
+              onChange={handleInputChange}
+              placeholder="Ej: 120"
+              min={0}
             />
 
             {/* ── Galería de imágenes ──────────────────────── */}

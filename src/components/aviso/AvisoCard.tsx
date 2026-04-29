@@ -115,21 +115,23 @@ export default function AvisoCard({
               )}
             </div>
 
-            <div className="flex justify-between items-center pt-3 border-t border-stone-100">
-              <span className="text-[11px] text-stone-400">
-                <span className="font-medium text-stone-500">{item.visitas ?? 0}</span> visitas
-              </span>
-              <div className="flex items-center gap-1.5">
+            <div className="pt-3 border-t border-stone-100 flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <span className="text-[11px] text-stone-400">
+                  <span className="font-medium text-stone-500">{item.visitas ?? 0}</span> visitas
+                </span>
                 <LikeButton
                   count={item.likes || 0}
                   onClick={(e) => { e.stopPropagation(); onLikeCount(item.id); }}
                 />
-                <WhatsAppButton
-                  phone={item.celular}
-                  title={item.titulo}
-                  onClick={(e) => e.stopPropagation()}
-                />
               </div>
+              <WhatsAppButton
+                phone={item.celular}
+                title={item.titulo}
+                label="Contactar por WhatsApp"
+                className="w-full py-2 px-3 rounded-xl text-xs font-semibold"
+                onClick={(e) => e.stopPropagation()}
+              />
             </div>
           </>
         )}
