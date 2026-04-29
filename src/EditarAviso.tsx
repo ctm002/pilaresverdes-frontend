@@ -4,6 +4,7 @@ import api from './api/axios.js';
 import { ImagesAvisoDto } from './dto/AvisoDto.js';
 import AppNav from './components/ui/AppNav.js';
 import FormField from './components/ui/FormField.js';
+import MapPickerModal from './components/ui/MapPickerModal.js';
 
 function imageSrc(img: ImagesAvisoDto): string {
   if (img.url) return img.url;
@@ -32,7 +33,9 @@ export default function EditarAviso() {
     id: 0,
     mainImageUrl: '',
     precio: '',
-    metros_cuadrados: ''
+    metros_cuadrados: '',
+    latitud: '',
+    longitud: ''
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<ImagesAvisoDto[]>([]);
@@ -41,6 +44,7 @@ export default function EditarAviso() {
   const [isEditing, setIsEditing] = useState(false);
   const [isAuthenticated] = useState(!!localStorage.getItem('token'));
   const [ufValue, setUfValue] = useState<number | null>(null);
+  const [showMapPicker, setShowMapPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -64,7 +68,9 @@ export default function EditarAviso() {
             id: aviso.id || 0,
             mainImageUrl: aviso.image_url || '',
             precio: aviso.precio != null ? String(aviso.precio) : '',
-            metros_cuadrados: aviso.metros_cuadrados != null ? String(aviso.metros_cuadrados) : ''
+            metros_cuadrados: aviso.metros_cuadrados != null ? String(aviso.metros_cuadrados) : '',
+            latitud: aviso.latitud != null ? String(aviso.latitud) : '',
+            longitud: aviso.longitud != null ? String(aviso.longitud) : ''
           });
           setExistingImages(aviso.imagesAvisoList || []);
           setMainImageUrl(aviso.image_url || '');
@@ -126,7 +132,9 @@ export default function EditarAviso() {
         precio_uf: formData.precio !== '' && ufValue
           ? parseFloat((Number(formData.precio) / ufValue).toFixed(2))
           : null,
-        metros_cuadrados: formData.metros_cuadrados !== '' ? Number(formData.metros_cuadrados) : null
+        metros_cuadrados: formData.metros_cuadrados !== '' ? Number(formData.metros_cuadrados) : null,
+        latitud: formData.latitud !== '' ? Number(formData.latitud) : null,
+        longitud: formData.longitud !== '' ? Number(formData.longitud) : null
       };
 
       if (isEditing && slug) {
@@ -250,6 +258,29 @@ export default function EditarAviso() {
               min={0}
             />
 
+            {/* ── Ubicación ────────────────────────────────── */}
+            <div>
+              <label className="block text-[11px] font-semibold text-forest-800 mb-2 tracking-widest uppercase">
+                Ubicación
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowMapPicker(true)}
+                className="w-full flex items-center gap-2 px-4 py-2.5 border border-stone-200 rounded-xl text-sm text-left hover:border-forest-500 hover:bg-forest-50 transition-colors"
+              >
+                <svg className="w-4 h-4 text-forest-700 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                {formData.latitud && formData.longitud
+                  ? <span className="text-forest-800 font-medium">{Number(formData.latitud).toFixed(5)}, {Number(formData.longitud).toFixed(5)}</span>
+                  : <span className="text-stone-400">Seleccionar en el mapa</span>
+                }
+                {formData.latitud && formData.longitud && (
+                  <span className="ml-auto text-[10px] text-forest-600 font-semibold">Cambiar</span>
+                )}
+              </button>
+            </div>
+
             {/* ── Galería de imágenes ──────────────────────── */}
             <div>
               <label className="block text-[11px] font-semibold text-forest-800 mb-2 tracking-widest uppercase">
@@ -359,6 +390,17 @@ export default function EditarAviso() {
           </form>
         </div>
       </div>
+
+      {showMapPicker && (
+        <MapPickerModal
+          latitud={formData.latitud !== '' ? Number(formData.latitud) : undefined}
+          longitud={formData.longitud !== '' ? Number(formData.longitud) : undefined}
+          onConfirm={(lat, lng) => {
+            setFormData(prev => ({ ...prev, latitud: String(lat), longitud: String(lng) }));
+          }}
+          onClose={() => setShowMapPicker(false)}
+        />
+      )}
     </div>
   );
 }
