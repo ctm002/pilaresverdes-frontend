@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import AppNav from './components/ui/AppNav.js';
+import { resolveImageUrl } from './utils/imageUrl.js';
 
 function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -114,7 +115,7 @@ export default function GestionarAviso() {
     );
   }
 
-  const imageSrc = previewUrl ?? aviso.image_url;
+  const imageSrc = previewUrl ?? resolveImageUrl(aviso.image_url);
 
   return (
     <div className="min-h-screen bg-cream pt-14">

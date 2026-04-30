@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Aviso } from '../../dto/AvisoDto.js';
 import LikeButton from './LikeButton.js';
 import WhatsAppButton from './WhatsAppButton.js';
+import { resolveImageUrl } from '../../utils/imageUrl.js';
 
 interface AvisoCardProps {
   item: Aviso;
@@ -42,7 +43,7 @@ export default function AvisoCard({
           <div className="absolute inset-0 z-10 bg-stone-200 animate-pulse" />
         )}
         <img
-          src={item.image_url}
+          src={resolveImageUrl(item.image_url)}
           alt={item.titulo}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           onLoad={() => setImageLoaded(true)}

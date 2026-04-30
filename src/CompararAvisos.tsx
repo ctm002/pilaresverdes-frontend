@@ -5,6 +5,7 @@ import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
 import AppNav from './components/ui/AppNav.js';
 import WhatsAppButton from './components/aviso/WhatsAppButton.js';
+import { resolveImageUrl } from './utils/imageUrl.js';
 
 const MAX = 3;
 
@@ -126,7 +127,7 @@ export default function CompararAvisos() {
                         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-forest-50 text-left transition-colors"
                       >
                         <img
-                          src={a.image_url}
+                          src={resolveImageUrl(a.image_url)}
                           alt={a.titulo}
                           className="w-10 h-10 object-cover rounded-lg flex-shrink-0"
                         />
@@ -171,7 +172,7 @@ export default function CompararAvisos() {
 
                 {/* Image */}
                 <div className="relative h-48 flex-shrink-0">
-                  <img src={aviso.image_url} alt={aviso.titulo} className="w-full h-full object-cover" />
+                  <img src={resolveImageUrl(aviso.image_url)} alt={aviso.titulo} className="w-full h-full object-cover" />
                   <button
                     onClick={() => removeAviso(aviso.id)}
                     className="absolute top-2 right-2 bg-black/40 hover:bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center transition-colors"

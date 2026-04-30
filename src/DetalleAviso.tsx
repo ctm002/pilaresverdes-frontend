@@ -8,6 +8,7 @@ import ImageGallery from './components/ui/ImageGallery.js';
 import MapView from './components/ui/MapView.js';
 import LikeButton from './components/aviso/LikeButton.js';
 import FavoriteButton from './components/aviso/FavoriteButton.js';
+import { resolveImageUrl } from './utils/imageUrl.js';
 import FavoritoModal from './components/aviso/FavoritoModal.js';
 import WhatsAppButton from './components/aviso/WhatsAppButton.js';
 
@@ -92,8 +93,8 @@ export default function DetalleAviso() {
   }
 
   const allImages = [
-    { url: aviso.image_url, id: 0, imageBase64: '', avisoId: aviso.id },
-    ...(aviso.imagesAvisoList || [])
+    { url: resolveImageUrl(aviso.image_url), id: 0, imageBase64: '', avisoId: aviso.id },
+    ...(aviso.imagesAvisoList || []).map(img => ({ ...img, url: resolveImageUrl(img.url) }))
   ];
 
   return (

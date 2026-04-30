@@ -120,7 +120,7 @@ export default function AppNav({ title, backTo, isAuthenticated, onSignOut }: Ap
           ) : (
             <button
               onClick={() => navigate('/signin')}
-              className="bg-white text-forest-900 hover:bg-forest-100 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors"
+              className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all border border-white/50 hover:border-white"
             >
               Iniciar sesión
             </button>

@@ -5,9 +5,10 @@ import { ImagesAvisoDto } from './dto/AvisoDto.js';
 import AppNav from './components/ui/AppNav.js';
 import FormField from './components/ui/FormField.js';
 import MapPickerModal from './components/ui/MapPickerModal.js';
+import { resolveImageUrl } from './utils/imageUrl.js';
 
 function imageSrc(img: ImagesAvisoDto): string {
-  if (img.url) return img.url;
+  if (img.url) return resolveImageUrl(img.url);
   if (!img.imageBase64) return '';
   return img.imageBase64.startsWith('data:')
     ? img.imageBase64
