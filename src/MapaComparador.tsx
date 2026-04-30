@@ -28,22 +28,14 @@ export default function MapaComparador() {
   return (
     <div className="min-h-screen flex flex-col bg-cream">
       <AppNav
-        title="Mapa comparador"
+        title="Mapa"
         backTo="/comparador"
         isAuthenticated={isAuthenticated}
         onSignOut={() => { localStorage.removeItem('token'); setIsAuthenticated(false); }}
       />
 
       <main className="flex-grow pt-14 px-4 py-6 max-w-6xl mx-auto w-full">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="font-display text-2xl font-bold text-forest-950">Mapa de avisos</h1>
-            <p className="text-stone-400 text-sm mt-0.5">
-              {markers.length === 0
-                ? 'Ningún aviso tiene coordenadas'
-                : `${markers.length} aviso${markers.length > 1 ? 's' : ''} en el mapa`}
-            </p>
-          </div>
+        <div className="mb-6">
           <button
             onClick={() => navigate('/comparador')}
             className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
@@ -53,6 +45,11 @@ export default function MapaComparador() {
             </svg>
             Volver al comparador
           </button>
+          <p className="text-stone-400 text-sm mt-2">
+            {markers.length === 0
+              ? 'Ningún aviso tiene coordenadas'
+              : `${markers.length} aviso${markers.length > 1 ? 's' : ''} en el mapa`}
+          </p>
         </div>
 
         {markers.length === 0 ? (

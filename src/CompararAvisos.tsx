@@ -18,6 +18,38 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
+const EMPTY = <span className="text-stone-300">—</span>;
+
+function AvisoFields({ aviso, ufValue }: { aviso: Aviso; ufValue: number | null }) {
+  return (
+    <>
+      <Field label="Título"><span className="font-display font-semibold leading-snug">{aviso.titulo}</span></Field>
+      <Field label="Descripción"><span className="text-stone-500 line-clamp-3 leading-relaxed">{aviso.descripcion || EMPTY}</span></Field>
+      <Field label="Publicado por"><span className="text-forest-700 font-medium">{aviso.username}</span></Field>
+      <Field label="Fecha">{aviso.fecha_creacion ?? EMPTY}</Field>
+      <Field label="Metros cuadrados">
+        {aviso.metros_cuadrados != null ? <span className="font-semibold">{aviso.metros_cuadrados} m²</span> : EMPTY}
+      </Field>
+      <Field label="Precio">
+        {aviso.precio != null ? <span className="font-bold text-forest-900">${aviso.precio.toLocaleString('es-CL')}</span> : EMPTY}
+      </Field>
+      <Field label="Precio UF">
+        {aviso.precio_uf != null
+          ? <span className="font-semibold">{aviso.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF</span>
+          : EMPTY}
+      </Field>
+      <Field label="Valor actual">
+        {aviso.precio_uf != null && ufValue != null
+          ? <>
+              <span className="font-bold text-forest-900">${Math.round(aviso.precio_uf * ufValue).toLocaleString('es-CL')}</span>
+              <span className="text-[10px] text-stone-400 ml-1">(UF {ufValue.toLocaleString('es-CL')})</span>
+            </>
+          : EMPTY}
+      </Field>
+    </>
+  );
+}
+
 export default function CompararAvisos() {
   const navigate = useNavigate();
   const isAuthenticated = !!localStorage.getItem('token');
@@ -78,16 +110,13 @@ export default function CompararAvisos() {
       <main className="flex-grow pt-14 px-4 py-6 max-w-6xl mx-auto w-full">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            {/* <h1 className="font-display text-2xl font-bold text-forest-950">Comparador de avisos</h1> */}
-            <p className="text-stone-400 text-sm mt-0.5">Agrega hasta {MAX} avisos para compararlos</p>
-          </div>
-          <div className="flex items-center gap-2">
+        <div className="mb-6">
+
+          <div className="flex items-center gap-2 mt-4">
             {selected.some(a => a.latitud != null && a.longitud != null) && (
               <button
-                onClick={() => navigate('/comparador/mapa')}
-                className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+              onClick={() => navigate('/comparador/mapa')}
+              className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
@@ -97,14 +126,17 @@ export default function CompararAvisos() {
             )}
             {selected.length < MAX && (
               <button
-                onClick={() => setShowPicker(v => !v)}
-                className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+              onClick={() => setShowPicker(v => !v)}
+              className="inline-flex items-center gap-1.5 bg-forest-50 hover:bg-forest-100 text-forest-800 border border-forest-500 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
               >
                 <span className="text-base leading-none">+</span>
                 Agregar aviso
               </button>
             )}
           </div>
+
+          <p className="text-stone-400 text-sm mt-0.5">Agrega hasta {MAX} avisos para compararlos</p>
+
         </div>
 
         {/* Picker */}
@@ -164,101 +196,106 @@ export default function CompararAvisos() {
 
         {/* Comparison grid */}
         {selected.length > 0 && (
-          <div
-            className="grid gap-4"
-            style={{ gridTemplateColumns: `repeat(${selected.length}, minmax(0, 1fr))` }}
-          >
-            {selected.map(aviso => (
-              <div key={aviso.id} className="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden flex flex-col">
+          <>
+            {/* ── Mobile: carrusel horizontal ──────────────── */}
+            <div className="md:hidden -mx-4">
+              <div
+                className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth"
+                style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+              >
+                {selected.map((aviso, i) => (
+                  <div key={aviso.id} className="snap-start flex-shrink-0 w-screen px-4 pb-3">
+                    <div className="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+                      <div className="relative w-full" style={{ height: '200px' }}>
+                        <img
+                          src={resolveImageUrl(aviso.image_url)}
+                          alt={aviso.titulo}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        />
+                        <div className="absolute top-2 left-2 bg-black/40 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                          {i + 1} / {selected.length}
+                        </div>
+                        <button
+                          onClick={() => removeAviso(aviso.id)}
+                          className="absolute top-2 right-2 bg-black/40 hover:bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center transition-colors"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="p-4 flex flex-col">
+                        <AvisoFields aviso={aviso} ufValue={ufValue} />
+                        <div className="pt-4 flex flex-col gap-2">
+                          <WhatsAppButton phone={aviso.celular} title={aviso.titulo} label="Contactar por WhatsApp" className="w-full py-2 px-3 rounded-xl text-xs font-semibold" />
+                          <button onClick={() => navigate(`/avisos/${aviso.slug}`)} className="w-full py-2 px-3 rounded-xl text-xs font-medium border border-stone-200 bg-white hover:bg-stone-50 text-stone-500 hover:text-stone-700 transition-colors">Más detalles</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-                {/* Image */}
-                <div className="relative h-48 flex-shrink-0">
-                  <img src={resolveImageUrl(aviso.image_url)} alt={aviso.titulo} className="w-full h-full object-cover" />
-                  <button
-                    onClick={() => removeAviso(aviso.id)}
-                    className="absolute top-2 right-2 bg-black/40 hover:bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center transition-colors"
-                    title="Quitar de comparación"
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+              {/* Dots */}
+              {selected.length > 1 && (
+                <div className="flex justify-center gap-1.5 mt-1">
+                  {selected.map((_, i) => (
+                    <div key={i} className="w-1.5 h-1.5 rounded-full bg-stone-300" />
+                  ))}
                 </div>
+              )}
+            </div>
 
-                {/* Fields */}
-                <div className="p-4 flex flex-col flex-grow">
-                  <Field label="Título">
-                    <span className="font-display font-semibold leading-snug">{aviso.titulo}</span>
-                  </Field>
-                  <Field label="Descripción">
-                    <span className="text-stone-500 line-clamp-3 leading-relaxed">{aviso.descripcion}</span>
-                  </Field>
-                  <Field label="Publicado por">
-                    <span className="text-forest-700 font-medium">{aviso.username}</span>
-                  </Field>
-                  {aviso.fecha_creacion && (
-                    <Field label="Fecha">{aviso.fecha_creacion}</Field>
-                  )}
-                  {aviso.metros_cuadrados != null && (
-                    <Field label="Metros cuadrados">
-                      <span className="font-semibold">{aviso.metros_cuadrados} m²</span>
-                    </Field>
-                  )}
-                  {aviso.precio != null && (
-                    <Field label="Precio">
-                      <span className="font-bold text-forest-900">${aviso.precio.toLocaleString('es-CL')}</span>
-                    </Field>
-                  )}
-                  {aviso.precio_uf != null && (
-                    <Field label="Precio UF">
-                      <span className="font-semibold">{aviso.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF</span>
-                    </Field>
-                  )}
-                  {aviso.precio_uf != null && ufValue != null && (
-                    <Field label="Valor actual">
-                      <span className="font-bold text-forest-900">
-                        ${Math.round(aviso.precio_uf * ufValue).toLocaleString('es-CL')}
-                      </span>
-                      <span className="text-[10px] text-stone-400 ml-1">(UF {ufValue.toLocaleString('es-CL')})</span>
-                    </Field>
-                  )}
-
-                  {/* Acciones */}
-                  <div className="mt-auto pt-4 flex flex-col gap-2">
-                    <WhatsAppButton
-                      phone={aviso.celular}
-                      title={aviso.titulo}
-                      label="Contactar por WhatsApp"
-                      className="w-full py-2 px-3 rounded-xl text-xs font-semibold"
-                    />
+            {/* ── Desktop: grid ────────────────────────────── */}
+            <div
+              className="hidden md:grid gap-4"
+              style={{ gridTemplateColumns: `repeat(${selected.length + (selected.length < MAX ? 1 : 0)}, minmax(0, 1fr))` }}
+            >
+              {selected.map(aviso => (
+                <div key={aviso.id} className="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden flex flex-col">
+                  <div className="relative h-48 flex-shrink-0">
+                    <img src={resolveImageUrl(aviso.image_url)} alt={aviso.titulo} className="w-full h-full object-cover" />
                     <button
-                      onClick={() => navigate(`/avisos/${aviso.slug}`)}
-                      className="w-full py-2 px-3 rounded-xl text-xs font-medium border border-stone-200 bg-white hover:bg-stone-50 text-stone-500 hover:text-stone-700 transition-colors"
+                      onClick={() => removeAviso(aviso.id)}
+                      className="absolute top-2 right-2 bg-black/40 hover:bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center transition-colors"
                     >
-                      Más detalles
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
                     </button>
                   </div>
+                  <div className="p-4 flex flex-col flex-grow">
+                    <AvisoFields aviso={aviso} ufValue={ufValue} />
+                    <div className="mt-auto pt-4 flex flex-col gap-2">
+                      <WhatsAppButton phone={aviso.celular} title={aviso.titulo} label="Contactar por WhatsApp" className="w-full py-2 px-3 rounded-xl text-xs font-semibold" />
+                      <button onClick={() => navigate(`/avisos/${aviso.slug}`)} className="w-full py-2 px-3 rounded-xl text-xs font-medium border border-stone-200 bg-white hover:bg-stone-50 text-stone-500 hover:text-stone-700 transition-colors">Más detalles</button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
 
-            {/* Slot vacío */}
-            {selected.length < MAX && (
-
-              <button
-                onClick={() => setShowPicker(true)}
-                className="border-2 border-dashed border-stone-200 hover:border-forest-400 hover:bg-forest-50 rounded-2xl flex flex-col items-center justify-center gap-2 text-stone-400 hover:text-forest-700 transition-colors min-h-[400px]"
-              >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
-                </svg>
-                <span className="text-sm font-medium">Agregar aviso</span>
-              </button>
-            )}
-          </div>
+              {selected.length < MAX && (
+                <button
+                  onClick={() => setShowPicker(true)}
+                  className="border-2 border-dashed border-stone-200 hover:border-forest-400 hover:bg-forest-50 rounded-2xl flex flex-col items-center justify-center gap-2 text-stone-400 hover:text-forest-700 transition-colors min-h-[400px]"
+                >
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="text-sm font-medium">Agregar aviso</span>
+                </button>
+              )}
+            </div>
+          </>
         )}
 
       </main>
+
+      <footer className="bg-forest-950 text-white/60 py-6 mt-auto">
+        <div className="container mx-auto px-4 text-center text-xs">
+          <p className="text-white/80 font-medium">© 2024 Pilares Verdes</p>
+        </div>
+      </footer>
     </div>
   );
 }

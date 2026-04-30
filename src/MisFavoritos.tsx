@@ -46,8 +46,10 @@ export default function MisFavoritos() {
   return (
     <div className="min-h-screen flex flex-col bg-cream">
       <AppNav
+        title="Mis Favoritos"
+        backTo="/"
         isAuthenticated={isAuthenticated}
-        onSignOut={handleSignOut}
+        onSignOut={() => { localStorage.removeItem('token'); navigate('/'); }}
       />
 
       <main className="flex-grow pt-14 px-4 py-6">
