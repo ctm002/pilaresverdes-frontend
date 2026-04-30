@@ -12,7 +12,7 @@ export default function DetalleFavorito() {
   const { guid } = useParams();
   const [favorito, setFavorito] = useState<FavoritoDetalle | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
-  
+
   useEffect(() => {
     if (!guid) return;
     api.get(`/api/v1/favoritos/${guid}`)
@@ -58,7 +58,7 @@ export default function DetalleFavorito() {
       {/* <AppNav title="Mi favorito" backTo="/mis-favoritos" /> */}
 
       <AppNav
-        title="Mi favoritos"
+        title="Mis favoritos"
         backTo="/mis-favoritos"
         isAuthenticated={isAuthenticated}
         onSignOut={() => { localStorage.removeItem('token'); setIsAuthenticated(false); navigate('/'); }}
