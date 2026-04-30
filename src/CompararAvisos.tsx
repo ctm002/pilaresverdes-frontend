@@ -69,7 +69,7 @@ export default function CompararAvisos() {
   return (
     <div className="min-h-screen flex flex-col bg-cream">
       <AppNav
-        title="Comparador de avisos"
+        title="Comparador"
         backTo="/"
         isAuthenticated={isAuthenticated}
         onSignOut={() => { localStorage.removeItem('token'); navigate('/'); }}
