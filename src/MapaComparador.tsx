@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Aviso } from './dto/AvisoDto.js';
 import AppNav from './components/ui/AppNav.js';
@@ -7,6 +7,10 @@ import MultiMarkerMap from './components/ui/MultiMarkerMap.js';
 export default function MapaComparador() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+
+  useEffect(() => {
+    if (!localStorage.getItem('token')) { navigate('/signin'); }
+  }, [navigate]);
 
   const [selected] = useState<Aviso[]>(() => {
     try {

@@ -11,7 +11,8 @@ export default function DetalleFavorito() {
   const navigate = useNavigate();
   const { guid } = useParams();
   const [favorito, setFavorito] = useState<FavoritoDetalle | null>(null);
-
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  
   useEffect(() => {
     if (!guid) return;
     api.get(`/api/v1/favoritos/${guid}`)
@@ -54,7 +55,15 @@ export default function DetalleFavorito() {
 
   return (
     <div className="min-h-screen bg-cream md:pt-8 pt-16">
-      <AppNav title="Mi favorito" backTo="/mis-favoritos" />
+      {/* <AppNav title="Mi favorito" backTo="/mis-favoritos" /> */}
+
+      <AppNav
+        title="Mi favoritos"
+        backTo="/mis-favoritos"
+        isAuthenticated={isAuthenticated}
+        onSignOut={() => { localStorage.removeItem('token'); setIsAuthenticated(false); navigate('/'); }}
+      />
+
 
       <div className="max-w-2xl mx-auto mt-8 hidden md:block px-4">
         <button

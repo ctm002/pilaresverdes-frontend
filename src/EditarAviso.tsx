@@ -6,6 +6,7 @@ import AppNav from './components/ui/AppNav.js';
 import FormField from './components/ui/FormField.js';
 import MapPickerModal from './components/ui/MapPickerModal.js';
 import { resolveImageUrl } from './utils/imageUrl.js';
+import ComunaSelector from './components/ui/ComunaSelector.js';
 
 function imageSrc(img: ImagesAvisoDto): string {
   if (img.url) return resolveImageUrl(img.url);
@@ -36,7 +37,9 @@ export default function EditarAviso() {
     precio: '',
     metros_cuadrados: '',
     latitud: '',
-    longitud: ''
+    longitud: '',
+    ubicacion: '',
+    comuna_id: 0
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<ImagesAvisoDto[]>([]);
@@ -71,7 +74,9 @@ export default function EditarAviso() {
             precio: aviso.precio != null ? String(aviso.precio) : '',
             metros_cuadrados: aviso.metros_cuadrados != null ? String(aviso.metros_cuadrados) : '',
             latitud: aviso.latitud != null ? String(aviso.latitud) : '',
-            longitud: aviso.longitud != null ? String(aviso.longitud) : ''
+            longitud: aviso.longitud != null ? String(aviso.longitud) : '',
+            ubicacion: aviso.ubicacion || '',
+            comuna_id: aviso.comuna_id ?? 0
           });
           setExistingImages(aviso.imagesAvisoList || []);
           setMainImageUrl(aviso.image_url || '');
@@ -135,7 +140,8 @@ export default function EditarAviso() {
           : null,
         metros_cuadrados: formData.metros_cuadrados !== '' ? Number(formData.metros_cuadrados) : null,
         latitud: formData.latitud !== '' ? Number(formData.latitud) : null,
-        longitud: formData.longitud !== '' ? Number(formData.longitud) : null
+        longitud: formData.longitud !== '' ? Number(formData.longitud) : null,
+        comuna_id: formData.comuna_id || null
       };
 
       if (isEditing && slug) {
@@ -154,6 +160,11 @@ export default function EditarAviso() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handlePrecioChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const raw = e.target.value.replace(/\D/g, '').slice(0, 15);
+    setFormData({ ...formData, precio: raw });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,12 +238,12 @@ export default function EditarAviso() {
 
             <FormField
               label="Precio"
-              type="number"
+              type="text"
+              inputMode="numeric"
               name="precio"
-              value={formData.precio}
-              onChange={handleInputChange}
-              placeholder="Ej: 150000"
-              min={0}
+              value={formData.precio !== '' ? Number(formData.precio).toLocaleString('es-CL') : ''}
+              onChange={handlePrecioChange}
+              placeholder="Ej: 1.500.000"
             />
 
             <FormField
@@ -257,6 +268,12 @@ export default function EditarAviso() {
               onChange={handleInputChange}
               placeholder="Ej: 120"
               min={0}
+            />
+
+            <ComunaSelector
+              value={formData.ubicacion}
+              comuna_id={formData.comuna_id}
+              onChange={(nombre, id) => setFormData({ ...formData, ubicacion: nombre, comuna_id: id })}
             />
 
             {/* ── Ubicación ────────────────────────────────── */}

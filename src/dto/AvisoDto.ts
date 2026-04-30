@@ -18,6 +18,7 @@ export interface Aviso {
   visitas?: number;
   fecha_creacion?: string;
   ubicacion?: string;
+  comuna_id?: number;
   latitud?: number;
   longitud?: number;
   precio?: number;

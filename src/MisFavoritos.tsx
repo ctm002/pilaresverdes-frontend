@@ -17,11 +17,13 @@ export default function MisFavoritos() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    setIsAuthenticated(!!localStorage.getItem('token'));
+    const token = localStorage.getItem('token');
+    if (!token) { navigate('/signin'); return; }
+    setIsAuthenticated(true);
     api.get('/api/v1/avisos')
       .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
       .catch((err: unknown) => console.error('Error al cargar avisos:', err));
-  }, []);
+  }, [navigate]);
 
   const handleSignOut = () => {
     localStorage.removeItem('token');

@@ -40,6 +40,7 @@ export default function CompararAvisos() {
   }, [selected]);
 
   useEffect(() => {
+    if (!localStorage.getItem('token')) { navigate('/signin'); return; }
     api.get('/api/v1/avisos')
       .then((res: AxiosResponse<Aviso[]>) => setAllAvisos(res.data))
       .catch((err: unknown) => console.error('Error al cargar avisos:', err));
@@ -47,7 +48,7 @@ export default function CompararAvisos() {
       .then(r => r.json())
       .then((data: { serie: { valor: number }[] }) => setUfValue(data.serie[0]?.valor ?? null))
       .catch(() => null);
-  }, []);
+  }, [navigate]);
 
   const addAviso = (aviso: Aviso) => {
     if (selected.find(a => a.id === aviso.id)) return;
@@ -79,7 +80,7 @@ export default function CompararAvisos() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="font-display text-2xl font-bold text-forest-950">Comparador de avisos</h1>
+            {/* <h1 className="font-display text-2xl font-bold text-forest-950">Comparador de avisos</h1> */}
             <p className="text-stone-400 text-sm mt-0.5">Agrega hasta {MAX} avisos para compararlos</p>
           </div>
           <div className="flex items-center gap-2">
