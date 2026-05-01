@@ -17,8 +17,7 @@ export interface Aviso {
   username: string;
   visitas?: number;
   fecha_creacion?: string;
-  ubicacion?: string;
-  comuna_id?: number;
+  comuna?: { id: number; name: string };
   latitud?: number;
   longitud?: number;
   precio?: number;

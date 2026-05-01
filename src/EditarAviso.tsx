@@ -75,8 +75,8 @@ export default function EditarAviso() {
             metros_cuadrados: aviso.metros_cuadrados != null ? String(aviso.metros_cuadrados) : '',
             latitud: aviso.latitud != null ? String(aviso.latitud) : '',
             longitud: aviso.longitud != null ? String(aviso.longitud) : '',
-            ubicacion: aviso.ubicacion || '',
-            comuna_id: aviso.comuna_id ?? 0
+            ubicacion: aviso.comuna?.name || '',
+            comuna_id: aviso.comuna?.id ?? 0
           });
           setExistingImages(aviso.imagesAvisoList || []);
           setMainImageUrl(aviso.image_url || '');
@@ -159,12 +159,12 @@ export default function EditarAviso() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handlePrecioChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const raw = e.target.value.replace(/\D/g, '').slice(0, 15);
-    setFormData({ ...formData, precio: raw });
+    setFormData(prev => ({ ...prev, precio: raw }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -273,7 +273,7 @@ export default function EditarAviso() {
             <ComunaSelector
               value={formData.ubicacion}
               comuna_id={formData.comuna_id}
-              onChange={(nombre, id) => setFormData({ ...formData, ubicacion: nombre, comuna_id: id })}
+              onChange={(nombre, id) => setFormData(prev => ({ ...prev, ubicacion: nombre, comuna_id: id }))}
             />
 
             {/* ── Ubicación ────────────────────────────────── */}

@@ -169,7 +169,7 @@ export default function DetalleAviso() {
             <MapView
               latitud={aviso.latitud}
               longitud={aviso.longitud}
-              ubicacion={aviso.ubicacion}
+              ubicacion={aviso.comuna?.name}
             />
 
             {/* Actions */}

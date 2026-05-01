@@ -1,5 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { COMUNAS } from '../../data/comunas.js';
+import api from '../../api/axios.js';
+
+interface ComunaOption {
+  id: number;
+  name: string;
+}
 
 interface Props {
   value: string;
@@ -19,9 +24,16 @@ const normalize = (s: string) =>
   s.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
 
 export default function ComunaSelector({ value, comuna_id, onChange }: Props) {
+  const [comunas, setComunas] = useState<ComunaOption[]>([]);
   const [query, setQuery] = useState(value);
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    api.get<ComunaOption[]>('/api/v1/comunas')
+      .then(res => setComunas(res.data))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => { setQuery(value); }, [value]);
 
@@ -37,8 +49,8 @@ export default function ComunaSelector({ value, comuna_id, onChange }: Props) {
   }, [value]);
 
   const filtered = query.length === 0
-    ? COMUNAS.slice(0, 8)
-    : COMUNAS.filter(c => normalize(c.nombre).includes(normalize(query))).slice(0, 8);
+    ? comunas.slice(0, 8)
+    : comunas.filter(c => normalize(c.name).includes(normalize(query))).slice(0, 8);
 
   const handleSelect = (nombre: string, id: number) => {
     onChange(nombre, id);
@@ -94,14 +106,14 @@ export default function ComunaSelector({ value, comuna_id, onChange }: Props) {
                 <button
                   type="button"
                   onMouseDown={e => e.preventDefault()}
-                  onClick={() => handleSelect(c.nombre, c.id)}
+                  onClick={() => handleSelect(c.name, c.id)}
                   className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                     c.id === comuna_id
                       ? 'bg-forest-50 text-forest-900 font-semibold'
                       : 'hover:bg-stone-50 text-forest-950'
                   }`}
                 >
-                  {c.nombre}
+                  {c.name}
                 </button>
               </li>
             ))}

@@ -86,6 +86,15 @@ export default function AvisoCard({
               )}
             </div>
 
+            <div className="flex items-center gap-1">
+              <svg className="w-3 h-3 text-stone-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <span className="text-[11px] text-stone-400 truncate">
+                {item.comuna?.name ?? '—'}
+              </span>
+            </div>
+
             <div className="flex-grow">
               <h3
                 className="font-display text-[15px] font-semibold text-forest-950 truncate leading-snug mb-1 cursor-pointer hover:text-forest-800 transition-colors"
@@ -99,21 +108,15 @@ export default function AvisoCard({
             </div>
 
             <div className="flex flex-col gap-0.5">
-              {item.precio != null && (
-                <span className="text-forest-900 font-bold text-base">
-                  ${item.precio.toLocaleString('es-CL')}
-                </span>
-              )}
-              {item.precio_uf != null && (
-                <span className="text-stone-500 text-[11px] font-bold">
-                  {item.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF
-                </span>
-              )}
-              {item.metros_cuadrados != null && (
-                <span className="text-stone-500 text-[11px] font-medium">
-                  {item.metros_cuadrados} m²
-                </span>
-              )}
+              <span className="text-forest-900 font-bold text-base">
+                {item.precio != null ? `$${item.precio.toLocaleString('es-CL')}` : '—'}
+              </span>
+              <span className="text-stone-500 text-[11px] font-bold">
+                {item.precio_uf != null ? `${item.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF` : '—'}
+              </span>
+              <span className="text-stone-500 text-[11px] font-medium">
+                {item.metros_cuadrados != null ? `${item.metros_cuadrados} m²` : '—'}
+              </span>
             </div>
 
             <div className="pt-3 border-t border-stone-100 flex flex-col gap-2">
