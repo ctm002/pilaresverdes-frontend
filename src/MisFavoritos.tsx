@@ -25,11 +25,6 @@ export default function MisFavoritos() {
       .catch((err: unknown) => console.error('Error al cargar avisos:', err));
   }, [navigate]);
 
-  const handleSignOut = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-  };
-
   const handleLikeCount = async (id: number) => {
     try {
       await api.patch(`/api/v1/avisos/${id}/like`);

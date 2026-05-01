@@ -103,7 +103,6 @@ export default function DetalleFavorito() {
               <MapView
                 latitud={favorito.latitud}
                 longitud={favorito.longitud}
-                ubicacion={favorito.ubicacion}
               />
 
               <div className="pt-4 border-t border-stone-100">
