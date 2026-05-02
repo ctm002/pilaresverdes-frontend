@@ -1,3 +1,8 @@
+export interface MainImageDto {
+  avisoId: number;
+  imageBase64: string;
+}
+
 export interface ImagesAvisoDto {
   imageBase64: string;
   url: string;

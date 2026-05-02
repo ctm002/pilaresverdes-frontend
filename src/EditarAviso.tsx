@@ -122,16 +122,15 @@ export default function EditarAviso() {
         imagesBase64 = await Promise.all(selectedFiles.map(file => compressImage(file)));
       }
 
+      const hasNewMain = !formData.mainImageUrl && imagesBase64.length > 0;
+      const mainImageBase64 = hasNewMain ? imagesBase64[0] : '';
+      const secondaryImages = hasNewMain ? imagesBase64.slice(1) : imagesBase64;
+
       const dto = {
         titulo: formData.titulo,
         descripcion: formData.descripcion,
         image_url: formData.mainImageUrl,
-        imageBase64: !formData.mainImageUrl && imagesBase64.length > 0 ? imagesBase64[0] : '',
-        imagesAvisoList: !formData.mainImageUrl && imagesBase64.length > 1
-          ? imagesBase64.slice(1).map((base64) => ({ imageBase64: base64, url: '', id: 0, avisoId: formData.id }))
-          : !formData.mainImageUrl && imagesBase64.length === 1
-            ? []
-            : imagesBase64.map((base64) => ({ imageBase64: base64, url: '', id: 0, avisoId: formData.id })),
+        imagesAvisoList: secondaryImages.map((base64) => ({ imageBase64: base64, url: '', id: 0, avisoId: formData.id })),
         celular: formData.celular,
         likes: 0,
         precio: formData.precio !== '' ? Number(formData.precio) : null,
@@ -146,9 +145,15 @@ export default function EditarAviso() {
 
       if (isEditing && slug) {
         await api.put(`/api/v1/avisos/${slug}`, dto);
+        if (mainImageBase64) {
+          await api.patch(`/api/v1/avisos/${slug}/imagen-principal`, { avisoId: formData.id, imageBase64: mainImageBase64 });
+        }
         navigate('/mis-avisos');
       } else {
-        await api.post('/api/v1/avisos', dto);
+        const res = await api.post('/api/v1/avisos', dto);
+        if (mainImageBase64) {
+          await api.patch(`/api/v1/avisos/${res.data.slug}/imagen-principal`, { avisoId: res.data.id, imageBase64: mainImageBase64 });
+        }
         navigate('/');
       }
     } catch (error) {
