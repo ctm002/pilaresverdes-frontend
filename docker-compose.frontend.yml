@@ -1,0 +1,16 @@
+services:
+  webserver:
+    image: ctm002/pilaresverdes-frontend:${IMAGE_TAG}
+    container_name: webserver
+    restart: unless-stopped
+    networks:
+      - red-local-docker
+    ports:
+      - "80:80"
+    volumes:
+      - ~/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ~/nginx/conf.d/:/etc/nginx/conf.d/
+
+networks:
+  red-local-docker:
+    external: true
