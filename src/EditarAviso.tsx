@@ -146,13 +146,13 @@ export default function EditarAviso() {
       if (isEditing && slug) {
         await api.put(`/api/v1/avisos/${slug}`, dto);
         if (mainImageBase64) {
-          await api.patch(`/api/v1/avisos/${slug}/imagen-principal`, { avisoId: formData.id, imageBase64: mainImageBase64 });
+          await api.patch(`/api/v1/avisos/${slug}/imagen-principal`, { imageBase64: mainImageBase64 });
         }
         navigate('/mis-avisos');
       } else {
         const res = await api.post('/api/v1/avisos', dto);
         if (mainImageBase64) {
-          await api.patch(`/api/v1/avisos/${res.data.slug}/imagen-principal`, { avisoId: res.data.id, imageBase64: mainImageBase64 });
+          await api.patch(`/api/v1/avisos/${res.data.slug}/imagen-principal`, { imageBase64: mainImageBase64 });
         }
         navigate('/');
       }
