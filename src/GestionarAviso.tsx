@@ -37,6 +37,7 @@ export default function GestionarAviso() {
   const isAuthenticated = !!localStorage.getItem('token');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -58,25 +59,22 @@ export default function GestionarAviso() {
       return;
     }
 
+    setMainImageFile(file);
     setIsUploadingImage(true);
     try {
       const base64 = await compressImage(file);
       setPreviewUrl(base64);
 
-      await api.put(`/api/v1/avisos/${aviso.slug}`, {
-        titulo: aviso.titulo,
-        descripcion: aviso.descripcion,
-        celular: aviso.celular,
+      await api.patch(`/api/v1/avisos/${aviso.slug}/imagen-principal`, {
+        // avisoId: aviso.id,
         imageBase64: base64,
-        image_url: '',
-        imagesAvisoList: aviso.imagesAvisoList ?? [],
-        likes: aviso.likes,
       });
 
       setAviso(prev => prev ? { ...prev, image_url: base64 } : prev);
     } catch (error) {
       console.error('Error al actualizar imagen:', error);
       setPreviewUrl(null);
+      setMainImageFile(null);
     } finally {
       setIsUploadingImage(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
