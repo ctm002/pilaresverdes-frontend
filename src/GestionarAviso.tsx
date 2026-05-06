@@ -37,7 +37,6 @@ export default function GestionarAviso() {
   const isAuthenticated = !!localStorage.getItem('token');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -59,7 +58,7 @@ export default function GestionarAviso() {
       return;
     }
 
-    setMainImageFile(file);
+
     setIsUploadingImage(true);
     try {
       const base64 = await compressImage(file);
@@ -74,7 +73,6 @@ export default function GestionarAviso() {
     } catch (error) {
       console.error('Error al actualizar imagen:', error);
       setPreviewUrl(null);
-      setMainImageFile(null);
     } finally {
       setIsUploadingImage(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
