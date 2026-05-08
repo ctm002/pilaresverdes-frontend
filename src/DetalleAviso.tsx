@@ -156,21 +156,57 @@ export default function DetalleAviso() {
                 onClose={() => setShowFavModal(false)}
               />
             )}
-
             <ImageGallery images={allImages} title={aviso.titulo} />
 
-            {/* Title */}
-            <h1 className="font-display text-2xl font-bold text-forest-950 mb-2 leading-snug">
-              {aviso.titulo}
-            </h1>
+            {/* Title + actions */}
+            <div className="flex items-start justify-between gap-3 mt-3 mb-1">
+              <h1 className="font-display text-2xl font-bold text-forest-950 leading-snug">
+                {aviso.titulo}
+              </h1>
+              <div className="flex items-center gap-2 flex-shrink-0 pt-1">
+                <LikeButton count={aviso.likes || 0} onClick={() => handleLikeCount(aviso.id)} />
+                <WhatsAppButton phone={aviso.celular} title={aviso.titulo} />
+              </div>
+            </div>
+
+            {/* Location */}
+            {(aviso.comuna?.name || aviso.comuna?.provincia?.region?.name) && (
+              <div className="flex items-center gap-1.5 mb-2">
+                <svg className="w-3.5 h-3.5 text-forest-600 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <span className="text-sm font-bold text-forest-700">
+                  {[aviso.comuna?.name, aviso.comuna?.provincia?.region?.name].filter(Boolean).join(', ')}
+                </span>
+              </div>
+            )}
 
             {/* Meta */}
             <div className="flex flex-wrap gap-x-4 gap-y-1 mb-5">
               <p className="text-stone-400 text-xs">Por <span className="text-forest-700 font-medium">{aviso.username}</span></p>
-              {aviso.fecha_creacion && (
-                <p className="text-stone-400 text-xs">Publicado el {aviso.fecha_creacion}</p>
-              )}
+              {aviso.fecha_creacion && (() => {
+                const [day, month, year] = aviso.fecha_creacion!.split('-').map(Number);
+                const dias = Math.floor((Date.now() - new Date(year, month - 1, day).getTime()) / 86_400_000);
+                const label = dias === 0 ? 'hoy' : dias === 1 ? 'hace 1 día' : `hace ${dias} días`;
+                return <p className="text-stone-400 text-xs">Publicado {label}</p>;
+              })()}
             </div>
+
+            {/* Precio */}
+            {(aviso.precio != null || aviso.precio_uf != null) && (
+              <div className="flex flex-col gap-0.5 mb-5">
+                {aviso.precio != null && (
+                  <span className="text-3xl font-extrabold text-forest-900 tracking-tight">
+                    ${aviso.precio.toLocaleString('es-CL')}
+                  </span>
+                )}
+                {aviso.precio_uf != null && (
+                  <span className="text-sm font-semibold text-stone-400">
+                    {aviso.precio_uf.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UF
+                  </span>
+                )}
+              </div>
+            )}
 
             {/* Description */}
             <p className="text-stone-600 text-[15px] leading-relaxed mb-6">{aviso.descripcion}</p>
@@ -182,11 +218,6 @@ export default function DetalleAviso() {
               ubicacion={aviso.comuna?.name}
             />
 
-            {/* Actions */}
-            <div className="flex justify-between items-center pt-4 border-t border-stone-100">
-              <LikeButton count={aviso.likes || 0} onClick={() => handleLikeCount(aviso.id)} />
-              <WhatsAppButton phone={aviso.celular} title={aviso.titulo} />
-            </div>
           </div>
         </div>
 

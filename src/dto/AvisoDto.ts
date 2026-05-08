@@ -22,7 +22,18 @@ export interface Aviso {
   username: string;
   visitas?: number;
   fecha_creacion?: string;
-  comuna?: { id: number; name: string };
+  comuna?: {
+    id: number;
+    name: string;
+    provincia?: {
+      id: number;
+      name: string;
+      region?: {
+        id: number;
+        name: string;
+      };
+    };
+  };
   latitud?: number;
   longitud?: number;
   precio?: number;
