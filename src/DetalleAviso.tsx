@@ -23,6 +23,13 @@ export default function DetalleAviso() {
   const [isNavigating, setIsNavigating] = useState(false);
   const [recommended, setRecommended] = useState<Aviso[]>([]);
   const hasFetched = useRef<string | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const scrollCarousel = (dir: 'left' | 'right') => {
+    const el = carouselRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === 'right' ? 200 : -200, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     if (!slug || hasFetched.current === slug) return;
@@ -133,20 +140,6 @@ export default function DetalleAviso() {
           )}
 
           <div className="p-5">
-            {/* Favorito — encima de la galería */}
-            <div className="flex justify-end mb-2">
-              <FavoriteButton
-                isFavorite={!!favorites[aviso.id]}
-                onClick={() => {
-                  if (favorites[aviso.id]) {
-                    removeFavorite(aviso.id);
-                  } else {
-                    setShowFavModal(true);
-                  }
-                }}
-              />
-            </div>
-
             {showFavModal && (
               <FavoritoModal
                 onConfirm={async (notas) => {
@@ -156,7 +149,23 @@ export default function DetalleAviso() {
                 onClose={() => setShowFavModal(false)}
               />
             )}
-            <ImageGallery images={allImages} title={aviso.titulo} />
+
+            {/* Galería con botón favorito superpuesto */}
+            <div className="relative">
+              <ImageGallery images={allImages} title={aviso.titulo} />
+              <div className="absolute top-3 right-3 z-10">
+                <FavoriteButton
+                  isFavorite={!!favorites[aviso.id]}
+                  onClick={() => {
+                    if (favorites[aviso.id]) {
+                      removeFavorite(aviso.id);
+                    } else {
+                      setShowFavModal(true);
+                    }
+                  }}
+                />
+              </div>
+            </div>
 
             {/* Title + actions */}
             <div className="flex items-start justify-between gap-3 mt-3 mb-1">
@@ -165,7 +174,7 @@ export default function DetalleAviso() {
               </h1>
               <div className="flex items-center gap-2 flex-shrink-0 pt-1">
                 <LikeButton count={aviso.likes || 0} onClick={() => handleLikeCount(aviso.id)} />
-                <WhatsAppButton phone={aviso.celular} title={aviso.titulo} />
+                <WhatsAppButton phone={aviso.celular} title={aviso.titulo} label="Contactar" className="px-3 py-2 text-sm font-semibold" />
               </div>
             </div>
 
@@ -225,15 +234,41 @@ export default function DetalleAviso() {
         {/* Recomendados */}
         {recommended.length > 0 && (
           <div className="max-w-2xl mx-auto mt-6 pb-24 md:pb-6">
-            <h2 className="text-sm font-semibold text-forest-800 tracking-widest uppercase mb-3 px-1">
-              Te puede interesar
-            </h2>
-            <div className="flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:overflow-visible snap-x snap-mandatory">
+            <div className="flex items-center justify-between mb-3 px-1">
+              <h2 className="text-sm font-semibold text-forest-800 tracking-widest uppercase">
+                Te puede interesar
+              </h2>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => scrollCarousel('left')}
+                  className="p-1.5 rounded-full bg-white border border-stone-200 text-stone-500 hover:text-forest-800 hover:border-forest-300 transition-colors shadow-sm"
+                  aria-label="Anterior"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => scrollCarousel('right')}
+                  className="p-1.5 rounded-full bg-white border border-stone-200 text-stone-500 hover:text-forest-800 hover:border-forest-300 transition-colors shadow-sm"
+                  aria-label="Siguiente"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div
+              ref={carouselRef}
+              className="flex gap-3 overflow-x-auto snap-x snap-mandatory"
+              style={{ scrollbarWidth: 'none' }}
+            >
               {recommended.map(a => (
                 <div
                   key={a.id}
                   onClick={() => navigate(`/avisos/${a.slug}`)}
-                  className="flex-shrink-0 w-44 md:w-auto bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow snap-start"
+                  className="flex-shrink-0 w-44 bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow snap-start"
                 >
                   <div className="h-28 overflow-hidden">
                     <img
