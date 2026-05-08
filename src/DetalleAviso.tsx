@@ -21,6 +21,7 @@ export default function DetalleAviso() {
   const [allAvisos, setAllAvisos] = useState<Aviso[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [recommended, setRecommended] = useState<Aviso[]>([]);
   const hasFetched = useRef<string | null>(null);
 
   useEffect(() => {
@@ -34,9 +35,18 @@ export default function DetalleAviso() {
     ])
       .then(([avisosRes, avisoRes]) => {
         setAllAvisos(avisosRes.data);
-        setAviso(avisoRes.data);
+        const loadedAviso: Aviso = avisoRes.data;
+        setAviso(loadedAviso);
         const index = avisosRes.data.findIndex((a: Aviso) => a.slug === slug);
         setCurrentIndex(index >= 0 ? index : 0);
+
+        if (loadedAviso.latitud != null && loadedAviso.longitud != null) {
+          api.get('/api/v1/avisos/cercanos', {
+            params: { lat: loadedAviso.latitud, lng: loadedAviso.longitud }
+          })
+            .then(res => setRecommended((res.data as Aviso[]).filter(a => a.slug !== slug)))
+            .catch(() => {});
+        }
       })
       .catch(err => console.error('Error al cargar datos:', err));
   }, [slug]);
@@ -181,6 +191,40 @@ export default function DetalleAviso() {
         </div>
 
 
+        {/* Recomendados */}
+        {recommended.length > 0 && (
+          <div className="max-w-2xl mx-auto mt-6 pb-24 md:pb-6">
+            <h2 className="text-sm font-semibold text-forest-800 tracking-widest uppercase mb-3 px-1">
+              Te puede interesar
+            </h2>
+            <div className="flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:overflow-visible snap-x snap-mandatory">
+              {recommended.map(a => (
+                <div
+                  key={a.id}
+                  onClick={() => navigate(`/avisos/${a.slug}`)}
+                  className="flex-shrink-0 w-44 md:w-auto bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow snap-start"
+                >
+                  <div className="h-28 overflow-hidden">
+                    <img
+                      src={resolveImageUrl(a.image_url)}
+                      alt={a.titulo}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-2.5">
+                    <p className="text-[13px] font-semibold text-forest-950 line-clamp-2 leading-snug mb-1">{a.titulo}</p>
+                    {a.comuna?.name && (
+                      <p className="text-[11px] text-stone-400 truncate">{a.comuna.name}</p>
+                    )}
+                    <p className="text-[12px] font-bold text-forest-900 mt-1">
+                      {a.precio != null ? `$${a.precio.toLocaleString('es-CL')}` : '—'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Mobile navigation */}
