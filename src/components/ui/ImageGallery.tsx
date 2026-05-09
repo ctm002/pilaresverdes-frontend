@@ -53,7 +53,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
   return (
     <>
       {/* ── Imagen principal ────────────────────────────── */}
-      <div className="relative rounded-xl overflow-hidden group cursor-zoom-in mb-3 select-none" onClick={() => setLightbox(true)}>
+      <div className="relative rounded-xl overflow-hidden group cursor-zoom-in mb-3 select-none bg-stone-100" onClick={() => setLightbox(true)}>
         <img
           src={currentSrc}
           alt={`${title} — foto ${current + 1}`}
