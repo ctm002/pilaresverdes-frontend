@@ -13,9 +13,11 @@ export default function Avisos() {
   const navigate = useNavigate();
   const [data, setData] = useState<Aviso[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const [showOnlyFavorites] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [selectedComuna, setSelectedComuna] = useState<string | null>(null);
+  const [pendingComuna, setPendingComuna] = useState<string | null>(null);
   const [lastAccess, setLastAccess] = useState<string>('');
   const { favorites } = useFavorites();
   const currentUsername = useCurrentUser();
@@ -52,13 +54,18 @@ export default function Avisos() {
 
   const isLoading = data === null;
 
+  const comunas = Array.from(
+    new Set((data ?? []).map(a => a.comuna?.name).filter(Boolean) as string[])
+  ).sort();
+
   const filteredData = (data ?? [])
     .filter(item => {
       const matchesSearch =
         item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesFav = !showOnlyFavorites || !!favorites[item.id];
-      return matchesSearch && matchesFav;
+      const matchesComuna = !selectedComuna || item.comuna?.name === selectedComuna;
+      return matchesSearch && matchesFav && matchesComuna;
     })
     .sort((a, b) => {
       const aFav = favorites[a.id] || false;
@@ -76,8 +83,62 @@ export default function Avisos() {
         onSignOut={() => { localStorage.removeItem('token'); setIsAuthenticated(false); }}
       />
 
+      {/* ── Barra de búsqueda ──────────────────────────── */}
+      <div className="pt-14 px-4">
+        <div className="max-w-2xl mx-auto py-4">
+          <div className="flex flex-col sm:flex-row gap-2">
+            {/* Input texto */}
+            <div className="relative flex-1">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Buscar avisos…"
+                value={searchInput}
+                onChange={e => setSearchInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') { setSearchTerm(searchInput); setSelectedComuna(pendingComuna); } }}
+                className="w-full pl-9 pr-4 py-2.5 bg-white border border-stone-200 rounded-xl text-sm text-forest-950 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-forest-700/40 focus:border-forest-700 transition-all"
+              />
+            </div>
+
+            {/* Selector comuna */}
+            <div className="relative sm:w-52">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <select
+                value={pendingComuna ?? ''}
+                onChange={e => setPendingComuna(e.target.value || null)}
+                className="w-full pl-9 pr-8 py-2.5 bg-white border border-stone-200 rounded-xl text-sm text-forest-950 appearance-none focus:outline-none focus:ring-2 focus:ring-forest-700/40 focus:border-forest-700 transition-all"
+              >
+                <option value="">Todas las comunas</option>
+                {comunas.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+              <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+
+            {/* Botón buscar */}
+            <button
+              onClick={() => { setSearchTerm(searchInput); setSelectedComuna(pendingComuna); }}
+              className="flex items-center justify-center gap-2 px-5 py-2.5 bg-forest-900 hover:bg-forest-800 text-white text-sm font-semibold rounded-xl transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* ── Main content ───────────────────────────────── */}
-      <main className={`flex-grow pt-14 px-4 py-6 transition-all duration-300 ${showSearch ? 'blur-sm' : ''}`}>
+      <main className="flex-grow px-4 py-4">
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {Array.from({ length: 10 }).map((_, i) => (
@@ -125,43 +186,6 @@ export default function Avisos() {
         </div>
       </footer>
 
-      {/* ── Floating search (mobile) ────────────────────── */}
-      <button
-        onClick={() => {
-          if (showSearch || searchTerm) { setShowSearch(false); setSearchTerm(''); }
-          else { setShowSearch(true); }
-        }}
-        className={`fixed text-white p-4 rounded-full shadow-xl transition-all duration-300 z-50 md:hidden ${
-          showSearch || searchTerm
-            ? 'top-1/2 right-5 -translate-y-1/2 bg-forest-800 hover:bg-forest-700'
-            : 'bottom-6 right-5 bg-forest-900 hover:bg-forest-800'
-        }`}
-        aria-label="Buscar"
-      >
-        {showSearch || searchTerm ? (
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        ) : (
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        )}
-      </button>
-
-      {showSearch && (
-        <div className="fixed top-20 left-4 right-4 z-50 md:hidden">
-          <input
-            type="text"
-            placeholder="Buscar avisos..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') setShowSearch(false); }}
-            className="w-full px-4 py-3 rounded-xl text-forest-950 bg-white shadow-xl text-sm placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-700/40"
-            autoFocus
-          />
-        </div>
-      )}
     </div>
   );
 }
