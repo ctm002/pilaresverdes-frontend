@@ -1,5 +1,5 @@
 import api from "./api/axios.js";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
 import { Aviso } from "./dto/AvisoDto.js";
@@ -18,6 +18,19 @@ export default function Avisos() {
   const [searchInput, setSearchInput] = useState('');
   const [selectedComuna, setSelectedComuna] = useState<string | null>(null);
   const [pendingComuna, setPendingComuna] = useState<string | null>(null);
+  const [comunaQuery, setComunaQuery] = useState('');
+  const [comunaOpen, setComunaOpen] = useState(false);
+  const comunaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (comunaRef.current && !comunaRef.current.contains(e.target as Node)) {
+        setComunaOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
   const [lastAccess, setLastAccess] = useState<string>('');
   const { favorites } = useFavorites();
   const currentUsername = useCurrentUser();
@@ -103,24 +116,60 @@ export default function Avisos() {
             </div>
 
             {/* Selector comuna */}
-            <div className="relative sm:w-52">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <select
-                value={pendingComuna ?? ''}
-                onChange={e => setPendingComuna(e.target.value || null)}
-                className="w-full pl-9 pr-8 py-2.5 bg-white border border-stone-200 rounded-xl text-sm text-forest-950 appearance-none focus:outline-none focus:ring-2 focus:ring-forest-700/40 focus:border-forest-700 transition-all"
-              >
-                <option value="">Todas las comunas</option>
-                {comunas.map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+            <div ref={comunaRef} className="relative sm:w-52">
+              <div className="relative">
+                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder={pendingComuna ?? 'Comuna…'}
+                  value={comunaOpen ? comunaQuery : (pendingComuna ?? '')}
+                  onFocus={() => { setComunaOpen(true); setComunaQuery(''); }}
+                  onChange={e => { setComunaQuery(e.target.value); setComunaOpen(true); }}
+                  className="w-full pl-9 pr-8 py-2.5 bg-white border border-stone-200 rounded-xl text-sm text-forest-950 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-700/40 focus:border-forest-700 transition-all"
+                  autoComplete="off"
+                />
+                {pendingComuna && !comunaOpen && (
+                  <button
+                    type="button"
+                    onClick={() => { setPendingComuna(null); setComunaQuery(''); }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+
+              {comunaOpen && (
+                <ul className="absolute z-50 w-full mt-1 bg-white rounded-xl shadow-lg border border-stone-200 overflow-y-auto" style={{ maxHeight: '11rem' }}>
+                  {(comunaQuery
+                    ? comunas.filter(c => c.toLowerCase().includes(comunaQuery.toLowerCase()))
+                    : comunas
+                  ).slice(0, 20).map(c => (
+                    <li key={c}>
+                      <button
+                        type="button"
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => { setPendingComuna(c); setComunaOpen(false); setComunaQuery(''); }}
+                        className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                          pendingComuna === c
+                            ? 'bg-forest-50 text-forest-900 font-semibold'
+                            : 'hover:bg-stone-50 text-forest-950'
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    </li>
+                  ))}
+                  {comunaQuery && comunas.filter(c => c.toLowerCase().includes(comunaQuery.toLowerCase())).length === 0 && (
+                    <li className="px-4 py-3 text-sm text-stone-400">Sin resultados</li>
+                  )}
+                </ul>
+              )}
             </div>
 
             {/* Botón buscar */}
