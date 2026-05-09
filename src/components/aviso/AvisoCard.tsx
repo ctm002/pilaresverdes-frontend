@@ -45,6 +45,8 @@ export default function AvisoCard({
         <img
           src={resolveImageUrl(item.image_url)}
           alt={item.titulo}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageLoaded(true)}
