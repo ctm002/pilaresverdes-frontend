@@ -57,7 +57,7 @@ export default function ImageGallery({ images, title }: ImageGalleryProps) {
         <img
           src={currentSrc}
           alt={`${title} — foto ${current + 1}`}
-          className={`w-full h-80 object-cover object-center transition-opacity duration-150 ${fade ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full object-cover object-center transition-opacity duration-150 ${fade ? 'opacity-100' : 'opacity-0'}`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
 
