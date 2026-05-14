@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
-import { Aviso } from './dto/AvisoDto.js';
+import { AvisoListItem } from './dto/AvisoListDto.js';
 import { useFavorites } from './hooks/useFavorites.js';
 import { useCurrentUser } from './hooks/useCurrentUser.js';
 import AppNav from './components/ui/AppNav.js';
@@ -13,7 +13,7 @@ export default function MisFavoritos() {
   const navigate = useNavigate();
   const currentUsername = useCurrentUser();
   const { favorites } = useFavorites();
-  const [data, setData] = useState<Aviso[] | null>(null);
+  const [data, setData] = useState<AvisoListItem[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -21,14 +21,14 @@ export default function MisFavoritos() {
     if (!token) { navigate('/signin'); return; }
     setIsAuthenticated(true);
     api.get('/api/v1/avisos')
-      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
+      .then((res: AxiosResponse<AvisoListItem[]>) => setData(res.data))
       .catch((err: unknown) => console.error('Error al cargar avisos:', err));
   }, [navigate]);
 
   const handleLikeCount = async (id: number) => {
     try {
       await api.patch(`/api/v1/avisos/${id}/like`);
-      const res: AxiosResponse<Aviso[]> = await api.get('/api/v1/avisos');
+      const res: AxiosResponse<AvisoListItem[]> = await api.get('/api/v1/avisos');
       setData(res.data);
     } catch (error) {
       console.error('Error al dar like:', error);

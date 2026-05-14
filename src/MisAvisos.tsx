@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
-import { Aviso } from './dto/AvisoDto.js';
+import { AvisoListItem } from './dto/AvisoListDto.js';
 import { useCurrentUser } from './hooks/useCurrentUser.js';
 import AppNav from './components/ui/AppNav.js';
 import AvisoCard from './components/aviso/AvisoCard.js';
@@ -11,12 +11,12 @@ import AvisoCardSkeleton from './components/aviso/AvisoCardSkeleton.js';
 export default function MisAvisos() {
   const navigate = useNavigate();
   const currentUsername = useCurrentUser();
-  const [data, setData] = useState<Aviso[] | null>(null);
+  const [data, setData] = useState<AvisoListItem[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
   const loadData = () => {
     api.get('/api/v1/mis-avisos')
-      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
+      .then((res: AxiosResponse<AvisoListItem[]>) => setData(res.data))
       .catch((err: unknown) => console.error('Error al cargar mis avisos:', err));
   };
 
