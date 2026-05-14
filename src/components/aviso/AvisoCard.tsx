@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Aviso } from '../../dto/AvisoDto.js';
+import { AvisoListItem } from '../../dto/AvisoListDto.js';
 import LikeButton from './LikeButton.js';
 import WhatsAppButton from './WhatsAppButton.js';
 import { resolveImageUrl } from '../../utils/imageUrl.js';
 
 interface AvisoCardProps {
-  item: Aviso;
+  item: AvisoListItem;
   currentUsername: string | null;
   delay?: number;
   onNavigate: (slug: string) => void;
@@ -52,11 +52,6 @@ export default function AvisoCard({
           onError={() => setImageLoaded(true)}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent pointer-events-none" />
-        {showContent && item.imagesAvisoList && item.imagesAvisoList.length > 0 && (
-          <span className="absolute bottom-2 right-2 bg-black/50 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
-            +{item.imagesAvisoList.length} fotos
-          </span>
-        )}
       </div>
 
       {/* Content */}
@@ -93,7 +88,7 @@ export default function AvisoCard({
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
               </svg>
               <span className="text-[11px] text-stone-400 truncate">
-                {item.comuna?.name ?? '—'}
+                {item.comuna ?? '—'}
               </span>
             </div>
 

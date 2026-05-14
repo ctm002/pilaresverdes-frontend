@@ -2,7 +2,7 @@ import api from "./api/axios.js";
 import { useEffect, useRef, useState } from "react";
 import { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
-import { Aviso } from "./dto/AvisoDto.js";
+import { AvisoListItem } from "./dto/AvisoListDto.js";
 import { useFavorites } from "./hooks/useFavorites.js";
 import { useCurrentUser } from "./hooks/useCurrentUser.js";
 import AvisoCard from "./components/aviso/AvisoCard.js";
@@ -11,7 +11,7 @@ import AppNav from "./components/ui/AppNav.js";
 
 export default function Avisos() {
   const navigate = useNavigate();
-  const [data, setData] = useState<Aviso[] | null>(null);
+  const [data, setData] = useState<AvisoListItem[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showOnlyFavorites] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,7 +38,7 @@ export default function Avisos() {
   const loadData = (minDelay = 0) => {
     const delay = new Promise<void>(resolve => setTimeout(resolve, minDelay));
     Promise.all([api.get("/api/v1/avisos"), delay])
-      .then(([res]) => setData((res as AxiosResponse<Aviso[]>).data))
+      .then(([res]) => setData((res as AxiosResponse<AvisoListItem[]>).data))
       .catch((err: unknown) => console.error("Error al cargar avisos:", err));
   };
 
@@ -68,7 +68,7 @@ export default function Avisos() {
   const isLoading = data === null;
 
   const comunas = Array.from(
-    new Set((data ?? []).map(a => a.comuna?.name).filter(Boolean) as string[])
+    new Set((data ?? []).map(a => a.comuna).filter(Boolean) as string[])
   ).sort();
 
   const filteredData = (data ?? [])
@@ -77,7 +77,7 @@ export default function Avisos() {
         item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesFav = !showOnlyFavorites || !!favorites[item.id];
-      const matchesComuna = !selectedComuna || item.comuna?.name === selectedComuna;
+      const matchesComuna = !selectedComuna || item.comuna === selectedComuna;
       return matchesSearch && matchesFav && matchesComuna;
     })
     .sort((a, b) => {
