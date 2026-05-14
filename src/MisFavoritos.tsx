@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
+import { Aviso } from './dto/AvisoDto.js';
 import { AvisoListItem } from './dto/AvisoListDto.js';
 import { useFavorites } from './hooks/useFavorites.js';
 import { useCurrentUser } from './hooks/useCurrentUser.js';
@@ -9,11 +10,24 @@ import AppNav from './components/ui/AppNav.js';
 import AvisoCard from './components/aviso/AvisoCard.js';
 import AvisoCardSkeleton from './components/aviso/AvisoCardSkeleton.js';
 
+function toListItem(a: Aviso): AvisoListItem {
+  return {
+    ...a,
+    comuna: a.comuna?.name ?? '',
+    region: { id: a.comuna?.provincia?.region?.id ?? 0, name: a.comuna?.provincia?.region?.name ?? '' },
+    visitas: a.visitas ?? 0,
+    precio: a.precio ?? 0,
+    precio_uf: a.precio_uf ?? 0,
+    fecha_creacion: a.fecha_creacion ?? '',
+    metros_cuadrados: a.metros_cuadrados ?? 0,
+  };
+}
+
 export default function MisFavoritos() {
   const navigate = useNavigate();
   const currentUsername = useCurrentUser();
   const { favorites } = useFavorites();
-  const [data, setData] = useState<AvisoListItem[] | null>(null);
+  const [data, setData] = useState<Aviso[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -21,14 +35,14 @@ export default function MisFavoritos() {
     if (!token) { navigate('/signin'); return; }
     setIsAuthenticated(true);
     api.get('/api/v1/avisos')
-      .then((res: AxiosResponse<AvisoListItem[]>) => setData(res.data))
+      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
       .catch((err: unknown) => console.error('Error al cargar avisos:', err));
   }, [navigate]);
 
   const handleLikeCount = async (id: number) => {
     try {
       await api.patch(`/api/v1/avisos/${id}/like`);
-      const res: AxiosResponse<AvisoListItem[]> = await api.get('/api/v1/avisos');
+      const res: AxiosResponse<Aviso[]> = await api.get('/api/v1/avisos');
       setData(res.data);
     } catch (error) {
       console.error('Error al dar like:', error);
@@ -75,7 +89,7 @@ export default function MisFavoritos() {
             {favAvisos.map(item => (
               <AvisoCard
                 key={item.id}
-                item={item}
+                item={toListItem(item)}
                 currentUsername={currentUsername}
                 onNavigate={() => navigate(`/mis-favoritos/${favorites[item.id]?.guid}`)}
                 onLikeCount={handleLikeCount}

@@ -2,21 +2,35 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
+import { Aviso } from './dto/AvisoDto.js';
 import { AvisoListItem } from './dto/AvisoListDto.js';
 import { useCurrentUser } from './hooks/useCurrentUser.js';
 import AppNav from './components/ui/AppNav.js';
 import AvisoCard from './components/aviso/AvisoCard.js';
 import AvisoCardSkeleton from './components/aviso/AvisoCardSkeleton.js';
 
+function toListItem(a: Aviso): AvisoListItem {
+  return {
+    ...a,
+    comuna: a.comuna?.name ?? '',
+    region: { id: a.comuna?.provincia?.region?.id ?? 0, name: a.comuna?.provincia?.region?.name ?? '' },
+    visitas: a.visitas ?? 0,
+    precio: a.precio ?? 0,
+    precio_uf: a.precio_uf ?? 0,
+    fecha_creacion: a.fecha_creacion ?? '',
+    metros_cuadrados: a.metros_cuadrados ?? 0,
+  };
+}
+
 export default function MisAvisos() {
   const navigate = useNavigate();
   const currentUsername = useCurrentUser();
-  const [data, setData] = useState<AvisoListItem[] | null>(null);
+  const [data, setData] = useState<Aviso[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
   const loadData = () => {
     api.get('/api/v1/mis-avisos')
-      .then((res: AxiosResponse<AvisoListItem[]>) => setData(res.data))
+      .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
       .catch((err: unknown) => console.error('Error al cargar mis avisos:', err));
   };
 
@@ -69,7 +83,7 @@ export default function MisAvisos() {
             {data.map((item) => (
               <AvisoCard
                 key={item.id}
-                item={item}
+                item={toListItem(item)}
                 currentUsername={currentUsername}
                 onNavigate={(s) => navigate(`/avisos/${s}/gestionar`)}
                 onLikeCount={() => {}}
