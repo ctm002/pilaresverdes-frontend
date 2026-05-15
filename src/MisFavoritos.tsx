@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
@@ -29,15 +29,18 @@ export default function MisFavoritos() {
   const { favorites } = useFavorites();
   const [data, setData] = useState<Aviso[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const hasFetched = useRef(false);
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
     const token = localStorage.getItem('token');
     if (!token) { navigate('/signin'); return; }
     setIsAuthenticated(true);
     api.get('/api/v1/avisos')
       .then((res: AxiosResponse<Aviso[]>) => setData(res.data))
       .catch((err: unknown) => console.error('Error al cargar avisos:', err));
-  }, [navigate]);
+  }, []);
 
   const handleLikeCount = async (id: number) => {
     try {

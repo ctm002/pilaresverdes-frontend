@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
@@ -27,6 +27,7 @@ export default function MisAvisos() {
   const currentUsername = useCurrentUser();
   const [data, setData] = useState<Aviso[] | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const hasFetched = useRef(false);
 
   const loadData = () => {
     api.get('/api/v1/mis-avisos')
@@ -35,12 +36,14 @@ export default function MisAvisos() {
   };
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
     if (!localStorage.getItem('token')) {
       navigate('/signin');
       return;
     }
     loadData();
-  }, [navigate]);
+  }, []);
 
   const isLoading = data === null;
 
