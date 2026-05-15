@@ -41,7 +41,7 @@ export default function GestionarAviso() {
 
   useEffect(() => {
     if (!slug) return;
-    api.get(`/api/v1/avisos/slug/${slug}`)
+    api.get(`/api/v1/avisos/${slug}`)
       .then(res => setAviso(res.data))
       .catch(err => console.error('Error al cargar aviso:', err));
   }, [slug]);

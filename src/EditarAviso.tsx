@@ -61,7 +61,7 @@ export default function EditarAviso() {
   useEffect(() => {
     if (slug) {
       setIsEditing(true);
-      api.get(`/api/v1/avisos/slug/${slug}`)
+      api.get(`/api/v1/avisos/${slug}`)
         .then(res => {
           const aviso = res.data;
           setFormData({

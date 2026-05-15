@@ -38,7 +38,7 @@ export default function DetalleAviso() {
 
     Promise.all([
       api.get('/api/v1/avisos'),
-      api.get(`/api/v1/avisos/slug/${slug}`)
+      api.get(`/api/v1/avisos/${slug}`)
     ])
       .then(([avisosRes, avisoRes]) => {
         setAllAvisos(avisosRes.data);
@@ -61,7 +61,7 @@ export default function DetalleAviso() {
   const handleLikeCount = async (avisoId: number) => {
     try {
       await api.patch(`/api/v1/avisos/${avisoId}/like`);
-      const res = await api.get(`/api/v1/avisos/slug/${aviso?.slug}`);
+      const res = await api.get(`/api/v1/avisos/${aviso?.slug}`);
       setAviso(res.data);
     } catch (error) {
       console.error('Error al dar like:', error);
