@@ -9,6 +9,13 @@ import AvisoCard from "./components/aviso/AvisoCard.js";
 import AvisoCardSkeleton from "./components/aviso/AvisoCardSkeleton.js";
 import AppNav from "./components/ui/AppNav.js";
 
+const operaciones = [
+  { value: 'VENTA', label: 'VENTA' },
+  { value: 'ARRIENDO', label: 'ARRIENDO' },
+] as const;
+
+type TipoOperacion = typeof operaciones[number]['value'] | '';
+
 export default function Avisos() {
   const navigate = useNavigate();
   const [data, setData] = useState<AvisoListItem[] | null>(null);
@@ -18,6 +25,8 @@ export default function Avisos() {
   const [searchInput, setSearchInput] = useState('');
   const [selectedComuna, setSelectedComuna] = useState<string | null>(null);
   const [pendingComuna, setPendingComuna] = useState<string | null>(null);
+  const [selectedTipo, setSelectedTipo] = useState<TipoOperacion>('');
+  const [pendingTipo, setPendingTipo] = useState<TipoOperacion>('');
   const [comunaQuery, setComunaQuery] = useState('');
   const [comunaOpen, setComunaOpen] = useState(false);
   const comunaRef = useRef<HTMLDivElement>(null);
@@ -73,12 +82,13 @@ export default function Avisos() {
 
   const filteredData = (data ?? [])
     .filter(item => {
-      const matchesSearch =
+      const matchesSearch = !searchTerm ||
         item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesFav = !showOnlyFavorites || !!favorites[item.id];
       const matchesComuna = !selectedComuna || item.comuna === selectedComuna;
-      return matchesSearch && matchesFav && matchesComuna;
+      const matchesTipo = !selectedTipo || item.tipo_operacion === selectedTipo;
+      return matchesSearch && matchesFav && matchesComuna && matchesTipo;
     })
     .sort((a, b) => {
       const aFav = favorites[a.id] || false;
@@ -110,7 +120,7 @@ export default function Avisos() {
                 placeholder="Buscar avisos…"
                 value={searchInput}
                 onChange={e => setSearchInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') { setSearchTerm(searchInput); setSelectedComuna(pendingComuna); } }}
+                onKeyDown={e => { if (e.key === 'Enter') { setSearchTerm(searchInput); setSelectedComuna(pendingComuna); setSelectedTipo(pendingTipo); } }}
                 className="w-full pl-9 pr-4 py-2.5 bg-white border border-stone-200 rounded-xl text-sm text-forest-950 placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-forest-700/40 focus:border-forest-700 transition-all"
               />
             </div>
@@ -172,9 +182,21 @@ export default function Avisos() {
               )}
             </div>
 
+            {/* Selector tipo operación */}
+            <select
+              value={pendingTipo}
+              onChange={e => setPendingTipo(e.target.value as TipoOperacion)}
+              className="sm:w-36 py-2.5 px-3 bg-white border border-stone-200 rounded-xl text-sm text-forest-950 focus:outline-none focus:ring-2 focus:ring-forest-700/40 focus:border-forest-700 transition-all appearance-none cursor-pointer"
+            >
+              <option value="">Todos</option>
+              {operaciones.map(t => (
+                <option key={t.value} value={t.value}>{t.label}</option>
+              ))}
+            </select>
+
             {/* Botón buscar */}
             <button
-              onClick={() => { setSearchTerm(searchInput); setSelectedComuna(pendingComuna); }}
+              onClick={() => { setSearchTerm(searchInput); setSelectedComuna(pendingComuna); setSelectedTipo(pendingTipo); }}
               className="flex items-center justify-center gap-2 px-5 py-2.5 bg-forest-900 hover:bg-forest-800 text-white text-sm font-semibold rounded-xl transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,7 +234,7 @@ export default function Avisos() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {filteredData.map((item) => (
               <AvisoCard
-                key={item.id}
+                key={item.slug}
                 item={item}
                 currentUsername={currentUsername}
                 delay={Math.floor(Math.random() * 1200) + 200}

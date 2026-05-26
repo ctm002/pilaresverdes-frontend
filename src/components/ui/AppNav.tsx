@@ -100,7 +100,7 @@ export default function AppNav({ title, backTo, isAuthenticated, onSignOut }: Ap
                 <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
                 </svg>
-                Publicar aviso
+                Publica tu propiedad
               </button>
               {username && (
                 <span className="flex items-center gap-1.5 text-white/80 text-sm px-1">

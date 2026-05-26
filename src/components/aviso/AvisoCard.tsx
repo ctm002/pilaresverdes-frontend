@@ -1,11 +1,26 @@
 import { useState, useEffect } from 'react';
-import { AvisoListItem } from '../../dto/AvisoListDto.js';
 import LikeButton from './LikeButton.js';
 import WhatsAppButton from './WhatsAppButton.js';
 import { resolveImageUrl } from '../../utils/imageUrl.js';
 
+export interface AvisoCardItem {
+  id: number;
+  slug: string;
+  username: string;
+  image_url: string;
+  titulo: string;
+  descripcion: string;
+  comuna: string;
+  precio?: number;
+  precio_uf?: number;
+  metros_cuadrados?: number;
+  visitas?: number;
+  likes: number;
+  celular: string;
+}
+
 interface AvisoCardProps {
-  item: AvisoListItem;
+  item: AvisoCardItem;
   currentUsername: string | null;
   delay?: number;
   onNavigate: (slug: string) => void;

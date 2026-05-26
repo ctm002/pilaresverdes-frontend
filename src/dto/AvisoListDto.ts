@@ -13,10 +13,11 @@ export interface AvisoListItem {
   username: string;
   visitas: number;
   comuna: string;
-  region: RegionDto;
+  region: string;
   precio: number;
   precio_uf: number;
   image_url: string;
   fecha_creacion: string;
   metros_cuadrados: number;
+  tipo_operacion: 'VENTA' | 'ARRIENDO';
 }

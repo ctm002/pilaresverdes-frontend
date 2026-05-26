@@ -3,23 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import api from './api/axios.js';
 import { Aviso } from './dto/AvisoDto.js';
-import { AvisoListItem } from './dto/AvisoListDto.js';
+import { AvisoCardItem } from './components/aviso/AvisoCard.js';
 import { useFavorites } from './hooks/useFavorites.js';
 import { useCurrentUser } from './hooks/useCurrentUser.js';
 import AppNav from './components/ui/AppNav.js';
 import AvisoCard from './components/aviso/AvisoCard.js';
 import AvisoCardSkeleton from './components/aviso/AvisoCardSkeleton.js';
 
-function toListItem(a: Aviso): AvisoListItem {
+function toCardItem(a: Aviso): AvisoCardItem {
   return {
-    ...a,
+    id: a.id,
+    slug: a.slug,
+    username: a.username,
+    image_url: a.image_url,
+    titulo: a.titulo,
+    descripcion: a.descripcion,
     comuna: a.comuna?.name ?? '',
-    region: { id: a.comuna?.provincia?.region?.id ?? 0, name: a.comuna?.provincia?.region?.name ?? '' },
-    visitas: a.visitas ?? 0,
-    precio: a.precio ?? 0,
-    precio_uf: a.precio_uf ?? 0,
-    fecha_creacion: a.fecha_creacion ?? '',
-    metros_cuadrados: a.metros_cuadrados ?? 0,
+    precio: a.precio,
+    precio_uf: a.precio_uf,
+    metros_cuadrados: a.metros_cuadrados,
+    visitas: a.visitas,
+    likes: a.likes,
+    celular: a.celular,
   };
 }
 
@@ -92,7 +97,7 @@ export default function MisFavoritos() {
             {favAvisos.map(item => (
               <AvisoCard
                 key={item.id}
-                item={toListItem(item)}
+                item={toCardItem(item)}
                 currentUsername={currentUsername}
                 onNavigate={() => navigate(`/mis-favoritos/${favorites[item.id]?.guid}`)}
                 onLikeCount={handleLikeCount}
